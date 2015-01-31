@@ -361,7 +361,7 @@
         var dataUrl = dataUrl || 'http://taxsample.iobio.io/?cmd=FluA71_MS_R1.40k.fastq';
         var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + encodeURIComponent(dataUrl))
         console.log(fq2faUrl);
-        var taxonomerUrl = encodeURI('http://taxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));
+        var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));
         // console.log(taxonomerUrl);
         var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxonomerUrl);
         return taxanglerUrl;
