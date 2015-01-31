@@ -1,0 +1,361 @@
+/*
+ * Base structure
+ */
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+html, body { height: 100%}
+body {
+  padding-top: 30px;
+}
+
+
+/*
+ * Global Colors
+ */
+.iobio-bg-color { background: #123d53;}
+.iobio-txt-color { color: #268bd2;}
+
+/*
+ * Global text
+ */
+ h2 { 
+  font: 300 30px quicksand;
+  color: rgb(60,60,60);
+}
+h4 { 
+  font: 400 14px Montserrat;
+  color: rgb(60,60,60);
+}
+
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar-fixed-top {
+  border: 0;
+}
+.navbar { min-height: 0px; height: 30px;}
+.navbar-brand,
+.navbar-nav li a {
+    line-height: 30px;    
+    padding-top: 0;
+    font-family: quicksand;
+}
+
+/*
+ * Sidebar
+ */
+
+.sidebar {
+    position: fixed;  
+    top: 30px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;        
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */    
+    border-right: 1px solid #eee;
+    text-align: center;
+  }
+}
+
+.sidebar svg {
+  width:100%;
+  /*height:80px;*/
+  border: 1px solid red;
+}
+
+/* Sidebar navigation */
+.nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+}
+.nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+  color: #fff;
+  background-color: #428bca;
+}
+
+/*
+ * container
+ */
+
+.container-fluid {    
+  height: 100%;
+}
+
+
+/*
+ * Main content
+ */
+
+.main {
+  padding: 0px;  
+  height: 100%;  
+}
+@media (min-width: 768px) {
+  .main {    
+  }
+}
+.main .page-header {
+  margin-top: 0;
+}
+
+
+/*
+ * metrics container
+ */
+
+#metrics-container {
+  padding: 20px;
+  text-align: center;
+  height: 140px;
+  border-bottom: 1px solid #eee;
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+}
+
+#metrics-container .metric  {
+  height: 100%;  
+  display:flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  -webkit-flex-direction: column;
+  -webkit-align-content: stretch;
+  align-content: stretch;
+  padding-bottom: 10px
+
+}
+
+#metrics-container .metric svg {
+  height: 100%;
+  -webkit-flex: 1;
+  flex:1;  
+}
+
+/*
+ * main visualization panel
+ */
+
+#main-viz {  
+  height: calc(100% - 140px);
+  position: relative;
+}
+
+#main-viz #top-controls {
+  text-align: center;
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;  
+  height: 46px;
+}
+
+
+#main-viz #top-controls #min-abundance h4 {
+  text-align:left;
+  width: 216px;  
+  padding-left: 15px;
+  margin-left: auto;
+  margin-right: auto;  
+}
+
+#main-viz #top-controls #min-abundance input {
+  width: 177px;
+  margin: 10px 5px 10px 0px;  
+  float:left;
+  position: relative;
+  z-index: 1;
+}
+
+#main-viz #selected-name {
+  font-size: 20px;  
+  width: 100%;
+  text-align: center;
+  position: absolute;  
+  top: 68px;
+}
+
+#main-viz #viz {
+  /*width: 80%;*/
+  height: calc(100% - 120px) ;
+  margin: 0px auto;    
+}
+
+#main-viz #viz svg {
+  width: 100%;
+  height: 100%;
+}
+
+#main-viz #viz-picker {
+  /*width: 40px;*/  
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border: 1px solid #eee;
+  border-right: none;
+  position: absolute;
+  top: 47%;
+  right: 0px;
+}
+
+#main-viz #viz-picker img {
+  height: 35px; 
+  margin: 15px;
+  display: block; 
+}
+
+#reads-viewed {
+  width: 430px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;   
+  height: 38px;  
+}
+
+/*
+ * custom input range styling
+ */
+
+ /* chrome */
+input[type=range]{
+    -webkit-appearance: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {    
+    height: 3px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background: #268bd2;
+    margin-top: -5px;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+
+/* firefox */
+input[type=range]{
+    /* fix for FF unable to apply focus style bug  */
+    border: 1px solid white; 
+
+    /*required for proper track sizing in FF*/
+    width: 300px;
+}
+
+input[type=range]::-moz-range-track {    
+    height: 3px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background: #268bd2;
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+    outline: 1px solid white;
+    outline-offset: -1px;
+}
+
+input[type=range]:focus::-moz-range-track {
+    background: #ccc;
+}
+
+/* ie 10+ */
+input[type=range]::-ms-track {    
+    height: 3px;
+    
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
+    
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
+
+    /*remove default tick marks*/
+    color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: #777;
+    border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+    background: #ddd;
+    border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+    border: none;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background: #268bd2;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: #888;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: #ccc;
+}
+
+/*
+ * sunburst visualization
+ */
+
+ path {
+  stroke: #fff;
+  fill-rule: evenodd;
+}
+
+.inactive {
+  /*fill-opacity: 0.2;*/
+}
+
+text  {
+  fill: white;
+  font-size: 9px;
+  /*alignment-baseline: middle;*/
+}
+
+/*
+ * tooltip
+ */
+div.tooltip {   
+  position: absolute; 
+  top:0px;            
+  text-align: center;           
+  z-index:20;
+  color:white;
+  padding: 4px 6px 4px 6px;             
+  font: 11px arial;        
+  background: rgb(80,80,80);   
+  border: 0px;      
+  border-radius: 4px;           
+  pointer-events: none;         
+}

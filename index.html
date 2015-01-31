@@ -1,0 +1,448 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="taxonomer.iobio">
+    <meta name="author" content="marthlab">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>taxonomer.iobio</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->    
+    <link href="assets/css/site.css" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Quicksand:300,400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+
+    <!-- JS -->
+    <script type="text/javascript" src='assets/js/d3.min.js'></script>  
+    <script type="text/javascript" src='assets/js/t.js'></script>          
+    <script type="text/javascript" src='assets/js/binary.js'></script>          
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <nav class=" iobio-bg-color navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+        <!--   <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button> -->
+          <a class="navbar-brand" href="#"><span class='iobio-txt-color'>taxononmer</span>.iobio</a>
+        </div>
+        <!-- <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Help</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div> -->
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row" style="height:100%">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <h2>History</h2>
+          <h4 style="font: italic 12px quicksand; color: rgb(180,180,180)">(use to navigate)</h4>
+          <!-- <svg style="width:100%;border:1px solid green;display:none;"></svg> -->
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">        
+          <div id='metrics-container' class="row">
+            <div id='binner' class="col-xs-6 col-sm-3 metric">              
+              <h2>Reads Bin</h2>
+              <svg></svg>
+            </div>
+            <div id='reads-sampled' class="col-xs-6 col-sm-3 metric">              
+              <h2>Reads Sampled</h2>
+              <span class="text-muted">add metric</span>
+            </div>
+            <div id='sensitivity' class="col-xs-6 col-sm-3 metric">              
+              <h2>Sensitivity</h2>
+              <svg></svg>
+            </div>
+            <div id='unclassified' class="col-xs-6 col-sm-3 metric">              
+              <h2>Unclassified</h2>
+              <span class="text-muted">add metric</span>
+            </div>
+          </div>
+          
+          <div id='main-viz'>            
+            <div id='top-controls' class="row">              
+              <div id='min-abundance' class="col-xs-3">              
+                <h4>Taxon Read Threshold</h4>
+                <div style="text-align: left; width: 240px; margin: -5px auto 0px auto;">
+                  <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
+                  <input id="min-abundance-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterAbundance(this.value)'></input> 
+                  <div style="clear:both"></div>
+                  <span id='min-read-count-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> count</span>
+                  <input id="min-read-count-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterReadCount(this.value)'></input>
+                </div>
+              </div>
+              <div class="col-xs-6"></div>
+              <div class="col-xs-3">                              
+                <div class="input-group" style="margin-top:10px">
+                  <input type="text" class="form-control" placeholder="Search for e.g. taxon ...">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                  </span>
+                </div>
+              </div>              
+            </div>
+            <div style="clear:both"></div>
+            <div id='selected-name'>All</div>
+            <div id='viz'>                            
+              <svg></svg>
+            </div>
+            <div id='reads-viewed'>
+              <h4 id='total-reads' style="float:left">Total Reads Classified: <span class='iobio-txt-color'></span></h4>
+              <h4 id='viewed-reads' style="float:right">Currently Viewed: <span class='iobio-txt-color'>100%</span></h4>
+              <div style="clear:both"></div>
+            </div>
+            <div id='viz-picker'>
+              <img src='assets/images/sunburst_icon_color.png'/>
+              <img src='assets/images/bubble_icon.png'/>
+              <img src='assets/images/tree_icon.png'/>
+              <img src='assets/images/bar_chart_icon.png'/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="assets/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- D3 Visualizations -->
+    <script type="text/javascript" src='assets/js/sunburst.d3.js'></script>   
+    <script type="text/javascript" src='assets/js/donut.d3.js'></script>  
+    <script type="text/javascript" src='assets/js/gauge.d3.js'></script>    
+
+    <!-- On load -->
+    <script>
+      var color = d3.scale.category20c();
+      window.bacterialColor = d3.scale.ordinal();      
+      var viralColor = d3.scale.ordinal()
+      var fungiColor = d3.scale.ordinal();
+      $(document).ready(function(){        
+
+        // create charts
+        var radius = $('#binner svg').height()/2;
+        var binnerColor = d3.scale.ordinal()
+              .domain(['bacterial', 'fungal', 'human', 'viral', 'unclassified'])
+              .range(['#ff6f03', 'green', '#25aaff', 'purple', 'rgb(120,120,120)'])
+        var binnerChart = donutD3()
+              .radius(radius)
+              .thickness(radius)
+              .klass("binnerArc")
+              .color(function(d) { return binnerColor(d.data.name); })
+        var pie = d3.layout.pie().sort(null).value(function(d) { return d.count});
+        var data = [ 10, 20, 20, 5 ];
+        
+
+        var radius = $('#sensitivity svg').height();
+        var sensitivityChart = gaugeD3().radius(radius).thickness(6).klass("sensitivityArc");        
+        var data = [ 10,5 ];
+        var arc = d3.select('#sensitivity svg')
+            .datum(gauge(data));
+        sensitivityChart(arc);
+
+        window.sunburstChart = sunburstD3()
+            .width( $('#viz svg').width() )
+            .height( $('#viz svg').height() )
+            .color(colorByCategory)
+            .click( function(d) {  
+              updateParentHistory(d);              
+              addClassToInactive(d, 'inactive');
+              updateReadsViewed();
+              // var percent = parseInt(d.value / window.totalReads * 1000) / 10;
+              // $('#viewed-reads span').html(percent + '%')
+              $('#selected-name').html(d.name);
+            });
+
+        // get data
+        // d3.json("data.bfv.id.json", function(error, data) {          
+        startWs(undefined, function(data) {
+          // transform binner data
+          var binnerData = [];
+          var total = 0;
+          Object.keys(data.binnerResult).forEach(function(key){
+            binnerData.push( {name:key, count:data.binnerResult[key]} );
+            total += data.binnerResult[key]
+          })
+          $('#reads-sampled span').html(total);
+          $('#unclassified span').html(data.binnerResult['unclassified']);
+
+          var arc = d3.select('#binner svg').selectAll(".arc")
+              .data(pie(binnerData));
+          binnerChart(arc, {text:false});
+
+          // transform classifier data
+          var classifierRoot = { 'name' : 'root', 'id' : 'root', 'count' : 0,  'children' : [] };
+          Object.keys(data.classifierResult).forEach(function(key) {
+            
+            // data.classifierResult[key].name = key;
+            if (data.classifierResult[key].children != undefined) {
+              classifierRoot.children.push( data.classifierResult[key].children[0].children[0] );  
+            }
+            
+            // t.dfs(data.classifierResult[key], [], function(node) {
+            //   node.category = key[0];
+            //   count += 1;
+            // });            
+            var count = data.classifierResult[key].count || 0;
+            classifierRoot['count'] += count;
+            if (key == 'bacterial') window.bacterialColor.range(colorRange('#ff6f03', '#ead6da', count));
+            else if (key == 'viral') viralColor.range(colorRange('purple', '#c9a9ea', count));  
+            else if (key == 'fungal') fungiColor.range(colorRange('green', '#bdeacb', count));
+          })
+
+          // var classifierRoot = data;
+
+          // if(classifierRoot.children.length == 2 && first) {
+            
+            window.rootData = JSON.parse(JSON.stringify(classifierRoot));       
+            var selection = d3.select("#viz svg").datum(classifierRoot);
+            window.sunburstChart(selection);
+          
+          // addToHistory(classifierRoot);
+
+          window.totalReads = d3.selectAll('#main-viz path').data()[0].value;
+          $('#total-reads span').html(window.totalReads)
+        })
+      });
+
+      function getCurrRoot() {
+        var xDomain = window.sunburstChart.x().domain();
+        var yDomain = window.sunburstChart.y().domain();
+        // if (range[0] ==  0 & range[1] == 1)
+        //   return d3.select('#main-viz #root').data()[0];
+
+        var root;
+        t.bfs(d3.select('#main-viz #root').data(), [], function(node, par, ctrl) {             
+             if (node.x >= xDomain[0] && node.x <= xDomain[1] && node.y >= yDomain[0] && node.y <= yDomain[1]) {               
+               root = node;
+               ctrl['stop'] = true;               
+             }           
+         })
+        return root;
+      }
+
+      function updateReadsViewed() {        
+        var percent = parseInt(getCurrRoot().value / window.totalReads * 1000) / 10;
+        $('#viewed-reads span').html(percent + '%')
+      }
+
+      function treeToArray(d, attr) {
+        var arr = [];
+        t.dfs(d, [], function(node) {
+          if (attr != undefined)
+            arr.push(node[attr]);
+          else
+            arr.push(node);     
+        }) 
+        return arr;
+      }
+
+      function updateParentHistory(d) {
+        if ($('.history-sunburst').length > 1)
+          $('.history-sunburst').last().remove();
+        if (d.parent.name != 'root')
+          addToHistory(d.parent);
+      }
+
+      function addToHistory(origD) {
+        // var d;
+        t.bfs(window.rootData, [], function(node, par, ctrl) {
+             if(origD.name == node.name) {
+              d = node;                    
+             }
+         })  
+        var newD = JSON.parse(JSON.stringify(d))     
+        var chart = sunburstD3()
+            .width( $('.sidebar').width() )
+            .height( 120 )
+            .color(colorByCategory);
+        var div = d3.select('.sidebar').append('div')
+        div.append('div').html('Name');
+        var selection = div.append('svg')
+          .datum(newD)
+            .attr('class', 'history-sunburst');
+        chart(selection, {'text': false, 'click': false, 'mouseover':false, 'idPrefix' : 'hist'});        
+      }
+
+      // layout for d3 gauge
+      function gauge(data) {
+        var pie = d3.layout.pie().sort(null);        
+        // sum values and add as final value
+        // do this since we are using a pie chart represent a gauge 
+        data.push( data.reduce(function(p,c){ return p+c;}) )
+        var d = pie(data);
+        d.pop();
+        return d;
+
+      }
+
+      function colorByCategory(d) {        
+        if (d.bin == 'bacterial')
+          return bacterialColor(d.id);
+        else if (d.bin == 'fungal')
+          return fungiColor(d.id);
+        else if (d.bin == 'viral')
+          return viralColor(d.id);
+        else if (d.bin == 'human')
+          return humanColor(d.id);
+      }
+
+      function colorRange(c1, c2, count) {
+        var color = d3.interpolateHcl(c1, c2);
+        var colors = [];
+        for (var i=0; i < count; i++) {
+          colors.push( color(i/count) );
+        }
+        return colors;
+      }
+
+      function addClassToInactive(node, klass) {
+        var activeNames = treeToArray(node, 'name');
+        d3.selectAll('.sidebar path').filter(function(d,i) {
+          return i!=0 && activeNames.indexOf(d.name) == -1;
+        }).attr('class', 'inactive')
+          .style('fill', 'rgb(180,180,180)');
+      }
+
+      function filterAbundance(val) {        
+        var fTree = t.filter(getCurrRoot(), [], function(node, par, ctrl) {
+             if (node.name == 'root' || node.size / window.totalReads * 100 > parseInt(val))
+              return {name: node.name, size:node.size, category:node.category, id:node.id};
+             else
+              return false;
+         })                  
+        var selection = d3.select("#viz svg").datum(fTree)            
+        window.sunburstChart(selection);
+        updateReadsViewed();
+      }
+
+      function filterReadCount(val) {        
+        var fTree = t.filter(getCurrRoot(), [], function(node, par, ctrl) {
+             if (node.name == 'root' || node.size  > parseInt(val))
+              return {name: node.name, size:node.size, category:node.category, id:node.id};
+             else
+              return false;
+         })                  
+        var selection = d3.select("#viz svg").datum(fTree)            
+        window.sunburstChart(selection); 
+        updateReadsViewed();       
+      }
+
+      function generateUrl(dataUrl) {
+        var dataUrl = dataUrl || 'http://taxsample.iobio.io/?cmd=FluA71_MS_R1.40k.fastq';
+        var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + encodeURIComponent(dataUrl))
+        console.log(fq2faUrl);
+        var taxonomerUrl = encodeURI('http://taxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));
+        // console.log(taxonomerUrl);
+        var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxonomerUrl);
+        return taxanglerUrl;
+      }
+
+      function startWs(dataUrl, callback) {        
+        var client = BinaryClient('ws://taxangler.iobio.io');
+        var url = encodeURI( generateUrl(dataUrl) );
+        var buffer = '';
+        client.on('open', function(stream){
+          var stream = client.createStream({event:'run', params : {'url':url}});          
+          
+          stream.on('data', function(data, options) {
+            if (data == undefined) return;
+            var success = true;
+            try {
+              var obj = JSON.parse(buffer + data)
+            } catch(e) {
+              success = false;
+              buffer += data;
+            }
+            if(success) {
+              buffer = "";
+              callback(obj); 
+            }               
+          });                    
+        });
+      }
+
+      function updateTextSize() {
+        var text = d3.selectAll('#viz path').append('text')                       
+              .attr('x', function(d) { return x(d.x); })
+              .attr('dy', function(d) {return (y(d.y + d.dy) - y(d.y))/2;})        
+              .attr('dx', function(d) {
+                var sa = x(d.x);
+                var ea = x(d.x + d.dx);
+                var angle = ea - sa;
+                var r = y(d.y) + (y(d.y + d.dy) - y(d.y))/2;
+                return (angle*r)/2 ;
+              })
+              .on("mouseover", function(d) {  
+                  div.transition()        
+                     .duration(200)      
+                     .style("opacity", .9);      
+                  div.html(d.name + ' - ' + d.value)                                 
+               .style("left", (d3.event.pageX) + "px") 
+               .style("text-align", 'left')    
+               .style("top", (d3.event.pageY - 24) + "px");    
+               })                  
+               .on("mouseout", function(d) {       
+                  div.transition()        
+                     .duration(500)      
+                     .style("opacity", 0);   
+               });  
+        d3.selectAll('text').append("textPath")   
+            .attr('id', function(d) { return d.id + '-text'})     
+            .attr('class', 'textpath')       
+            .attr("xlink:href",function(d) { return '#' + d.id; })
+            .attr('alignment-baseline', "middle")
+            .attr('text-anchor', "middle")
+            .style('height', '10px')
+            .text(function(d,i) {               
+              var pathId = d.id.split('-text')[0];
+              var name = d.name.split(':')[1];              
+              this.innerHTML = name;
+              if (i==0 || this.getComputedTextLength() > document.getElementById(pathId).getBBox().width)            
+                return ''              
+              else         
+                return name;                      
+            });
+      }
+
+      function updateSlider(elem) {
+        $('#' + elem.id + '-span').html(elem.value);
+      }
+    </script>
+    <script>
+        // add tooltip div
+        var div = d3.select("body").append("div")   
+            .attr("class", "tooltip")               
+            .style("opacity", 1);
+    </script>   
+  </body>
+</html>
