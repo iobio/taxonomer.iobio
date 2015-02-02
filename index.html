@@ -223,12 +223,10 @@
             .height( $('#viz svg').height() )
             .color(colorByCategory)
             .click( function(d) {  
-             // updateParentHistory(d);              
+              updateParentHistory(d);              
               addClassToInactive(d, 'inactive');
               updateReadsViewed();
-              updateBreadcrumbs();
-              // var percent = parseInt(d.value / window.totalReads * 1000) / 10;
-              // $('#viewed-reads span').html(percent + '%')               
+              updateBreadcrumbs();              
               $('#selected-name').html( d.name == 'root' ? 'All' : d.name );
             });
         
@@ -272,7 +270,7 @@
           window.sunburstChart(selection);
           updateBreadcrumbs();
           
-          // addToHistory(classifierRoot);
+          updateGlobalHistory(classifierRoot);
 
           window.totalReads = d3.selectAll('#main-panel path').data()[0].value;
           $('#total-reads span').html(window.totalReads)
@@ -311,11 +309,24 @@
         return arr;
       }
 
+      function updateGlobalHistory(d) {
+        if ($('.history-sunburst').length == 0) {
+          addToHistory(d);
+          $('.history-title').html('All');
+        }
+        else {
+          var selection = d3.select('.history-sunburst').datum(d);
+          var chart = getHistoryChart();            
+          chart(selection, {'text': false, 'click': false, 'mouseover':false, 'idPrefix' : 'hist'});
+        }
+      }
+
       function updateParentHistory(d) {
-        if ($('.history-sunburst').length > 1)
-          $('.history-sunburst').last().remove();
-        if (d.parent.name != 'root')
-          addToHistory(d.parent);
+        if ($('.history').length > 1)
+          $('.history').last().remove();
+        // if (d.parent && d.parent.name != 'root')
+        addToHistory(d.parent);        
+        $('.history-title').last().html( d.parent.name == 'root' ? 'All' : d.parent.name );
       }
 
       function addToHistory(origD) {
@@ -326,16 +337,21 @@
              }
          })  
         var newD = JSON.parse(JSON.stringify(d))     
-        var chart = sunburstD3()
-            .width( $('.sidebar').width() )
-            .height( 120 )
-            .color(colorByCategory);
-        var div = d3.select('.sidebar').append('div')
-        div.append('div').html('Name');
+        var chart = getHistoryChart();
+        var div = d3.select('.sidebar').append('div').attr('class', 'history')
+        div.append('div').attr('class','history-title');
         var selection = div.append('svg')
           .datum(newD)
             .attr('class', 'history-sunburst');
         chart(selection, {'text': false, 'click': false, 'mouseover':false, 'idPrefix' : 'hist'});        
+      }
+
+      function getHistoryChart() {
+        var chart = sunburstD3()
+            .width( $('.sidebar').width() )
+            .height( 120 )
+            .color(colorByCategory);
+        return chart;
       }
 
       function updateBreadcrumbs() {
@@ -427,25 +443,6 @@
         window.sunburstChart(selection);
         updateReadsViewed();
       }
-
-      // function filterReadCount(val) {  
-      //   var currVizRoot = getCurrRoot();
-      //   var currRoot = ''
-      //   t.bfs(window.rootData, [], function(node, par, ctrl) {
-      //        if(currVizRoot.name == node.name) {
-      //         currRoot = node;                    
-      //        }
-      //    })        
-      //   var fTree = t.filter(getCurrRoot(), [], function(node, par, ctrl) {
-      //        if (node.name == 'root' || node.count  > parseInt(val))
-      //         return {name: node.name, count:node.count, bin:node.bin, id:node.id};
-      //        else
-      //         return false;
-      //    })                  
-      //   var selection = d3.select("#viz svg").datum(fTree)            
-      //   window.sunburstChart(selection); 
-      //   updateReadsViewed();       
-      // }
 
       function generateUrl(dataUrl) {
         // var dataUrl = dataUrl || 'http://taxsample.iobio.io/?cmd=FluA71_MS_R1.40k.fastq';

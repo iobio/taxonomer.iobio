@@ -89,20 +89,20 @@ function sunburstD3() {
                 }
                 return (angle*r)/2 ;
               })
-              .on("mouseover", function(d) {  
-                  div.transition()        
-                     .duration(200)      
-                     .style("opacity", .9);      
-                  div.html(d.name + ' - ' + d.value)                                 
-               .style("left", (d3.event.pageX) + "px") 
-               .style("text-align", 'left')    
-               .style("top", (d3.event.pageY - 24) + "px");    
-               })                  
-               .on("mouseout", function(d) {       
-                  div.transition()        
-                     .duration(500)      
-                     .style("opacity", 0);   
-               });                       
+              // .on("mouseover", function(d) {  
+              //     div.transition()        
+              //        .duration(200)      
+              //        .style("opacity", .9);      
+              //     div.html(d.name + ' - ' + d.value)                                 
+              //  .style("left", (d3.event.pageX) + "px") 
+              //  .style("text-align", 'left')    
+              //  .style("top", (d3.event.pageY - 24) + "px");    
+              //  })                  
+              //  .on("mouseout", function(d) {       
+              //     div.transition()        
+              //        .duration(500)      
+              //        .style("opacity", 0);   
+              //  });                       
 
         // text.filter(function(d,i){
         //   if (i == 0) return false;
@@ -163,10 +163,7 @@ function sunburstD3() {
     }); // end selection.each
   
     // click hanlder
-    function clickHandler(d) {
-      console.log('x.domain = ' + x.domain())
-      console.log('y.domain = ' + y.domain())
-      console.log('y.range = ' + y.range())
+    function clickHandler(d) {      
       if (options.click) {
         
         // if(y(d.y) <= 20) {return} // do nothing for center rings

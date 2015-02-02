@@ -428,6 +428,7 @@ input[type=range]:focus::-ms-fill-upper {
   stroke: #fff;
   fill-rule: evenodd;
 }
+#main-viz svg text {pointer-events: none;}
 
 .inactive {
   /*fill-opacity: 0.2;*/
