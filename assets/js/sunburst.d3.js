@@ -169,7 +169,7 @@ function sunburstD3() {
       console.log('y.range = ' + y.range())
       if (options.click) {
         
-        if(y(d.y) <= 20) {return} // do nothing for center rings
+        // if(y(d.y) <= 20) {return} // do nothing for center rings
         // selection.selectAll('text').remove();
         selection.selectAll('path').transition()
           .duration(750)
@@ -177,8 +177,17 @@ function sunburstD3() {
           .call(endall, function() { 
             click(d); 
             selection.selectAll('.textpath')
-              .text(function(d) {             
-                return (d.x >= x.domain()[0] && d.x < x.domain()[1]) ? d.name : '' 
+              .text(function(d,i) {             
+                if (d.x < x.domain()[0] || d.x >= x.domain()[1])
+                  return '';
+                
+                var pathId = d.id.split('-text')[0];
+                var name = d.name.split(':')[1];              
+                this.innerHTML = name;
+                if (i==0 || this.getComputedTextLength() > document.getElementById(pathId).getBBox().width)               
+                  return ''              
+                else         
+                  return name;
               })
           });
         

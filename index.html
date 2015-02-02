@@ -15,7 +15,7 @@
     <link href="assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->    
-    <link href="assets/css/site.css" rel="stylesheet">
+    <link href="assets/css/site.css" rel="stylesheet">    
 
     <!-- Fonts -->
     <link href='http://fonts.googleapis.com/css?family=Quicksand:300,400' rel='stylesheet' type='text/css'>
@@ -24,11 +24,12 @@
     <!-- JS -->
     <script type="text/javascript" src='assets/js/d3.min.js'></script>  
     <script type="text/javascript" src='assets/js/t.js'></script>          
-    <script type="text/javascript" src='assets/js/binary.js'></script>          
+    <script type="text/javascript" src='assets/js/binary.js'></script>
+    <script type="text/javascript" src='assets/js/filePicker.js'></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
@@ -75,7 +76,7 @@
             </div>
             <div id='reads-sampled' class="col-xs-6 col-sm-3 metric">              
               <h2>Reads Sampled</h2>
-              <span class="text-muted">add metric</span>
+              <span class="text-muted"></span>
             </div>
             <div id='sensitivity' class="col-xs-6 col-sm-3 metric">              
               <h2>Sensitivity</h2>
@@ -83,21 +84,28 @@
             </div>
             <div id='unclassified' class="col-xs-6 col-sm-3 metric">              
               <h2>Unclassified</h2>
-              <span class="text-muted">add metric</span>
+              <span class="text-muted"></span>
             </div>
           </div>
           
-          <div id='main-viz'>            
+          <div id='main-panel'>            
             <div id='top-controls' class="row">              
-              <div id='min-abundance' class="col-xs-3">              
-                <h4>Taxon Read Threshold</h4>
-                <div style="text-align: left; width: 240px; margin: -5px auto 0px auto;">
-                  <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
-                  <input id="min-abundance-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterAbundance(this.value)'></input> 
-                  <div style="clear:both"></div>
-                  <span id='min-read-count-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> count</span>
-                  <input id="min-read-count-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterReadCount(this.value)'></input>
+              <div class="col-xs-3">
+                <div id='breadcrumbs' >
+                  <ul>
+
+                  </ul>
                 </div>
+                <!-- <div id='min-abundance'>              
+                  <h4>Taxon Read Threshold</h4>
+                  <div style="text-align: left; width: 240px; margin: -5px auto 0px auto;">
+                    <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
+                    <input id="min-abundance-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterAbundance(this.value)'></input> 
+                    <div style="clear:both"></div>
+                    <span id='min-read-count-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> count</span>
+                    <input id="min-read-count-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterReadCount(this.value)'></input>
+                  </div>
+                </div> -->
               </div>
               <div class="col-xs-6"></div>
               <div class="col-xs-3">                              
@@ -109,21 +117,50 @@
                 </div>
               </div>              
             </div>
-            <div style="clear:both"></div>
-            <div id='selected-name'>All</div>
-            <div id='viz'>                            
-              <svg></svg>
-            </div>
-            <div id='reads-viewed'>
-              <h4 id='total-reads' style="float:left">Total Reads Classified: <span class='iobio-txt-color'></span></h4>
-              <h4 id='viewed-reads' style="float:right">Currently Viewed: <span class='iobio-txt-color'>100%</span></h4>
-              <div style="clear:both"></div>
-            </div>
-            <div id='viz-picker'>
-              <img src='assets/images/sunburst_icon_color.png'/>
-              <img src='assets/images/bubble_icon.png'/>
-              <img src='assets/images/tree_icon.png'/>
-              <img src='assets/images/bar_chart_icon.png'/>
+            <div style="clear:both"></div>            
+
+            <div id='spinner'><img  src='assets/images/loading_dots.gif'/></div>
+            <!-- file/url picker -->            
+            <div id="filepicker" >
+                <div class="btn-group" >
+                  <button  type="button" class="btn btn-default dropdown-toggle load-file" data-toggle="dropdown" aria-expanded="false">
+                    Select Reads <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li>
+                         <div class="file" onClick="onFileButtonClicked()">
+                            <input type="file" name="files[]" id="fastq-file"  multiple />
+                            <label class="file-button" for="fastq-file" >Choose FASTQ File(s)</label>
+                        </div>
+                    </li>
+                    <li><a onClick="displayUrlBox()" href="#">Enter URL for FASTQ(s)</a></li>                       
+                  </ul>
+                </div>
+                <div id="url-input-group" class="input-group" style="min-width: 300px;max-width: 600px;">
+                    <input id="url-input" type="text" value="http://s3.amazonaws.com/iobio/test_files/FluA71_MS_R1.160k.fastq" class="form-control" placeholder="http://..." >
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" onClick="onUrlEntered()" type="button">Go</button>
+                    </span>
+                </div>
+            </div>  
+
+            <!-- the big visualization -->
+            <div id='main-viz'>
+              <div id='selected-name'>All</div>
+              <div id='viz'>                            
+                <svg></svg>
+              </div>
+              <div id='reads-viewed'>
+                <h4 id='total-reads' style="float:left">Total Reads Classified: <span class='iobio-txt-color'></span></h4>
+                <h4 id='viewed-reads' style="float:right">Currently Viewed: <span class='iobio-txt-color'>100%</span></h4>
+                <div style="clear:both"></div>
+              </div>
+              <div id='viz-picker'>
+                <img src='assets/images/sunburst_icon_color.png'/>
+                <img src='assets/images/bubble_icon.png'/>
+                <img src='assets/images/tree_icon.png'/>
+                <img src='assets/images/bar_chart_icon.png'/>
+              </div>
             </div>
           </div>
         </div>
@@ -146,21 +183,33 @@
       window.bacterialColor = d3.scale.ordinal();      
       var viralColor = d3.scale.ordinal()
       var fungiColor = d3.scale.ordinal();
-      $(document).ready(function(){        
+      $(document).ready(function(){   
+        // initialize file/url picker
+        $('#fastq-file').on('change', onFilesSelected);
+
+        
+
+        // setup file/url picker
+        
+        
+      });
+
+      function go(url) {
+        $('#filepicker').css('visibility', 'hidden')
+        $('#main-viz').css('visibility', 'visible')     
+        $('#spinner').css('visibility', 'visible')        
 
         // create charts
         var radius = $('#binner svg').height()/2;
         var binnerColor = d3.scale.ordinal()
-              .domain(['bacterial', 'fungal', 'human', 'viral', 'unclassified'])
-              .range(['#ff6f03', 'green', '#25aaff', 'purple', 'rgb(120,120,120)'])
+              .domain(['bacterial', 'fungal', 'human', 'viral', 'unclassified', 'tied'])
+              .range(['#ff6f03', 'green', '#25aaff', 'purple', 'rgb(120,120,120)', '#5877ab'])
         var binnerChart = donutD3()
               .radius(radius)
               .thickness(radius)
               .klass("binnerArc")
               .color(function(d) { return binnerColor(d.data.name); })
-        var pie = d3.layout.pie().sort(null).value(function(d) { return d.count});
-        var data = [ 10, 20, 20, 5 ];
-        
+        var pie = d3.layout.pie().sort(null).value(function(d) { return d.count});                
 
         var radius = $('#sensitivity svg').height();
         var sensitivityChart = gaugeD3().radius(radius).thickness(6).klass("sensitivityArc");        
@@ -174,26 +223,30 @@
             .height( $('#viz svg').height() )
             .color(colorByCategory)
             .click( function(d) {  
-              updateParentHistory(d);              
+             // updateParentHistory(d);              
               addClassToInactive(d, 'inactive');
               updateReadsViewed();
+              updateBreadcrumbs();
               // var percent = parseInt(d.value / window.totalReads * 1000) / 10;
-              // $('#viewed-reads span').html(percent + '%')
-              $('#selected-name').html(d.name);
+              // $('#viewed-reads span').html(percent + '%')               
+              $('#selected-name').html( d.name == 'root' ? 'All' : d.name );
             });
+        
 
-        // get data
-        // d3.json("data.bfv.id.json", function(error, data) {          
-        startWs(undefined, function(data) {
+        startWs(url, function(data) {
+          $('#spinner').css('visibility', 'hidden')        
           // transform binner data
           var binnerData = [];
           var total = 0;
           Object.keys(data.binnerResult).forEach(function(key){
-            binnerData.push( {name:key, count:data.binnerResult[key]} );
+            if (key == 'other')
+                binnerData.push( {name:'tied', count:data.binnerResult[key]} );
+            else
+              binnerData.push( {name:key, count:data.binnerResult[key]} );
             total += data.binnerResult[key]
           })
-          $('#reads-sampled span').html(total);
-          $('#unclassified span').html(data.binnerResult['unclassified']);
+          $('#reads-sampled span').html(numberFormatter(total));
+          $('#unclassified span').html(numberFormatter(data.binnerResult['unclassified']));
 
           var arc = d3.select('#binner svg').selectAll(".arc")
               .data(pie(binnerData));
@@ -202,46 +255,38 @@
           // transform classifier data
           var classifierRoot = { 'name' : 'root', 'id' : 'root', 'count' : 0,  'children' : [] };
           Object.keys(data.classifierResult).forEach(function(key) {
-            
-            // data.classifierResult[key].name = key;
+                        
             if (data.classifierResult[key].children != undefined) {
               classifierRoot.children.push( data.classifierResult[key].children[0].children[0] );  
             }
-            
-            // t.dfs(data.classifierResult[key], [], function(node) {
-            //   node.category = key[0];
-            //   count += 1;
-            // });            
+                                 
             var count = data.classifierResult[key].count || 0;
             classifierRoot['count'] += count;
             if (key == 'bacterial') window.bacterialColor.range(colorRange('#ff6f03', '#ead6da', count));
             else if (key == 'viral') viralColor.range(colorRange('purple', '#c9a9ea', count));  
             else if (key == 'fungal') fungiColor.range(colorRange('green', '#bdeacb', count));
           })
-
-          // var classifierRoot = data;
-
-          // if(classifierRoot.children.length == 2 && first) {
             
-            window.rootData = JSON.parse(JSON.stringify(classifierRoot));       
-            var selection = d3.select("#viz svg").datum(classifierRoot);
-            window.sunburstChart(selection);
+          window.rootData = JSON.parse(JSON.stringify(classifierRoot));       
+          var selection = d3.select("#viz svg").datum(classifierRoot);
+          window.sunburstChart(selection);
+          updateBreadcrumbs();
           
           // addToHistory(classifierRoot);
 
-          window.totalReads = d3.selectAll('#main-viz path').data()[0].value;
+          window.totalReads = d3.selectAll('#main-panel path').data()[0].value;
           $('#total-reads span').html(window.totalReads)
         })
-      });
+      }
 
       function getCurrRoot() {
         var xDomain = window.sunburstChart.x().domain();
         var yDomain = window.sunburstChart.y().domain();
         // if (range[0] ==  0 & range[1] == 1)
-        //   return d3.select('#main-viz #root').data()[0];
+        //   return d3.select('#main-panel #root').data()[0];
 
         var root;
-        t.bfs(d3.select('#main-viz #root').data(), [], function(node, par, ctrl) {             
+        t.bfs(d3.select('#main-panel #root').data(), [], function(node, par, ctrl) {             
              if (node.x >= xDomain[0] && node.x <= xDomain[1] && node.y >= yDomain[0] && node.y <= yDomain[1]) {               
                root = node;
                ctrl['stop'] = true;               
@@ -291,6 +336,25 @@
           .datum(newD)
             .attr('class', 'history-sunburst');
         chart(selection, {'text': false, 'click': false, 'mouseover':false, 'idPrefix' : 'hist'});        
+      }
+
+      function updateBreadcrumbs() {
+        $('#breadcrumbs ul').html('');
+        var node = getCurrRoot();
+        var name = node.name.split(':')[1] || 'All';
+        $('#breadcrumbs ul').prepend('<li>' + name + '</li>');
+        node = node.parent;
+        if(node == undefined) { return; }
+        
+        while(node.parent != undefined) {
+          $('#breadcrumbs ul').prepend('<li>->   <a href="#" onclick="selectCategory(' + node.id + ')">' + node.name.split(':')[1] + '</a></li>')
+          node = node.parent;
+        }
+        $('#breadcrumbs ul').prepend('<li> <a href="#" onclick="selectCategory(' + node.id + ')">All</a></li>')
+      }
+
+      function selectCategory(path) {
+        $(path).d3Click();
       }
 
       // layout for d3 gauge
@@ -358,11 +422,13 @@
       }
 
       function generateUrl(dataUrl) {
-        var dataUrl = dataUrl || 'http://taxsample.iobio.io/?cmd=FluA71_MS_R1.40k.fastq';
-        var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + encodeURIComponent(dataUrl))
+        // var dataUrl = dataUrl || 'http://taxsample.iobio.io/?cmd=FluA71_MS_R1.40k.fastq';
+        dataUrl = encodeURI('http://partialstream.iobio.io?cmd=--url ' + dataUrl + ' --range 0,6000000');
+        console.log(dataUrl)
+        var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl)
         console.log(fq2faUrl);
         var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));
-        // console.log(taxonomerUrl);
+        console.log(taxonomerUrl);
         var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxonomerUrl);
         return taxanglerUrl;
       }
@@ -433,10 +499,28 @@
                 return name;                      
             });
       }
+      
+      function numberFormatter (d) {
+        if ((d / 1000000) >= 1)
+          d = d / 1000000 + "M";
+        else if ((d / 1000) >= 1)
+          d = d / 1000 + "K";
+        return d;            
+      }
 
       function updateSlider(elem) {
         $('#' + elem.id + '-span').html(elem.value);
       }
+
+      // fix d3 click event
+      jQuery.fn.d3Click = function () {
+        this.each(function (i, e) {
+          var evt = document.createEvent("MouseEvents");
+          evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+
+          e.dispatchEvent(evt);
+        });
+      };
     </script>
     <script>
         // add tooltip div
