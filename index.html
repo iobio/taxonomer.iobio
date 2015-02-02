@@ -64,7 +64,7 @@
     <div class="container-fluid">
       <div class="row" style="height:100%">
         <div class="col-sm-3 col-md-2 sidebar">
-          <h2>History</h2>
+          <h2>Zoom Level</h2>
           <h4 style="font: italic 12px quicksand; color: rgb(180,180,180)">(use to navigate)</h4>
           <!-- <svg style="width:100%;border:1px solid green;display:none;"></svg> -->
         </div>
@@ -96,7 +96,7 @@
 
                   </ul>
                 </div>
-                <!-- <div id='min-abundance'>              
+                <div id='min-abundance'>              
                   <h4>Taxon Read Threshold</h4>
                   <div style="text-align: left; width: 240px; margin: -5px auto 0px auto;">
                     <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
@@ -105,7 +105,7 @@
                     <span id='min-read-count-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> count</span>
                     <input id="min-read-count-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterReadCount(this.value)'></input>
                   </div>
-                </div> -->
+                </div>
               </div>
               <div class="col-xs-6"></div>
               <div class="col-xs-3">                              
@@ -397,10 +397,17 @@
           .style('fill', 'rgb(180,180,180)');
       }
 
-      function filterAbundance(val) {        
-        var fTree = t.filter(getCurrRoot(), [], function(node, par, ctrl) {
-             if (node.name == 'root' || node.size / window.totalReads * 100 > parseInt(val))
-              return {name: node.name, size:node.size, category:node.category, id:node.id};
+      function filterAbundance(val) {    
+        var currVizRoot = getCurrRoot();
+        var currRoot = ''
+        t.bfs(window.rootData, [], function(node, par, ctrl) {
+             if(currVizRoot.name == node.name) {
+              currRoot = node;                    
+             }
+         })    
+        var fTree = t.filter(currRoot, [], function(node, par, ctrl) {
+             if (node.name == 'root' || node.count / window.totalReads * 100 > parseInt(val))
+              return {name: node.name, count:node.count, category:node.category, id:node.id};
              else
               return false;
          })                  
@@ -411,8 +418,8 @@
 
       function filterReadCount(val) {        
         var fTree = t.filter(getCurrRoot(), [], function(node, par, ctrl) {
-             if (node.name == 'root' || node.size  > parseInt(val))
-              return {name: node.name, size:node.size, category:node.category, id:node.id};
+             if (node.name == 'root' || node.count  > parseInt(val))
+              return {name: node.name, count:node.count, category:node.category, id:node.id};
              else
               return false;
          })                  
