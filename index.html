@@ -100,10 +100,10 @@
                   <h4>Taxon Read Threshold</h4>
                   <div style="text-align: left; width: 240px; margin: -5px auto 0px auto;">
                     <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
-                    <input id="min-abundance-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterAbundance(this.value)'></input> 
+                    <input id="min-abundance-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterPercent(this.value)'></input> 
                     <div style="clear:both"></div>
                     <span id='min-read-count-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> count</span>
-                    <input id="min-read-count-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterReadCount(this.value)'></input>
+                    <input id="min-read-count-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterCount(this.value)'></input>
                   </div>
                 </div>
               </div>
@@ -397,7 +397,19 @@
           .style('fill', 'rgb(180,180,180)');
       }
 
-      function filterAbundance(val) {    
+      function filterPercent(val) {
+        filterTree(val, function(node, val) {
+          return (node.name == 'root' || node.count / window.totalReads * 100 > parseInt(val))
+        })
+      }
+
+      function filterCount(val) {
+        filterTree(val, function(node, val) {
+          return (node.name == 'root' || node.count  > parseInt(val))
+        })
+      }
+
+      function filterTree(val, expression) {    
         var currVizRoot = getCurrRoot();
         var currRoot = ''
         t.bfs(window.rootData, [], function(node, par, ctrl) {
@@ -405,9 +417,9 @@
               currRoot = node;                    
              }
          })    
-        var fTree = t.filter(currRoot, [], function(node, par, ctrl) {
-             if (node.name == 'root' || node.count / window.totalReads * 100 > parseInt(val))
-              return {name: node.name, count:node.count, category:node.category, id:node.id};
+        var fTree = t.filter(currRoot, [], function(node, par, ctrl) {             
+             if (expression(node, val))
+              return {name: node.name, count:node.count, bin:node.bin, id:node.id};
              else
               return false;
          })                  
@@ -416,20 +428,29 @@
         updateReadsViewed();
       }
 
-      function filterReadCount(val) {        
-        var fTree = t.filter(getCurrRoot(), [], function(node, par, ctrl) {
-             if (node.name == 'root' || node.count  > parseInt(val))
-              return {name: node.name, count:node.count, category:node.category, id:node.id};
-             else
-              return false;
-         })                  
-        var selection = d3.select("#viz svg").datum(fTree)            
-        window.sunburstChart(selection); 
-        updateReadsViewed();       
-      }
+      // function filterReadCount(val) {  
+      //   var currVizRoot = getCurrRoot();
+      //   var currRoot = ''
+      //   t.bfs(window.rootData, [], function(node, par, ctrl) {
+      //        if(currVizRoot.name == node.name) {
+      //         currRoot = node;                    
+      //        }
+      //    })        
+      //   var fTree = t.filter(getCurrRoot(), [], function(node, par, ctrl) {
+      //        if (node.name == 'root' || node.count  > parseInt(val))
+      //         return {name: node.name, count:node.count, bin:node.bin, id:node.id};
+      //        else
+      //         return false;
+      //    })                  
+      //   var selection = d3.select("#viz svg").datum(fTree)            
+      //   window.sunburstChart(selection); 
+      //   updateReadsViewed();       
+      // }
 
       function generateUrl(dataUrl) {
         // var dataUrl = dataUrl || 'http://taxsample.iobio.io/?cmd=FluA71_MS_R1.40k.fastq';
+        // http://taxsample.iobio.io/?cmd=test.fastq
+        //
         dataUrl = encodeURI('http://partialstream.iobio.io?cmd=--url ' + dataUrl + ' --range 0,6000000');
         console.log(dataUrl)
         var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl)
