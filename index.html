@@ -312,6 +312,7 @@
       function updateGlobalHistory(d) {
         if ($('.history-sunburst').length == 0) {
           addToHistory(d);
+          $('.history-title').html('Global');
           $('.history-title').html('All');
         }
         else {
@@ -326,7 +327,8 @@
           $('.history').last().remove();
         // if (d.parent && d.parent.name != 'root')
         addToHistory(d.parent);        
-        $('.history-title').last().html( d.parent.name == 'root' ? 'All' : d.parent.name );
+        $('.history-title').last().html( d.parent.name == 'root' ? 'Global' : 'Parent' );
+        $('.history-category').last().html( d.parent.name == 'root' ? 'All' : d.parent.name );
       }
 
       function addToHistory(origD) {
@@ -343,7 +345,8 @@
         var selection = div.append('svg')
           .datum(newD)
             .attr('class', 'history-sunburst');
-        chart(selection, {'text': false, 'click': false, 'mouseover':false, 'idPrefix' : 'hist'});        
+        chart(selection, {'text': false, 'click': false, 'mouseover':false, 'idPrefix' : 'hist'});   
+        div.append('div').attr('class','history-category');
       }
 
       function getHistoryChart() {
@@ -447,8 +450,9 @@
       function generateUrl(dataUrl) {
         // var dataUrl = dataUrl || 'http://taxsample.iobio.io/?cmd=FluA71_MS_R1.40k.fastq';
         // http://taxsample.iobio.io/?cmd=test.fastq
+        //http://taxsample.iobio.io/?cmd=FluA71_MS_R1.fastq
         //
-        dataUrl = encodeURI('http://partialstream.iobio.io?cmd=--url ' + dataUrl + ' --range 0,6000000');
+        dataUrl = encodeURI('http://partialstream.iobio.io?cmd=--url ' + dataUrl + ' --range 0-6000000');
         console.log(dataUrl)
         var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl)
         console.log(fq2faUrl);
