@@ -83,7 +83,7 @@
               <svg></svg>
             </div>
             <div id='unclassified' class="col-xs-6 col-sm-3 metric">              
-              <h2>Unclassified</h2>
+              <h2>Unbinned</h2>
               <span class="text-muted"></span>
             </div>
           </div>
@@ -95,7 +95,14 @@
                   <ul>
 
                   </ul>
-                </div>
+                </div>                
+              </div>
+              <div class="col-xs-6">
+                <div class='composition' id='bacterial-composition'>Bacterial Composition (based on 16s reads)</div>
+                <div class='composition' id='viral-composition'>Viral Composition (based on XXX reads)</div>
+                <div class='composition' id='fungal-composition'>Fungal Composition (based on XXX reads)</div>
+              </div>
+              <div class="col-xs-3">                              
                 <div id='min-abundance'>              
                   <h4>Taxon Read Threshold</h4>
                   <div style="text-align: left; width: 240px; margin: -5px auto 0px auto;">
@@ -106,15 +113,12 @@
                     <input id="min-read-count-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterCount(this.value)'></input>
                   </div>
                 </div>
-              </div>
-              <div class="col-xs-6"></div>
-              <div class="col-xs-3">                              
-                <div class="input-group" style="margin-top:10px">
+                <!-- <div class="input-group" style="margin-top:10px">
                   <input type="text" class="form-control" placeholder="Search for e.g. taxon ...">
                   <span class="input-group-btn">
                     <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
                   </span>
-                </div>
+                </div> -->
               </div>              
             </div>
             <div style="clear:both"></div>            
@@ -142,17 +146,44 @@
                         <button class="btn btn-default" onClick="onUrlEntered()" type="button">Go</button>
                     </span>
                 </div>
-            </div>  
+            </div> 
 
-            <!-- the big visualization -->
+            <!-- binner visualization -->
+            <div id="big-binner">
+              <div style="float:left; height: 100%; width: 50%;">
+                <svg></svg>
+              </div>
+              <div style="float:right;width:48%">
+                <table style="width:90%"> 
+                  <tr>
+                    <th>Human</th>
+                    <th>Bacterial</th> 
+                    <th>Viral</th>
+                    <th>Fungal</th>
+                    <th>Tie</th>
+                    <th>Unbinned</th>
+                  </tr>
+                  <tr>
+                    <td class='human-binned-reads'></td>
+                    <td> <a class='bacterial-binned-reads' href="#" onclick="toStarburst(this)"></a></td>
+                    <td> <a class='viral-binned-reads' href="#" onclick="toStarburst(this)"></a></td>
+                    <td> <a class='fungal-binned-reads' href="#" onclick="toStarburst(this)"></a></td>
+                    <td class='other-binned-reads'></td>                    
+                    <td class='unclassified-binned-reads'></td>                    
+                  </tr>
+                </table>
+              </div>              
+            </div>
+
+            <!-- sunburst visualization -->
             <div id='main-viz'>
               <div id='selected-name'>All</div>
               <div id='viz'>                            
                 <svg></svg>
               </div>
               <div id='reads-viewed'>
-                <h4 id='total-reads' style="float:left">Total Reads Classified: <span class='iobio-txt-color'></span></h4>
-                <h4 id='viewed-reads' style="float:right">Currently Viewed: <span class='iobio-txt-color'>100%</span></h4>
+                <h4 id='total-reads' style="float:left">Total <span id='bin'></span> Reads Classified: <span class='iobio-txt-color'></span></h4>
+                <h4 id='viewed-reads' style="float:right">Currently Viewing: <span class='iobio-txt-color'>100%</span></h4>
                 <div style="clear:both"></div>
               </div>
               <div id='viz-picker'>
@@ -196,20 +227,29 @@
 
       function go(url) {
         $('#filepicker').css('visibility', 'hidden')
-        $('#main-viz').css('visibility', 'visible')     
+        // $('#main-viz').css('visibility', 'visible')  
+        $('#big-binner').css('visibility', 'visible')     
         $('#spinner').css('visibility', 'visible')        
 
         // create charts
-        var radius = $('#binner svg').height()/2;
+        var radiusSmall = $('#binner svg').height()/2;
+        var radiusBig = $('#big-binner svg').height()/2;
+        console.log('radius = ' + radiusBig);
         var binnerColor = d3.scale.ordinal()
               .domain(['bacterial', 'fungal', 'human', 'viral', 'unclassified', 'tied'])
               .range(['#ff6f03', 'green', '#25aaff', 'purple', 'rgb(120,120,120)', '#5877ab'])
         var binnerChart = donutD3()
-              .radius(radius)
-              .thickness(radius)
+              .radius(radiusSmall)
+              .thickness(radiusSmall)
               .klass("binnerArc")
               .color(function(d) { return binnerColor(d.data.name); })
-        var pie = d3.layout.pie().sort(null).value(function(d) { return d.count});                
+        var bigBinnerChart = donutD3()
+              .radius(radiusBig)
+              .thickness(radiusBig)
+              .klass("binnerArc")
+              .color(function(d) { return binnerColor(d.data.name); })
+        var pie = d3.layout.pie().sort(null).value(function(d) { return d.count}); 
+
 
         var radius = $('#sensitivity svg').height();
         var sensitivityChart = gaugeD3().radius(radius).thickness(6).klass("sensitivityArc");        
@@ -250,6 +290,12 @@
               .data(pie(binnerData));
           binnerChart(arc, {text:false});
 
+          var arcBig = d3.select('#big-binner svg').selectAll(".arc")
+              .data(pie(binnerData));
+          bigBinnerChart(arcBig, {text:false});
+          var rows = ['human', 'viral', 'bacterial', 'fungal', 'other', 'unclassified'];
+          rows.forEach(function(key){ $('.' + key + '-binned-reads').html( data.binnerResult[key] )});
+
           // transform classifier data
           var classifierRoot = { 'name' : 'root', 'id' : 'root', 'count' : 0,  'children' : [] };
           Object.keys(data.classifierResult).forEach(function(key) {
@@ -273,8 +319,27 @@
           updateGlobalHistory(classifierRoot);
 
           window.totalReads = d3.selectAll('#main-panel path').data()[0].value;
-          $('#total-reads span').html(window.totalReads)
+          // $('#total-reads span').html(window.totalReads)
         })
+      }
+
+      function toStarburst(elem) {
+        var bin = elem.classList[0].split('-')[0];
+        var binNode;
+        t.bfs(d3.select('#main-panel #root').data(), [], function(node, par, ctrl) {             
+             if (node.bin == bin) {               
+               binNode = node;
+               ctrl['stop'] = true;               
+             }           
+         })
+        $('#big-binner').css('visibility', 'hidden');
+        $('#main-viz').css('visibility', 'visible');
+        $('#top-controls').css('visibility', 'visible');
+        $('.composition').css('display', 'none');
+        $('#' + bin + '-composition').css('display', 'block');
+        $('#' + binNode.id).d3Click();
+        $('#total-reads #bin').html(bin.charAt(0).toUpperCase() + bin.slice(1))
+        $('#total-reads .iobio-txt-color').html(getBinRoot(bin).count)
       }
 
       function getCurrRoot() {
@@ -293,8 +358,21 @@
         return root;
       }
 
+      function getBinRoot(bin) {        
+
+        var root;
+        t.bfs(d3.select('#main-panel #root').data(), [], function(node, par, ctrl) {             
+             if (node.bin == bin) {               
+               root = node;
+               ctrl['stop'] = true;               
+             }           
+         })
+        return root;
+      }
+
       function updateReadsViewed() {        
-        var percent = parseInt(getCurrRoot().value / window.totalReads * 1000) / 10;
+        var currRoot = getCurrRoot();
+        var percent = parseInt(currRoot.count / getBinRoot(currRoot.bin).count * 1000) / 10;
         $('#viewed-reads span').html(percent + '%')
       }
 
@@ -332,21 +410,21 @@
       }
 
       function addToHistory(origD) {
-        // var d;
-        t.bfs(window.rootData, [], function(node, par, ctrl) {
-             if(origD.name == node.name) {
-              d = node;                    
-             }
-         })  
-        var newD = JSON.parse(JSON.stringify(d))     
-        var chart = getHistoryChart();
-        var div = d3.select('.sidebar').append('div').attr('class', 'history')
-        div.append('div').attr('class','history-title');
-        var selection = div.append('svg')
-          .datum(newD)
-            .attr('class', 'history-sunburst');
-        chart(selection, {'text': false, 'click': false, 'mouseover':false, 'idPrefix' : 'hist'});   
-        div.append('div').attr('class','history-category');
+        
+        // t.bfs(window.rootData, [], function(node, par, ctrl) {
+        //      if(origD.name == node.name) {
+        //       d = node;                    
+        //      }
+        //  })  
+        // var newD = JSON.parse(JSON.stringify(d))     
+        // var chart = getHistoryChart();
+        // var div = d3.select('.sidebar').append('div').attr('class', 'history')
+        // div.append('div').attr('class','history-title');
+        // var selection = div.append('svg')
+        //   .datum(newD)
+        //     .attr('class', 'history-sunburst');
+        // chart(selection, {'text': false, 'click': false, 'mouseover':false, 'idPrefix' : 'hist'});   
+        // div.append('div').attr('class','history-category');
       }
 
       function getHistoryChart() {
@@ -366,14 +444,19 @@
         if(node == undefined) { return; }
         
         while(node.parent != undefined) {
-          $('#breadcrumbs ul').prepend('<li>->   <a href="#" onclick="selectCategory(' + node.id + ')">' + node.name.split(':')[1] + '</a></li>')
+          $('#breadcrumbs ul').prepend('<li><a href="#" onclick="selectCategory(' + node.id + ')">' + node.name.split(':')[1] + '</a></li>')
           node = node.parent;
         }
         $('#breadcrumbs ul').prepend('<li> <a href="#" onclick="selectCategory(' + node.id + ')">All</a></li>')
       }
 
       function selectCategory(path) {
-        $(path).d3Click();
+        if (path.id == 'root') {
+          $('#main-viz').css('visibility', 'hidden');
+          $('#top-controls').css('visibility', 'hidden');
+          $('#big-binner').css('visibility', 'visible');
+        } else 
+          $(path).d3Click();
       }
 
       // layout for d3 gauge
@@ -452,7 +535,7 @@
         // http://taxsample.iobio.io/?cmd=test.fastq
         //http://taxsample.iobio.io/?cmd=FluA71_MS_R1.fastq
         //
-        dataUrl = encodeURI('http://partialstream.iobio.io?cmd=--url ' + dataUrl + ' --range 0-6000000');
+        dataUrl = encodeURI('http://partialstream.iobio.io?cmd=--url ' + dataUrl + ' --range 0-15000000');
         console.log(dataUrl)
         var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl)
         console.log(fq2faUrl);
