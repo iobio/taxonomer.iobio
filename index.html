@@ -218,8 +218,7 @@
         // initialize file/url picker
         $('#fastq-file').on('change', onFilesSelected);
 
-        // defaults
-        // window.bytesToSample=1999886;
+        // defaults        
         window.bytesToSample=15000000;
       });
 
@@ -250,11 +249,13 @@
 
 
         var radius = $('#sensitivity svg').height();
-        var sensitivityChart = gaugeD3().radius(radius).thickness(6).klass("sensitivityArc");        
-        var data = [ 10,5 ];
+        window.sensitivityChart = gaugeD3().radius(radius).thickness(6).klass("sensitivityArc");        
+        window.sensitivityScale = d3.scale.log().domain([0.0001,1]).range([1,0]);
+        var num = window.sensitivityScale(1);
+        var data = [ num,1 - num ];
         var arc = d3.select('#sensitivity svg')
             .datum(gauge(data));
-        sensitivityChart(arc);
+        window.sensitivityChart(arc);
 
         window.sunburstChart = sunburstD3()
             .width( $('#viz svg').width() )
@@ -281,8 +282,28 @@
               binnerData.push( {name:key, count:data.binnerResult[key]} );
             total += data.binnerResult[key]
           })
+          // update metrics
           $('#reads-sampled span').html(numberFormatter(total));
           $('#unclassified span').html(numberFormatter(data.binnerResult['unclassified']));
+          $.ajax({
+            url: encodeURI("http://binomial.iobio.io/?cmd=solveP " + total + " 03"),
+            dataType: 'json',
+            success: function(result) {
+              var num = window.sensitivityScale(result.response.sensitivity);
+              var data = [ num, 1-num];
+              var arc = d3.select('#sensitivity svg')
+                .datum(gauge(data));
+              window.sensitivityChart(arc)
+            }            
+          })
+        //   var radius = $('#sensitivity svg').height();
+        // var sensitivityChart = gaugeD3().radius(radius).thickness(6).klass("sensitivityArc");        
+        // var scale = d3.scale.log().domain([0.0001,1]).range([1,0]);
+        // var num = scale(0.5);
+        // var data = [ num,1 - num ];
+        // var arc = d3.select('#sensitivity svg')
+        //     .datum(gauge(data));
+        // sensitivityChart(arc);
 
           var arc = d3.select('#binner svg').selectAll(".arc")
               .data(pie(binnerData));

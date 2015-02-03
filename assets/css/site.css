@@ -487,6 +487,14 @@ text  {
 }
 
 /*
+ * gauge visualization
+ */
+ #sensitivity text { 
+  fill: black;
+  font-size: 12px;
+}
+
+/*
  * tooltip
  */
 div.tooltip {   

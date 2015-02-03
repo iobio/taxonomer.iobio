@@ -1,26 +1,67 @@
 function gaugeD3() {
    var radius = 90,
-       thickness = 7;
+       thickness = 7,
+       marginTop = 10;
 
    var arc = d3.svg.arc();
-   var color = d3.scale.category20c();
+   var color = d3.scale.category20c();   
    
    var formatter = d3.format(",.1f"); 
    var commaFormatter = d3.format(",0f"); 
 
    function my(selection) {
+
       arc = d3.svg.arc()
-      .outerRadius(radius)
-      .innerRadius(radius - thickness);
+      .outerRadius(radius-marginTop)
+      .innerRadius(radius-marginTop - thickness);
 
       selection.each(function(data) {
          var svg = d3.select(this);
 
 
          var bbox = this.getBoundingClientRect();      
-         var g = svg.selectAll("g").data([0])
-            .enter().append('g')     
-               .attr('transform', "translate("+ bbox.width/2 + "," + bbox.height + ") rotate(-90)")                         
+         var gEnter = svg.selectAll(".group")
+                     .data([0])
+                  .enter().append('g')
+                     .attr('transform', "translate("+ bbox.width/2 + "," + bbox.height + ") rotate(-90)")
+                     .attr('class', 'group');
+
+         var g = svg.selectAll(".group");
+
+         // add scale
+         gEnter.append('text')
+            .attr('transform', 'rotate(90)')
+            .attr('x', radius - 6)
+            .attr('y', 0)
+            .text('0.0001');
+
+         gEnter.append('text')
+            .attr('transform', 'rotate(90)')
+            .attr('x', -radius+6 )
+            .attr('y', 0)
+            .attr('text-anchor', 'end')
+            .text('1');
+
+         gEnter.append('text')
+            .attr('transform', 'rotate(90)')
+            .attr('x', radius/2 + 7)
+            .attr('y', -radius/2 - 7)
+            // .attr('text-anchor', 'end')
+            .text('0.001');
+
+         gEnter.append('text')
+            .attr('transform', 'rotate(90)')
+            .attr('x', -radius/2 - 7)
+            .attr('y', -radius/2 - 7)
+            .attr('text-anchor', 'end')
+            .text('0.1');
+
+         gEnter.append('text')
+            .attr('transform', 'rotate(90)')
+            .attr('x', 0)
+            .attr('y', -radius + 9)
+            .attr('text-anchor', 'middle')
+            .text('0.01');
 
          var gArc = g.selectAll('.arc')
                .data(data)
@@ -29,7 +70,11 @@ function gaugeD3() {
 
          gArc.append("path")
             .attr("d", arc)         
-            .style('fill', function(d,i) { return color(i) });        
+            .style('fill', function(d,i) { return color(i) });    
+
+         g.selectAll('.arc').select('path').transition()
+            .duration(200)
+            .attr('d', arc);    
             
           
       });
