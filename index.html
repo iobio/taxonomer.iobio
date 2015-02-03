@@ -535,7 +535,7 @@
         // http://taxsample.iobio.io/?cmd=test.fastq
         //http://taxsample.iobio.io/?cmd=FluA71_MS_R1.fastq
         //
-        dataUrl = encodeURI('http://partialstream.iobio.io?cmd=--url ' + dataUrl + ' --range 0-9000000');
+        dataUrl = encodeURI('http://partialstream.iobio.io?cmd=--url ' + dataUrl + ' --range 0-15000000');
         console.log(dataUrl)
         var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl)
         console.log(fq2faUrl);
