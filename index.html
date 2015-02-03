@@ -284,18 +284,7 @@
           })
           // update metrics
           $('#reads-sampled span').html(numberFormatter(total));
-          $('#unclassified span').html(numberFormatter(data.binnerResult['unclassified']));
-          $.ajax({
-            url: encodeURI("http://binomial.iobio.io/?cmd=solveP " + total + " 03"),
-            dataType: 'json',
-            success: function(result) {
-              var num = window.sensitivityScale(result.response.sensitivity);
-              var data = [ num, 1-num];
-              var arc = d3.select('#sensitivity svg')
-                .datum(gauge(data));
-              window.sensitivityChart(arc)
-            }            
-          })
+          $('#unclassified span').html(numberFormatter(data.binnerResult['unclassified']));          
         //   var radius = $('#sensitivity svg').height();
         // var sensitivityChart = gaugeD3().radius(radius).thickness(6).klass("sensitivityArc");        
         // var scale = d3.scale.log().domain([0.0001,1]).range([1,0]);
@@ -328,6 +317,18 @@
             if (key == 'bacterial') window.bacterialColor.range(colorRange('#ff6f03', '#ead6da', count));
             else if (key == 'viral') viralColor.range(colorRange('purple', '#c9a9ea', count));  
             else if (key == 'fungal') fungiColor.range(colorRange('green', '#bdeacb', count));
+          })
+
+          $.ajax({
+            url: encodeURI("http://binomial.iobio.io/?cmd=solveP " + classifierRoot['count'] + " 03"),
+            dataType: 'json',
+            success: function(result) {
+              var num = window.sensitivityScale(result.response.sensitivity);
+              var data = [ num, 1-num];
+              var arc = d3.select('#sensitivity svg')
+                .datum(gauge(data));
+              window.sensitivityChart(arc)
+            }            
           })
             
           window.rootData = JSON.parse(JSON.stringify(classifierRoot));       
