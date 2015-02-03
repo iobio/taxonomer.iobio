@@ -63,12 +63,13 @@
 
     <div class="container-fluid">
       <div class="row" style="height:100%">
-        <div class="col-sm-3 col-md-2 sidebar">
+        <div class="col-sm-3 col-md-2 sidebar" style="display:none">
           <h2>Zoom Level</h2>
           <h4 style="font: italic 12px quicksand; color: rgb(180,180,180)">(use to navigate)</h4>
           <!-- <svg style="width:100%;border:1px solid green;display:none;"></svg> -->
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">        
+        <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">  -->       
+        <div class="main"> 
           <div id='metrics-container' class="row">
             <div id='binner' class="col-xs-6 col-sm-3 metric">              
               <h2>Reads Bin</h2>
@@ -195,7 +196,7 @@
                 <h4 id='viewed-reads' style="float:right">Currently Viewing: <span class='iobio-txt-color'>100%</span></h4>
                 <div style="clear:both"></div>
               </div>
-              <div id='viz-picker'>
+              <div id='viz-picker' style='display:none'>
                 <img src='assets/images/sunburst_icon_color.png'/>
                 <img src='assets/images/bubble_icon.png'/>
                 <img src='assets/images/tree_icon.png'/>
