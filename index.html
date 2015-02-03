@@ -272,7 +272,7 @@
             .height( $('#viz svg').height() )
             .color(colorByCategory)
             .click( function(d) {  
-              updateParentHistory(d);              
+              //updateParentHistory(d);              
               addClassToInactive(d, 'inactive');
               updateReadsViewed();
               updateBreadcrumbs();              
@@ -342,11 +342,11 @@
           })
             
           window.rootData = JSON.parse(JSON.stringify(classifierRoot));       
-          var selection = d3.select("#viz svg").datum(classifierRoot);
-          window.sunburstChart(selection);
-          updateBreadcrumbs();
+          // var selection = d3.select("#viz svg").datum(classifierRoot);
+          // window.sunburstChart(selection);
+         // updateBreadcrumbs();
           
-          updateGlobalHistory(classifierRoot);
+          //updateGlobalHistory(classifierRoot);
 
           window.totalReads = d3.selectAll('#main-panel path').data()[0].value;
           // $('#total-reads span').html(window.totalReads)
@@ -368,13 +368,11 @@
           var bin = elem;
         else 
           var bin = elem.classList[0].split('-')[0];        
-        var binNode;
-        t.bfs(d3.select('#main-panel #root').data(), [], function(node, par, ctrl) {             
-             if (node.bin == bin) {               
-               binNode = node;
-               ctrl['stop'] = true;               
-             }           
-         })
+        if (bin == 'human' || bin == 'tied' || bin == 'unclassified') return;
+        var binNode = getBinRoot(bin);
+        var selection = d3.select("#viz svg").datum(binNode);
+        window.sunburstChart(selection);
+        initBreadcrumbs(binNode);
         $('#big-binner').css('visibility', 'hidden');
         $('#main-viz').css('visibility', 'visible');
         $('#top-controls').css('visibility', 'visible');
@@ -392,7 +390,7 @@
         //   return d3.select('#main-panel #root').data()[0];
 
         var root;
-        t.bfs(d3.select('#main-panel #root').data(), [], function(node, par, ctrl) {             
+        t.bfs(d3.select('#main-viz path').data(), [], function(node, par, ctrl) {             
              if (node.x >= xDomain[0] && node.x <= xDomain[1] && node.y >= yDomain[0] && node.y <= yDomain[1]) {               
                root = node;
                ctrl['stop'] = true;               
@@ -404,7 +402,7 @@
       function getBinRoot(bin) {        
 
         var root;
-        t.bfs(d3.select('#main-panel #root').data(), [], function(node, par, ctrl) {             
+        t.bfs(window.rootData, [], function(node, par, ctrl) {             
              if (node.bin == bin) {               
                root = node;
                ctrl['stop'] = true;               
@@ -415,7 +413,7 @@
 
       function updateReadsViewed() {        
         var currRoot = getCurrRoot();
-        var percent = parseInt(currRoot.count / getBinRoot(currRoot.bin).count * 1000) / 10;
+        var percent = parseInt(currRoot.value / getBinRoot(currRoot.bin).value * 1000) / 10;
         $('#viewed-reads span').html(percent + '%')
       }
 
@@ -478,23 +476,36 @@
         return chart;
       }
 
+      function initBreadcrumbs(node) {
+        $('#breadcrumbs ul').html('');
+        $('#breadcrumbs ul').append('<li> <a href="#" onclick="selectCategory(\'root\')">All</a></li>')
+        $('#breadcrumbs ul').append('<li>' + node.name.split(':')[1] + '</li>')
+      }
+
       function updateBreadcrumbs() {
         $('#breadcrumbs ul').html('');
         var node = getCurrRoot();
         var name = node.name.split(':')[1] || 'All';
         $('#breadcrumbs ul').prepend('<li>' + name + '</li>');
         node = node.parent;
-        if(node == undefined) { return; }
+        if(node == undefined) { 
+          $('#breadcrumbs ul').prepend('<li> <a href="#" onclick="selectCategory(\'root\')">All</a></li>')
+          return;
+        }
         
-        while(node.parent != undefined) {
+        while(node != undefined) {
           $('#breadcrumbs ul').prepend('<li><a href="#" onclick="selectCategory(' + node.id + ')">' + node.name.split(':')[1] + '</a></li>')
           node = node.parent;
         }
-        $('#breadcrumbs ul').prepend('<li> <a href="#" onclick="selectCategory(' + node.id + ')">All</a></li>')
+        $('#breadcrumbs ul').prepend('<li> <a href="#" onclick="selectCategory(\'root\')">All</a></li>')
       }
 
       function selectCategory(path) {
-        if (path.id == 'root') {
+        if (typeof path == 'string' || path instanceof String) 
+          var pathId = path;
+        else
+          var pathId = path.id;
+        if (pathId == 'root') {
           $('#main-viz').css('visibility', 'hidden');
           $('#top-controls').css('visibility', 'hidden');
           $('#big-binner').css('visibility', 'visible');
@@ -544,7 +555,7 @@
 
       function filterPercent(val) {
         filterTree(val, function(node, val) {
-          return (node.name == 'root' || node.count / window.totalReads * 100 > parseInt(val))
+          return (node.name == 'root' || node.count / getBinRoot(node.bin).count * 100 > parseInt(val))
         })
       }
 

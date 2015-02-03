@@ -130,6 +130,7 @@ function sunburstD3() {
       g.selectAll('.path').select('path').transition()
         .duration(750)
         .attr('d', arc)
+        .attrTween("d", arcTween( partition.nodes(data)[0] ) )
         // .each('interrupt', function(){
       g.selectAll('.path').select('text').transition()
           .duration(750)
