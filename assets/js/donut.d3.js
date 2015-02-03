@@ -6,6 +6,7 @@ function donutD3() {
    var arc = d3.svg.arc();
    var color = d3.scale.category20c();
    var options = { text:true }
+   var click = function() { return; };
    
    var formatter = d3.format(",.1f"); 
    var commaFormatter = d3.format(",0f");    
@@ -31,6 +32,9 @@ function donutD3() {
       g.append("path")
          .attr("d", arc)         
          .style('fill', function(d,i) { return color(d) })
+         .on('click', function(d){
+            click(d.data);
+         })
          .on("mouseover", function(d,i) {           
              div.transition()        
                 .duration(200)      
@@ -107,7 +111,13 @@ function donutD3() {
       if (!arguments.length) return color;
       color = value;      
       return my;
-   }   
+   }  
+
+  my.click = function(_) {
+    if (!arguments.length) return click;
+    click = _;
+    return my;
+  } 
 
    my.klass = function(value) {
       if (!arguments.length) return klass;

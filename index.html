@@ -174,9 +174,9 @@
                   </tr>
                   <tr >
                     <td class='human-binned-reads'></td>
-                    <td> <a class='bacterial-binned-reads' href="#" onclick="toStarburst(this)"></a></td>
-                    <td> <a class='viral-binned-reads' href="#" onclick="toStarburst(this)"></a></td>
-                    <td> <a class='fungal-binned-reads' href="#" onclick="toStarburst(this)"></a></td>
+                    <td> <a class='bacterial-binned-reads' href="#" onclick="toSunburst(this)"></a></td>
+                    <td> <a class='viral-binned-reads' href="#" onclick="toSunburst(this)"></a></td>
+                    <td> <a class='fungal-binned-reads' href="#" onclick="toSunburst(this)"></a></td>
                     <td class='other-binned-reads'></td>                    
                     <td class='unclassified-binned-reads'></td>                    
                   </tr>
@@ -253,6 +253,7 @@
               .radius(radiusBig-25)
               .thickness(radiusBig)
               .klass("binnerArc")
+              .click(function(d) { toSunburst(d.name) })
               .color(function(d) { return binnerColor(d.data.name); })
         var pie = d3.layout.pie().sort(null).value(function(d) { return d.count}); 
 
@@ -362,8 +363,11 @@
         go(url);
       }
 
-      function toStarburst(elem) {
-        var bin = elem.classList[0].split('-')[0];
+      function toSunburst(elem) {
+        if (typeof elem == 'string' || elem instanceof String)
+          var bin = elem;
+        else 
+          var bin = elem.classList[0].split('-')[0];        
         var binNode;
         t.bfs(d3.select('#main-panel #root').data(), [], function(node, par, ctrl) {             
              if (node.bin == bin) {               
