@@ -363,6 +363,15 @@
         go(url);
       }
 
+      function resetSliders() {
+        var s1 = document.querySelectorAll('#min-abundance input')[0];
+        s1.value = 0;
+        updateSlider(s1);
+        var s2 = document.querySelectorAll('#min-abundance input')[1];
+        s2.value = 0;
+        updateSlider(s2);
+      }
+
       function toSunburst(elem) {
         if (typeof elem == 'string' || elem instanceof String)
           var bin = elem;
@@ -374,6 +383,9 @@
         window.sunburstChart(selection);
         initBreadcrumbs(binNode);
         $('#big-binner').css('visibility', 'hidden');
+        // reset sliders
+        resetSliders();
+        // show hide panels
         $('#main-viz').css('visibility', 'visible');
         $('#top-controls').css('visibility', 'visible');
         $('.composition').css('display', 'none');
@@ -682,7 +694,7 @@
           // curr = Math.min(curr+bufferSize, window.bytesToSample);
           // reader.readAsBinaryString( file.slice(start, curr ) );  
           
-          var blob = file.slice(0, 15000000);
+          var blob = file.slice(0, 7000000);
           reader.readAsBinaryString(blob);
         })
 

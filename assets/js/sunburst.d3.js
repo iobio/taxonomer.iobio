@@ -169,7 +169,10 @@ function sunburstD3() {
         
         // if(y(d.y) <= 20) {return} // do nothing for center rings
         // selection.selectAll('text').remove();
-        selection.selectAll('path').transition()
+
+       // selection.selectAll('path')
+
+        selection.selectAll('.path').select('path').transition()
           .duration(750)
           .attrTween("d", arcTween(d))
           .call(endall, function() { 
