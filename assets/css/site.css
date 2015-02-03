@@ -232,9 +232,14 @@ h4 {
   margin: 0px 30px;
 }
 
-#main-panel #big-binner svg {
+#main-panel #big-binner svg {  
   height: 100%;
   width: 100%;
+}
+
+#main-panel #big-binner text {
+  font-size: 14px;
+  fill: rgb(100,100,100);
 }
 
 /*#main-panel #big-binner ul {

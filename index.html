@@ -154,7 +154,7 @@
                 <svg></svg>
               </div>
               <div style="float:right;width:48%">
-                <table style="width:90%"> 
+                <table style="width:90%;"> 
                   <tr>
                     <th>Human</th>
                     <th>Bacterial</th> 
@@ -163,7 +163,7 @@
                     <th>Tie</th>
                     <th>Unbinned</th>
                   </tr>
-                  <tr>
+                  <tr >
                     <td class='human-binned-reads'></td>
                     <td> <a class='bacterial-binned-reads' href="#" onclick="toStarburst(this)"></a></td>
                     <td> <a class='viral-binned-reads' href="#" onclick="toStarburst(this)"></a></td>
@@ -244,7 +244,7 @@
               .klass("binnerArc")
               .color(function(d) { return binnerColor(d.data.name); })
         var bigBinnerChart = donutD3()
-              .radius(radiusBig)
+              .radius(radiusBig-25)
               .thickness(radiusBig)
               .klass("binnerArc")
               .color(function(d) { return binnerColor(d.data.name); })
@@ -292,7 +292,7 @@
 
           var arcBig = d3.select('#big-binner svg').selectAll(".arc")
               .data(pie(binnerData));
-          bigBinnerChart(arcBig, {text:false});
+          bigBinnerChart(arcBig);
           var rows = ['human', 'viral', 'bacterial', 'fungal', 'other', 'unclassified'];
           rows.forEach(function(key){ $('.' + key + '-binned-reads').html( data.binnerResult[key] )});
 

@@ -1,6 +1,7 @@
 function donutD3() {
    var radius = 90,
-       thickness = 7;
+       thickness = 7,
+       labelr = radius + 30;
 
    var arc = d3.svg.arc();
    var color = d3.scale.category20c();
@@ -9,7 +10,9 @@ function donutD3() {
    var formatter = d3.format(",.1f"); 
    var commaFormatter = d3.format(",0f");    
 
-   function my(selection, options) {
+   function my(selection, opts) {
+      options = $.extend(options, opts); 
+      labelr = radius + 20;
       arc = d3.svg.arc()
       .outerRadius(radius)
       .innerRadius(radius - thickness);
@@ -20,10 +23,10 @@ function donutD3() {
          .attr("class", "arc")
          .attr("transform", "translate("+ bbox.width/2 + "," + bbox.height/2 + ")");
 
-      if ( g.data()[0] != undefined )
-         var total = g.data()[0].data + g.data()[1].data
-      else
-         var total = selection.data()[0].data + selection.data()[1].data
+      // if ( g.data()[0] != undefined )
+      //    var total = g.data()[0].data + g.data()[1].data
+      // else
+      //    var total = selection.data()[0].data + selection.data()[1].data
 
       g.append("path")
          .attr("d", arc)         
@@ -44,34 +47,47 @@ function donutD3() {
           });;
          
       selection.exit().remove();
-      if (options.text) {
+      if (options.text) {         
          g.append("text")
-            .attr("dy", "0.3em")
-            .style("text-anchor", "middle")
-            .attr("class", "percent")
-            .text(function(d,i) { if(i==0) return formatter(d.data / total * 100) + "%"; });
-         g.append("text")
-            .attr("dy", "1.9em")
-            .style("text-anchor", "middle")
-            .attr("class", "total")
-            .text(function(d,i) { if(i==0) return commaFormatter(d.data); });
+           .attr("transform", function(d) {
+                var c = arc.centroid(d),
+                    x = c[0],
+                    y = c[1],
+                    // pythagorean theorem for hypotenuse
+                    h = Math.sqrt(x*x + y*y);
+                return "translate(" + (x/h * labelr) +  ',' +
+                   (y/h * labelr) +  ")"; 
+            })
+            .attr("dy", ".35em")
+            .attr("text-anchor", function(d) {
+                // are we past the center?
+                return (d.endAngle + d.startAngle)/2 > Math.PI ?
+                    "end" : "start";
+            })
+            // .attr("dy", "1.9em")
+            // .style("text-anchor", "middle")            
+            .text(function(d,i) { return d.data.name; });         
       }
+
+      selection.select('text').transition()
+        .duration(200)
+        .attr("transform", function(d) {
+            var c = arc.centroid(d),
+                x = c[0],
+                y = c[1],
+                // pythagorean theorem for hypotenuse
+                h = Math.sqrt(x*x + y*y);
+            return "translate(" + (x/h * labelr) +  ',' +
+               (y/h * labelr) +  ")"; 
+        })        
+        .attr("text-anchor", function(d) {
+            // are we past the center?
+            return (d.endAngle + d.startAngle)/2 > Math.PI ?
+                "end" : "start";
+        })             
          
       selection.select("path")
          .attr("d", arc)
-      
-
-      selection.select(".percent")
-         .text(function(d,i) { 
-            if(i==0) return formatter(d.data / total * 100) + "%"; 
-         });
-         
-      selection.select(".total")
-         .text(function(d,i) { 
-            if(i==0) return commaFormatter(d.data); 
-         });
-      
-      
    }
    
 
