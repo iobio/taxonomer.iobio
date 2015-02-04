@@ -301,6 +301,7 @@
               updateBreadcrumbs();              
               $('#selected-name').html( d.name == 'root' ? 'All' : d.name );
             });
+        var commaFormat = d3.format("0,000");
         
 
         startWs(url, function(data) {
@@ -338,7 +339,7 @@
               .data(window.binnerPie(binnerData));
           window.bigBinnerChart(arcBig);
           var rows = ['human', 'viral', 'bacterial', 'fungal', 'other', 'unclassified'];
-          rows.forEach(function(key){ $('.' + key + '-binned-reads').html( data.binnerResult[key] )});
+          rows.forEach(function(key){ $('.' + key + '-binned-reads').html( commaFormat(data.binnerResult[key]) )});
 
           // transform classifier data
           var classifierRoot = { 'name' : 'root', 'id' : 'root', 'count' : 0,  'children' : [] };
