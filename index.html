@@ -192,8 +192,8 @@
                   <div> <a data-bin='fungal' class='fungal-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
                 </div>
                 <div class='cat-group'>
-                  <button data-bin='tied' type='button' class='category btn btn-default'  style='background:#5877ab'>
-                    Tied
+                  <button data-bin='ambiguous' type='button' class='category btn btn-default'  style='background:#5877ab'>
+                    Ambiguous
                   </button>
                   <div class='other-binned-reads'>0</div> 
                 </div>
@@ -243,7 +243,7 @@
     <script>
       var color = d3.scale.category20c();
       window.bacterialColor = d3.scale.ordinal();      
-      var viralColor = d3.scale.ordinal()
+      window.viralColor = d3.scale.ordinal()
       var fungiColor = d3.scale.ordinal();
       $(document).ready(function(){   
         // initialize file/url picker
@@ -265,7 +265,7 @@
         var radiusBig = $('#big-binner svg').height()/2;
         console.log('radius = ' + radiusBig);
         var binnerColor = d3.scale.ordinal()
-              .domain(['bacterial', 'fungal', 'human', 'viral', 'unclassified', 'tied'])
+              .domain(['bacterial', 'fungal', 'human', 'viral', 'unclassified', 'ambiguous'])
               .range(['#ff6f03', 'green', '#25aaff', 'purple', 'rgb(120,120,120)', '#5877ab'])
         var binnerChart = donutD3()
               .radius(radiusSmall)
@@ -310,7 +310,7 @@
           var total = 0;
           Object.keys(data.binnerResult).forEach(function(key){
             if (key == 'other')
-                binnerData.push( {name:'tied', count:data.binnerResult[key]} );
+                binnerData.push( {name:'ambiguous', count:data.binnerResult[key]} );
             else
               binnerData.push( {name:key, count:data.binnerResult[key]} );
             total += data.binnerResult[key]
@@ -345,12 +345,16 @@
             if (data.classifierResult[key].children != undefined) {
               classifierRoot.children.push( data.classifierResult[key].children[0].children[0] );  
             }
-                                 
+            // var numCategories = 0;
+            // t.dfs(data.classifierResult[key], [], function(node) {
+            //   numCategories += 1;
+            // }) 
+            
             var count = data.classifierResult[key].count || 0;
             classifierRoot['count'] += count;
-            if (key == 'bacterial') window.bacterialColor.range(colorRange('#ff6f03', '#ead6da', count));
-            else if (key == 'viral') viralColor.range(colorRange('purple', '#c9a9ea', count));  
-            else if (key == 'fungal') fungiColor.range(colorRange('green', '#bdeacb', count));
+            if (key == 'bacterial') window.bacterialColor.range(colorRange('#ff6f03', '#ff9f7c', 30));
+            else if (key == 'viral') window.viralColor.range(colorRange('purple', '#c9a9ea', 30));  
+            else if (key == 'fungal') window.fungiColor.range(colorRange('green', '#bdeacb', 30));
           })
 
           $.ajax({
@@ -399,14 +403,14 @@
           var bin = elem;
         else 
           var bin = elem.getAttribute('data-bin');
-        if (bin == 'human' || bin == 'tied' || bin == 'unclassified') return;
+        if (bin == 'human' || bin == 'ambiguous' || bin == 'unclassified') return;
         var binNode = getBinRoot(bin);
         var selection = d3.select("#viz svg").datum(binNode);
         window.sunburstChart(selection);
         initBreadcrumbs(binNode);
         
         // drill into binner chart        
-        var data = [{"name":"viral","count":0},{"name":"unclassified","count":0},{"name":"fungal","count":0},{"name":"bacterial","count":0},{"name":"human","count":0},{"name":"tied","count":0}]  
+        var data = [{"name":"viral","count":0},{"name":"unclassified","count":0},{"name":"fungal","count":0},{"name":"bacterial","count":0},{"name":"human","count":0},{"name":"ambiguous","count":0}]  
         data.forEach(function(d) { if (d.name==bin) d.count = 1; })
         // var data = [{"name":bin,"count":1}];  
         var arcBig = d3.select('#big-binner svg').selectAll(".arc")
@@ -576,13 +580,13 @@
 
       function colorByCategory(d) {        
         if (d.bin == 'bacterial')
-          return bacterialColor(d.id);
+          return window.bacterialColor(d.id);
         else if (d.bin == 'fungal')
-          return fungiColor(d.id);
+          return window.fungiColor(d.id);
         else if (d.bin == 'viral')
-          return viralColor(d.id);
+          return window.viralColor(d.id);
         else if (d.bin == 'human')
-          return humanColor(d.id);
+          return window.humanColor(d.id);
       }
 
       function colorRange(c1, c2, count) {
