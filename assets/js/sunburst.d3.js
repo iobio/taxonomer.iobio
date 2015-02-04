@@ -63,8 +63,12 @@ function sunburstD3() {
               if(i == 0 || !options.mouseover) return;  
                 div.transition()        
                    .duration(200)      
-                   .style("opacity", .9);      
-                div.html(d.name + ' - ' + d.value)                                 
+                   .style("opacity", .9);   
+                var category = d.name.split(':')[0];  
+                if (category == 'no rank')
+                  div.html(d.name.split(':')[1] + ' - ' + d.value)
+                else
+                  div.html(d.name + ' - ' + d.value)
              .style("left", (d3.event.pageX) + "px") 
              .style("text-align", 'left')    
              .style("top", (d3.event.pageY - 24) + "px");    
