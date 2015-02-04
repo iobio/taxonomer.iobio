@@ -6,7 +6,7 @@ function donutD3() {
    var arc = d3.svg.arc();
    var color = d3.scale.category20c();
    var options = { text:true }
-   var click = function() { return; };
+   var click = function() { return; };   
    
    var formatter = d3.format(",.1f"); 
    var commaFormatter = d3.format(",0f");    
@@ -48,7 +48,8 @@ function donutD3() {
              div.transition()        
                 .duration(500)      
                 .style("opacity", 0);   
-          });;
+          })
+          .each(function(d) { this._current = d; });
          
       selection.exit().remove();
       if (options.text) {         
@@ -65,12 +66,16 @@ function donutD3() {
             .attr("dy", ".35em")
             .attr("text-anchor", function(d) {
                 // are we past the center?
-                return (d.endAngle + d.startAngle)/2 > Math.PI ?
+                return (d.endAngle + d.startAngle)/2  > Math.PI ?
                     "end" : "start";
             })
             // .attr("dy", "1.9em")
             // .style("text-anchor", "middle")            
-            .text(function(d,i) { return d.data.name; });         
+            .text(function(d,i) { 
+              var a = d.endAngle - d.startAngle
+              if (a > 0.08) 
+                return d.data.name; 
+            });         
       }
 
       selection.select('text').transition()
@@ -85,13 +90,51 @@ function donutD3() {
                (y/h * labelr) +  ")"; 
         })        
         .attr("text-anchor", function(d) {
-            // are we past the center?
+            // are we past the center?            
             return (d.endAngle + d.startAngle)/2 > Math.PI ?
                 "end" : "start";
         })             
          
-      selection.select("path")
-         .attr("d", arc)
+      selection.select("path").transition()
+        .duration(400)
+        .attrTween('d', arcTween)
+        .call(endall, function() { 
+          if (options.events) {
+            $.event.trigger({
+              type: "binnerTransitionOver",            
+            });
+          }
+        });
+        // .attr("d", arc);
+
+      function arcTween(a) {
+        var i = d3.interpolate(this._current, a);
+        this._current = i(0);
+        return function(t) {
+          return arc(i(t));
+        };
+      }
+
+      function endall(transition, callback) { 
+        var n = 0; 
+        transition 
+            .each(function() { ++n; }) 
+            .each("end", function() { if (!--n) callback.apply(this, arguments); }); 
+      }
+
+        // Computes the angle of an arc, converting from radians to degrees.
+      function angle(d) {
+        var a = (d.startAngle + d.endAngle) * 90 / Math.PI;
+        // if (a > 270 && a < 360) return 0;
+        // if (a > 270) return 0;
+        // if (a > 0 && a < 180) return 0;
+        // if ( (a > 0 && a < 70) || (a >110 && a < 250) || (a > 290) ) return 0;
+        if ((Math.abs(a) >20 && Math.abs(a) < 160) || (a > 200 && a < 340)) return 0;
+        a -= 90;
+        return a > 90 ? -25 : -25;
+      }
+      
+      return this;      
    }
    
 

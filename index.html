@@ -272,13 +272,13 @@
               .thickness(radiusSmall)
               .klass("binnerArc")
               .color(function(d) { return binnerColor(d.data.name); })
-        var bigBinnerChart = donutD3()
+        window.bigBinnerChart = donutD3()
               .radius(radiusBig-25)
               .thickness(radiusBig)
               .klass("binnerArc")
               .click(function(d) { toSunburst(d.name) })
               .color(function(d) { return binnerColor(d.data.name); })
-        var pie = d3.layout.pie().sort(null).value(function(d) { return d.count});         
+        window.binnerPie = d3.layout.pie().sort(null).value(function(d) { return d.count});         
         $('#cat-list').css('right', parseInt(($('#main-panel').width()/2 - radiusBig)/2) + 'px');
 
         var radius = $('#sensitivity svg').height();
@@ -327,13 +327,14 @@
         //     .datum(gauge(data));
         // sensitivityChart(arc);
 
+          window.binnerData = binnerData;
           var arc = d3.select('#binner svg').selectAll(".arc")
-              .data(pie(binnerData));
+              .data(window.binnerPie(binnerData));
           binnerChart(arc, {text:false});
 
           var arcBig = d3.select('#big-binner svg').selectAll(".arc")
-              .data(pie(binnerData));
-          bigBinnerChart(arcBig);
+              .data(window.binnerPie(binnerData));
+          window.bigBinnerChart(arcBig);
           var rows = ['human', 'viral', 'bacterial', 'fungal', 'other', 'unclassified'];
           rows.forEach(function(key){ $('.' + key + '-binned-reads').html( data.binnerResult[key] )});
 
@@ -403,17 +404,29 @@
         var selection = d3.select("#viz svg").datum(binNode);
         window.sunburstChart(selection);
         initBreadcrumbs(binNode);
-        $('#big-binner').css('visibility', 'hidden');
-        // reset sliders
-        resetSliders();
-        // show hide panels
-        $('#main-viz').css('visibility', 'visible');
-        $('#top-controls').css('visibility', 'visible');
-        $('.composition').css('display', 'none');
-        $('#' + bin + '-composition').css('display', 'block');
-        $('#' + binNode.id).d3Click();
-        $('#total-reads #bin').html(bin.charAt(0).toUpperCase() + bin.slice(1))
-        $('#total-reads .iobio-txt-color').html(getBinRoot(bin).count)
+        
+        // drill into binner chart        
+        var data = [{"name":"viral","count":0},{"name":"unclassified","count":0},{"name":"fungal","count":0},{"name":"bacterial","count":0},{"name":"human","count":0},{"name":"tied","count":0}]  
+        data.forEach(function(d) { if (d.name==bin) d.count = 1; })
+        // var data = [{"name":bin,"count":1}];  
+        var arcBig = d3.select('#big-binner svg').selectAll(".arc")
+            .data(window.binnerPie(data), function(d) { return d.data.name; });
+        window.bigBinnerChart(arcBig, {events:true});
+        // do this horrible event b\c i don't know how to tell when binner transition is over
+        $(document).on("binnerTransitionOver", function() {          
+          $('#big-binner').css('visibility', 'hidden');
+          // reset sliders
+          resetSliders();
+
+          // show hide panels
+          $('#main-viz').css('visibility', 'visible');
+          $('#top-controls').css('visibility', 'visible');
+          $('.composition').css('display', 'none');
+          $('#' + bin + '-composition').css('display', 'block');
+          $('#' + binNode.id).d3Click();
+          $('#total-reads #bin').html(bin.charAt(0).toUpperCase() + bin.slice(1))
+          $('#total-reads .iobio-txt-color').html(getBinRoot(bin).count)
+        });          
       }
 
       function getCurrRoot() {
@@ -542,6 +555,9 @@
           $('#main-viz').css('visibility', 'hidden');
           $('#top-controls').css('visibility', 'hidden');
           $('#big-binner').css('visibility', 'visible');
+          var arcBig = d3.select('#big-binner svg').selectAll(".arc")
+              .data(window.binnerPie(window.binnerData), function(d) { return d.data.name; });
+          window.bigBinnerChart(arcBig, {events: false});
         } else 
           $(path).d3Click();
       }
