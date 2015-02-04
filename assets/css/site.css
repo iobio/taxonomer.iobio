@@ -247,16 +247,20 @@ h4 {
   fill: rgb(100,100,100);
 }
 
-/*#main-panel #big-binner ul {
-  padding: 0px;
-  list-style: none;
-  font-size: 20px
+#main-panel #cat-list {
+  visibility: hidden;
+  position: absolute;
+  top: 140px; 
+  text-align: center;
 }
 
-#main-panel #big-binner li {
-  display: inline;
-  margin-right: 20px;  
-}*/
+#main-panel #cat-list #cat-group {
+  margin-bottom: 20px;
+}
+#main-panel #cat-list button {
+  min-width: 80px;
+  color: white;
+}
 
 #main-panel #selected-name {
   font-size: 15px;  

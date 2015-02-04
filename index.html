@@ -160,30 +160,51 @@
 
             <!-- binner visualization -->
             <div id="big-binner">
-              <div style="float:left; height: 100%; width: 50%;">
+              <div style="height: 100%; width: 100%;">
                 <svg></svg>
-              </div>
-              <div style="float:right;width:48%">
-                <table style="width:90%;"> 
-                  <tr>
-                    <th>Human</th>
-                    <th>Bacterial</th> 
-                    <th>Viral</th>
-                    <th>Fungal</th>
-                    <th>Tie</th>
-                    <th>Unbinned</th>
-                  </tr>
-                  <tr >
-                    <td class='human-binned-reads'></td>
-                    <td> <a class='bacterial-binned-reads' href="#" onclick="toSunburst(this)"></a></td>
-                    <td> <a class='viral-binned-reads' href="#" onclick="toSunburst(this)"></a></td>
-                    <td> <a class='fungal-binned-reads' href="#" onclick="toSunburst(this)"></a></td>
-                    <td class='other-binned-reads'></td>                    
-                    <td class='unclassified-binned-reads'></td>                    
-                  </tr>
-                </table>
               </div>              
             </div>
+
+            <div id='cat-list'>
+              <div style="width:100px;"> 
+                <div class='cat-group'>
+                  <button data-bin='human' type='button' class='category btn btn-default' style="background:#25aaff">
+                    Human
+                  </button>
+                  <div data-bin='human' class='human-binned-reads'>0</div>
+                </div>
+                <div class='cat-group'>
+                  <button data-bin='bacterial' type='button' class='category btn btn-default' onclick="toSunburst(this)" style="background:#ff6f03">
+                    Bacterial
+                  </button>
+                  <div> <a data-bin='bacterial' class='bacterial-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
+                </div>
+                <div class='cat-group'>
+                  <button data-bin='viral' type='button' class='category btn btn-default' onclick="toSunburst(this)" style='background:purple'>
+                    Viral
+                  </button>
+                  <div> <a data-bin='viral' class='viral-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
+                </div>
+                <div class='cat-group'>
+                  <button data-bin='fungal' type='button' class='category btn btn-default' onclick="toSunburst(this)" style='background:green'>
+                    Fungal
+                  </button>
+                  <div> <a data-bin='fungal' class='fungal-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
+                </div>
+                <div class='cat-group'>
+                  <button data-bin='tied' type='button' class='category btn btn-default'  style='background:#5877ab'>
+                    Tied
+                  </button>
+                  <div class='other-binned-reads'>0</div> 
+                </div>
+                <div class='cat-group'>
+                  <button data-bin='unclassified' type='button' class='category btn btn-default'  style="background:rgb(120,120,120)">
+                    Unbinned
+                  </button>
+                  <div class='unclassified-binned-reads'>0</div>  
+                </div>                                                    
+              </div>
+            </div>              
 
             <!-- sunburst visualization -->
             <div id='main-viz'>
@@ -236,6 +257,7 @@
         $('#filepicker').css('visibility', 'hidden')
         // $('#main-viz').css('visibility', 'visible')  
         $('#big-binner').css('visibility', 'visible')     
+        $('#cat-list').css('visibility', 'visible')     
         $('#spinner').css('visibility', 'visible')        
 
         // create charts
@@ -256,8 +278,8 @@
               .klass("binnerArc")
               .click(function(d) { toSunburst(d.name) })
               .color(function(d) { return binnerColor(d.data.name); })
-        var pie = d3.layout.pie().sort(null).value(function(d) { return d.count}); 
-
+        var pie = d3.layout.pie().sort(null).value(function(d) { return d.count});         
+        $('#cat-list').css('right', parseInt(($('#main-panel').width()/2 - radiusBig)/2) + 'px');
 
         var radius = $('#sensitivity svg').height();
         window.sensitivityChart = gaugeD3().radius(radius).thickness(6).klass("sensitivityArc");        
@@ -377,7 +399,7 @@
         if (typeof elem == 'string' || elem instanceof String)
           var bin = elem;
         else 
-          var bin = elem.classList[0].split('-')[0];        
+          var bin = elem.getAttribute('data-bin');
         if (bin == 'human' || bin == 'tied' || bin == 'unclassified') return;
         var binNode = getBinRoot(bin);
         var selection = d3.select("#viz svg").datum(binNode);
