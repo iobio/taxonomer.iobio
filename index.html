@@ -80,7 +80,7 @@
               <span class="text-muted"></span>
             </div>
             <div id='sensitivity' class="col-xs-6 col-sm-3 metric">              
-              <h2>Sensitivity</h2>
+              <h2>Detection Threshold</h2>
               <svg></svg>
             </div>
             <div id='unclassified' class="col-xs-6 col-sm-3 metric">              
@@ -114,12 +114,12 @@
               </div>
               <div class="col-xs-3">                              
                 <div id='min-abundance'>              
-                  <h4>Taxon Read Threshold</h4>
+                  <h4>Display Threshold</h4>
                   <div style="text-align: left; width: 240px; margin: -5px auto 0px auto;">
-                    <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
+                    <!-- <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
                     <input id="min-abundance-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterPercent(this.value)'></input> 
-                    <div style="clear:both"></div>
-                    <span id='min-read-count-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> count</span>
+                    <div style="clear:both"></div> -->
+                    <span id='min-read-count-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> reads</span>
                     <input id="min-read-count-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterCount(this.value)'></input>
                   </div>
                 </div>
@@ -387,12 +387,10 @@
       }
 
       function resetSliders() {
-        var s1 = document.querySelectorAll('#min-abundance input')[0];
-        s1.value = 0;
-        updateSlider(s1);
-        var s2 = document.querySelectorAll('#min-abundance input')[1];
-        s2.value = 0;
-        updateSlider(s2);
+        $('#min-abundance input').each(function(s) {
+          s.value = 0;
+          updateSlider(s);
+        })        
       }
 
       function toSunburst(elem) {
