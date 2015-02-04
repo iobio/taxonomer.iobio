@@ -26,7 +26,7 @@ function onUrlEntered() {
 
   // stream your file here
   goUrl(url);
-
+  window.location.search = 'url=' + url;
 }
 
 function displayUrlBox() {

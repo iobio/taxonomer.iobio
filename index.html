@@ -251,6 +251,13 @@
 
         // defaults        
         window.bytesToSample=15000000;
+
+        // check if url to bam file is supplied in url and sample it
+        if (window.location.search != "") {
+            var url = getUrlParameter('url');
+            if (url[url.length-1] == '#') url = url.slice(0,url.length-1);
+            goUrl(url);            
+        }
       });
 
       function go(url) {
@@ -806,6 +813,19 @@
 
       function updateSlider(elem) {
         $('#' + elem.id + '-span').html(elem.value);
+      }
+
+      function getUrlParameter(sParam) {
+          var sPageURL = window.location.search.substring(1);
+          var sURLVariables = sPageURL.split('&');
+          for (var i = 0; i < sURLVariables.length; i++) 
+          {
+              var sParameterName = sURLVariables[i].split('=');
+              if (sParameterName[0] == sParam) 
+              {
+                  return sParameterName[1];
+              }
+          }
       }
 
       // fix d3 click event
