@@ -673,7 +673,7 @@
         if (dataUrl.split(',').length == 2) {
           var urls = [];
           dataUrl.split(',').forEach(function(u) {
-            urls.push(encodeURI('http://partialstream.iobio.io?cmd=--url ' + u + ' --range 0-' + window.bytesToSample + ' --separator ' + seperator));
+            urls.push(encodeURI('http://partialstream.iobio.io?cmd=--url ' + u.trim() + ' --range 0-' + window.bytesToSample + ' --separator ' + seperator));
           });
           dataUrl = urls.join(' ');
         } else {
@@ -768,7 +768,7 @@
           // curr = Math.min(curr+bufferSize, window.bytesToSample);
           // reader.readAsBinaryString( file.slice(start, curr ) );  
           
-          var blob = file.slice(0, 15000000);
+          var blob = file.slice(0, 7000000);
           reader.readAsBinaryString(blob);
         })
 
