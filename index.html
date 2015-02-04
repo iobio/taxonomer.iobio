@@ -649,15 +649,36 @@
         updateReadsViewed();
       }
 
+      // function generateUrl(dataUrl) {        
+      //   var split = dataUrl.split('.');
+      //   var format = split[split.length-1];
+      //   var seperator = '@';
+      //   if (format == 'fa' || format == 'fasta' || format == 'fas') seperator = '">"';          
+      //   dataUrl = encodeURI('http://partialstream.iobio.io?cmd=--url ' + dataUrl + ' --range 0-' + window.bytesToSample + ' --separator ' + seperator);
+      //   console.log(dataUrl)
+      //   var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl)
+      //   console.log(fq2faUrl);
+      //   var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));
+      //   console.log(taxonomerUrl);
+      //   var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxonomerUrl);
+      //   return encodeURI(taxanglerUrl);
+      // } 
+
       function generateUrl(dataUrl) {
-        // var dataUrl = dataUrl || 'http://taxsample.iobio.io/?cmd=FluA71_MS_R1.40k.fastq';
-        // http://taxsample.iobio.io/?cmd=test.fastq
-        //http://taxsample.iobio.io/?cmd=FluA71_MS_R1.fastq
+        // var dataUrl = 'https://s3.amazonaws.com/iobio/SRR1714192_1.fastq,https://s3.amazonaws.com/iobio/SRR1714192_2.fastq';        
         var split = dataUrl.split('.');
         var format = split[split.length-1];
         var seperator = '@';
         if (format == 'fa' || format == 'fasta' || format == 'fas') seperator = '">"';          
-        dataUrl = encodeURI('http://partialstream.iobio.io?cmd=--url ' + dataUrl + ' --range 0-' + window.bytesToSample + ' --separator ' + seperator);
+        if (dataUrl.split(',').length == 2) {
+          var urls = [];
+          dataUrl.split(',').forEach(function(u) {
+            urls.push(encodeURI('http://partialstream.iobio.io?cmd=--url ' + u + ' --range 0-' + window.bytesToSample + ' --separator ' + seperator));
+          });
+          dataUrl = urls.join(' ');
+        } else {
+          dataUrl = encodeURI('http://partialstream.iobio.io?cmd=--url ' + dataUrl + ' --range 0-' + window.bytesToSample + ' --separator ' + seperator);
+        }
         console.log(dataUrl)
         var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl)
         console.log(fq2faUrl);
@@ -665,7 +686,7 @@
         console.log(taxonomerUrl);
         var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxonomerUrl);
         return encodeURI(taxanglerUrl);
-      }      
+      }     
 
       function startWs(url, callback) {        
         var client = BinaryClient('ws://taxangler.iobio.io');        
