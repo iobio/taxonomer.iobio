@@ -385,8 +385,10 @@
       }
 
       function goFile(file) {
-        var url = generateFileUrl(file);
-        go(url);
+        generateFileUrl(file, function(url){
+          go(url);  
+        });
+        
       }
 
       function goUrl(dataUrl) {        
@@ -678,15 +680,12 @@
         });
       }
 
-      function generateFileUrl(file) {
+      function generateFileUrl(file, callback) {
         var me = this;
         var taxonomerService = 'ws://thetaxonomer.iobio.io';
         var connectionID = generateUid();
         var client = BinaryClient(taxonomerService + '?id=', {'connectionID' : connectionID} );
-        client.on('open', function(stream){
-          var stream = client.createStream({event:'setID', 'connectionID':connectionID});
-          stream.end();
-        })
+
 
         var taxonomerUrl = encodeURI(taxonomerService + "?protocol=websocket&cmd=" + encodeURIComponent("http://client?&id="+connectionID));
         var ended = 0;
@@ -745,8 +744,13 @@
         // var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));
         console.log(taxonomerUrl);
         var taxanglerUrl = 'http://taxangler.iobio.io?protocol=websocket&cmd=' + encodeURIComponent(taxonomerUrl);
-        
-        return encodeURI(taxanglerUrl);        
+
+        var url = encodeURI(taxanglerUrl); 
+        client.on('open', function(stream){
+          var stream = client.createStream({event:'setID', 'connectionID':connectionID});
+          stream.end();
+          callback(url);
+        })
       }
 
       function updateTextSize() {
