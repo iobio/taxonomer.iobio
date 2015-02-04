@@ -29,6 +29,14 @@ function onUrlEntered() {
   window.location.search = 'url=' + url;
 }
 
+function onSampleUrlEntered(url) {
+  $('#url-input-group').css('visibility', 'hidden');
+
+  // stream your file here
+  goUrl(url);
+  window.location.search = 'url=' + url;
+}
+
 function displayUrlBox() {
   $('#url-input-group').css('visibility', 'visible');
   $("#url-input").focus();
