@@ -84,7 +84,7 @@
               <svg></svg>
             </div>
             <div id='unclassified' class="col-xs-6 col-sm-3 metric">              
-              <h2>Unbinned</h2>
+              <h2>Unknown</h2>
               <span class="text-muted"></span>
             </div>
           </div>
@@ -198,8 +198,8 @@
                   <div class='other-binned-reads'>0</div> 
                 </div>
                 <div class='cat-group'>
-                  <button data-bin='unclassified' type='button' class='category btn btn-default'  style="background:rgb(120,120,120)">
-                    Unbinned
+                  <button data-bin='unknown' type='button' class='category btn btn-default'  style="background:rgb(120,120,120)">
+                    Unknown
                   </button>
                   <div class='unclassified-binned-reads'>0</div>  
                 </div>                                                    
@@ -265,7 +265,7 @@
         var radiusBig = $('#big-binner svg').height()/2;
         console.log('radius = ' + radiusBig);
         var binnerColor = d3.scale.ordinal()
-              .domain(['bacterial', 'fungal', 'human', 'viral', 'unclassified', 'ambiguous'])
+              .domain(['bacterial', 'fungal', 'human', 'viral', 'unknown', 'ambiguous'])
               .range(['#ff6f03', 'green', '#25aaff', 'purple', 'rgb(120,120,120)', '#5877ab'])
         var binnerChart = donutD3()
               .radius(radiusSmall)
@@ -311,6 +311,8 @@
           Object.keys(data.binnerResult).forEach(function(key){
             if (key == 'other')
                 binnerData.push( {name:'ambiguous', count:data.binnerResult[key]} );
+            else if (key == 'unclassified')
+                binnerData.push( {name:'unknown', count:data.binnerResult[key]} );
             else
               binnerData.push( {name:key, count:data.binnerResult[key]} );
             total += data.binnerResult[key]
@@ -403,14 +405,14 @@
           var bin = elem;
         else 
           var bin = elem.getAttribute('data-bin');
-        if (bin == 'human' || bin == 'ambiguous' || bin == 'unclassified') return;
+        if (bin == 'human' || bin == 'ambiguous' || bin == 'unknown') return;
         var binNode = getBinRoot(bin);
         var selection = d3.select("#viz svg").datum(binNode);
         window.sunburstChart(selection);
         initBreadcrumbs(binNode);
         
         // drill into binner chart        
-        var data = [{"name":"viral","count":0},{"name":"unclassified","count":0},{"name":"fungal","count":0},{"name":"bacterial","count":0},{"name":"human","count":0},{"name":"ambiguous","count":0}]  
+        var data = [{"name":"viral","count":0},{"name":"unknown","count":0},{"name":"fungal","count":0},{"name":"bacterial","count":0},{"name":"human","count":0},{"name":"ambiguous","count":0}]  
         data.forEach(function(d) { if (d.name==bin) d.count = 1; })
         // var data = [{"name":bin,"count":1}];  
         var arcBig = d3.select('#big-binner svg').selectAll(".arc")
