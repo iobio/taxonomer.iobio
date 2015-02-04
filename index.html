@@ -278,7 +278,7 @@
               .klass("binnerArc")
               .click(function(d) { toSunburst(d.name) })
               .color(function(d) { return binnerColor(d.data.name); })
-        window.binnerPie = d3.layout.pie().sort(null).value(function(d) { return d.count});         
+        window.binnerPie = d3.layout.pie().sort(function(a,b) { return d3.ascending(a.name,b.name); }).value(function(d) { return d.count});         
         $('#cat-list').css('right', parseInt(($('#main-panel').width()/2 - radiusBig)/2) + 'px');
 
         var radius = $('#sensitivity svg').height();

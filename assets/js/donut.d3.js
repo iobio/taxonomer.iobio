@@ -74,7 +74,7 @@ function donutD3() {
             .text(function(d,i) { 
               var a = d.endAngle - d.startAngle
               if (a > 0.08) 
-                return d.data.name; 
+                return d.data.name[0].toUpperCase() + d.data.name.slice(1,d.data.name.length); 
             });         
       }
 

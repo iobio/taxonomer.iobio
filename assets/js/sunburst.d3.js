@@ -189,10 +189,16 @@ function sunburstD3() {
                 var pathId = d.id.split('-text')[0];
                 var name = d.name.split(':')[1];              
                 this.innerHTML = name;
-                if (i==0 || this.getComputedTextLength() > document.getElementById(pathId).getBBox().width)               
-                  return ''              
-                else         
-                  return name;
+                var fontsize = 15;
+                for (var k=fontsize; k >=9; k--) {
+                  this.style.fontSize = k;
+                  // if (i==0 || this.getComputedTextLength() > document.getElementById(pathId).getBBox().width)               
+                  if (this.getComputedTextLength() <= document.getElementById(pathId).getBBox().width)
+                    return name;
+                  // else  
+                  //   return name; 
+                }
+                return '';
               })
           });
         
