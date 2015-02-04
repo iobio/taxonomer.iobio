@@ -70,7 +70,12 @@ function gaugeD3() {
 
          gArc.append("path")
             .attr("d", arc)         
-            .style('fill', function(d,i) { return color(i) });    
+            .style('fill', function(d,i) { 
+               if (i==0)
+                  return color(i) 
+               else
+                  return '#9ce1ff';
+         });    
 
          g.selectAll('.arc').select('path').transition()
             .duration(200)
