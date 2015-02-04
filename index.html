@@ -747,7 +747,7 @@
           // curr = Math.min(curr+bufferSize, window.bytesToSample);
           // reader.readAsBinaryString( file.slice(start, curr ) );  
           
-          var blob = file.slice(0, 7000000);
+          var blob = file.slice(0, 15000000);
           reader.readAsBinaryString(blob);
         })
 
@@ -808,9 +808,9 @@
       
       function numberFormatter (d) {
         if ((d / 1000000) >= 1)
-          d = d / 1000000 + "M";
+          d = Math.round(d / 1000000) + "M";
         else if ((d / 1000) >= 1)
-          d = d / 1000 + "K";
+          d = Math.round(d / 1000) + "K";
         return d;            
       }
 
