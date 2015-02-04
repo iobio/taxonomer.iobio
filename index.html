@@ -119,7 +119,7 @@
                     <!-- <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
                     <input id="min-abundance-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterPercent(this.value)'></input> 
                     <div style="clear:both"></div> -->
-                    <span id='min-read-count-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> reads</span>
+                    <span id='min-read-count-slider-span'>0</span><span > reads</span>
                     <input id="min-read-count-slider" type="range" value='0' max='20' oninput='updateSlider(this)' onchange='filterCount(this.value)'></input>
                   </div>
                 </div>
@@ -214,7 +214,7 @@
               </div>
               <div id='reads-viewed'>                
                 <h4 id='total-reads' style="float:left">Total <span id='bin'></span> Reads Classified: <span class='iobio-txt-color'></span></h4>
-                <h4 id='viewed-reads' style="float:right">Currently Viewing: <span class='iobio-txt-color'>100%</span></h4>
+                <h4 id='viewed-reads' style="float:right">Displayed: <span class='iobio-txt-color'>100%</span></h4>
                 <div style="clear:both"></div>
               </div>
               <div id='viz-picker' style='display:none'>
@@ -307,6 +307,7 @@
               updateReadsViewed();
               updateBreadcrumbs();              
               $('#selected-name').html( d.name == 'root' ? 'All' : d.name );
+              updateSliderAvailability();
             });
         var commaFormat = d3.format("0,000");
         
@@ -837,6 +838,20 @@
 
       function updateSlider(elem) {
         $('#' + elem.id + '-span').html(elem.value);
+      }
+
+      function updateSliderAvailability() {
+        var root = getCurrRoot();
+        if ( root.id == getBinRoot(root.bin).id ) {
+          // make slider available
+          $('#min-abundance').removeClass('disabled')
+          $('#min-abundance input').attr('disabled', false);
+        }
+        else {
+          // make slider disabled
+          $('#min-abundance').addClass('disabled')
+          $('#min-abundance input').attr('disabled', true);
+        }
       }
 
       function getUrlParameter(sParam) {
