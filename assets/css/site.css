@@ -19,7 +19,7 @@ body {
  * Global text
  */
  h2 { 
-  font: 300 30px quicksand;
+  font: 300 26px quicksand;
   color: rgb(60,60,60);
 }
 h4 { 
@@ -207,6 +207,14 @@ h4 {
   position: relative;
   z-index: 1;
 }
+
+#main-panel #top-controls #min-abundance span {color: #268bd2;}
+
+#main-panel #top-controls #min-abundance.disabled input[type=range]::-webkit-slider-thumb {
+  background: rgb(230,230,230);
+}
+
+#main-panel #top-controls #min-abundance.disabled span, #min-abundance.disabled h4 {color: rgb(230,230,230);}
 
 #main-panel #spinner { 
   position: absolute; 
