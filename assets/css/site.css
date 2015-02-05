@@ -13,7 +13,8 @@ body {
  * Global Colors
  */
 .iobio-bg-color { background: #123d53;}
-.iobio-txt-color { color: #268bd2;}
+.iobio-txt-color { color: #268bd2; font-weight: 600;}
+.iobio-txt-color:hover { color: #159EFF; font-weight: 600;}
 
 /*
  * Global text
@@ -40,6 +41,17 @@ h4 {
     line-height: 30px;    
     padding-top: 0;
     font-family: quicksand;
+}
+.navbar-right a {
+    line-height: 30px;    
+    padding-top: 0;
+    font-family: quicksand;
+    color: white;
+    font-weight: 200;
+    text-decoration: none;
+}
+.navbar-right a:hover {
+    font-weight: 400;
 }
 
 /*
@@ -83,6 +95,39 @@ h4 {
   color: #fff;
   background-color: #428bca;
 }
+
+/*
+ * footer
+ */
+#footer {
+   position: relative;
+   margin-top: 30px;                   
+   width: 100%;                                     
+   margin-left: auto;
+   margin-right: auto;
+   font-size: 18px;
+   text-align: center;
+}
+#footer a {
+    color: rgb(110,110,110);
+    color:#2d8fc1;
+    text-decoration: underline;
+}   
+
+.logos {
+
+    display: -webkit-flex;
+    display:         flex;
+    display: -ms-flexbox;
+    -webkit-flex-flow: row wrap;
+            flex-flow: row wrap;
+    -webkit-justify-content: space-around;        
+            justify-content: space-around;
+    -webkit-align-items: center;
+           align-items: center;        
+}
+
+
 
 /*
  * container
