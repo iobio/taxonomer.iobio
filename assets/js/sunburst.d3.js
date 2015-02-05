@@ -40,7 +40,13 @@ function sunburstD3() {
 
       // Otherwise, create the skeletal chart.
       var gEnter = g.enter().append("g")
-          .attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");                      
+          .attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");
+
+      if (options.drillTo != undefined) {
+        var d = options.drillTo
+        x.domain([d.x, d.x + d.dx]);
+        y.domain([d.y,1]).range([d.y ? 20 : 0, radius]);
+      }
 
       var path = g.selectAll(".path")
               .data(partition.nodes(data), function(d) { return d.id; })            
@@ -230,6 +236,18 @@ function sunburstD3() {
               return arc(d);};         
       };
     }
+
+    // Interpolate the scales!
+    function drill(d,i) {
+      if (i)
+        return arc
+      else {         
+        x.domain([d.x, d.x + d.dx]);
+        y.domain([d.y,1]).range([d.y ? 20 : 0, radius]);
+        return arc;
+      }      
+    }
+
     // end of transition solution
     function endall(transition, callback) { 
       var n = 0; 

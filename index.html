@@ -295,11 +295,11 @@
       });
 
       function go(url) {
-        $('#filepicker').css('visibility', 'hidden')
-        // $('#main-viz').css('visibility', 'visible')  
+        $('#filepicker').css('visibility', 'hidden')        
         $('#big-binner').css('visibility', 'visible')     
         $('#cat-list').css('visibility', 'visible')     
-        $('#spinner').css('visibility', 'visible')        
+        $('#spinner').css('visibility', 'visible')  
+        window.mode = 'binner';      
 
         // create charts
         var radiusSmall = $('#binner svg').height()/2;
@@ -363,25 +363,14 @@
           // update metrics
           $('#reads-sampled span').html(numberFormatter(total));
           $('#unclassified span').html(numberFormatter(data.binnerResult['unclassified']));          
-        //   var radius = $('#sensitivity svg').height();
-        // var sensitivityChart = gaugeD3().radius(radius).thickness(6).klass("sensitivityArc");        
-        // var scale = d3.scale.log().domain([0.0001,1]).range([1,0]);
-        // var num = scale(0.5);
-        // var data = [ num,1 - num ];
-        // var arc = d3.select('#sensitivity svg')
-        //     .datum(gauge(data));
-        // sensitivityChart(arc);
 
-          window.binnerData = binnerData;
+          // update small binner
+          window.binnerData = binnerData;          
           var arc = d3.select('#binner svg').selectAll(".arc")
               .data(window.binnerPie(binnerData));
           binnerChart(arc, {text:false});
-
-          var arcBig = d3.select('#big-binner svg').selectAll(".arc")
-              .data(window.binnerPie(binnerData));
-          window.bigBinnerChart(arcBig);
           var rows = ['human', 'viral', 'bacterial', 'fungal', 'other', 'unclassified'];
-          rows.forEach(function(key){ $('.' + key + '-binned-reads').html( commaFormat(data.binnerResult[key]) )});
+           rows.forEach(function(key){ $('.' + key + '-binned-reads').html( commaFormat(data.binnerResult[key]) )});          
 
           // transform classifier data
           var classifierRoot = { 'name' : 'root', 'id' : 'root', 'count' : 0,  'children' : [] };
@@ -389,12 +378,7 @@
                         
             if (data.classifierResult[key].children != undefined) {
               classifierRoot.children.push( data.classifierResult[key].children[0].children[0] );  
-            }
-            // var numCategories = 0;
-            // t.dfs(data.classifierResult[key], [], function(node) {
-            //   numCategories += 1;
-            // }) 
-            
+            }            
             var count = data.classifierResult[key].count || 0;
             classifierRoot['count'] += count;
             if (key == 'bacterial') window.bacterialColor.range(colorRange('#ff6f03', '#ff9f7c', 30));
@@ -414,15 +398,31 @@
             }            
           })
             
-          window.rootData = JSON.parse(JSON.stringify(classifierRoot));       
-          // var selection = d3.select("#viz svg").datum(classifierRoot);
-          // window.sunburstChart(selection);
-         // updateBreadcrumbs();
-          
-          //updateGlobalHistory(classifierRoot);
+          window.rootData = JSON.parse(JSON.stringify(classifierRoot));                 
+          // window.totalReads = d3.selectAll('#main-panel path').data()[0].value;
+         
+          // update correct chart
+          if ( window.mode == 'binner') {
+            var arcBig = d3.select('#big-binner svg').selectAll(".arc")
+                .data(window.binnerPie(binnerData));
+            window.bigBinnerChart(arcBig);            
+          } else {
+            var currRoot = getCurrRoot();
+            var currBinRoot = getBinRoot(currRoot.bin);
+            var newDataCurrRoot;
 
-          window.totalReads = d3.selectAll('#main-panel path').data()[0].value;
-          // $('#total-reads span').html(window.totalReads)
+            t.bfs(window.rootData, [], function(node, par, ctrl) {             
+                 if (node.id == currBinRoot.id) {
+                   newDataCurrRoot = node;
+                   ctrl['stop'] = true;               
+                 }           
+             })
+            console.log('curroot = ' + currRoot.name);
+            var selection = d3.select("#viz svg").datum( newDataCurrRoot );
+            // window.sunburstChart(selection, {drillTo:currRoot});
+            window.sunburstChart(selection);
+          }
+          
         })            
       }
 
@@ -446,6 +446,7 @@
       }
 
       function toSunburst(elem) {
+        window.mode = 'sunburst';
         if (typeof elem == 'string' || elem instanceof String)
           var bin = elem;
         else 
@@ -603,12 +604,13 @@
         else
           var pathId = path.id;
         if (pathId == 'root') {
+          window.mode = 'binner';
           $('#main-viz').css('visibility', 'hidden');
           $('#top-controls').css('visibility', 'hidden');
           $('#big-binner').css('visibility', 'visible');
           var arcBig = d3.select('#big-binner svg').selectAll(".arc")
               .data(window.binnerPie(window.binnerData), function(d) { return d.data.name; });
-          window.bigBinnerChart(arcBig, {events: false});
+          window.bigBinnerChart(arcBig, {events: false});          
         } else 
           $(path).d3Click();
       }
