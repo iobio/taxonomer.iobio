@@ -97,6 +97,39 @@ h4 {
 }
 
 /*
+ * footer
+ */
+#footer {
+   position: relative;
+   margin-top: 30px;                   
+   width: 100%;                                     
+   margin-left: auto;
+   margin-right: auto;
+   font-size: 18px;
+   text-align: center;
+}
+#footer a {
+    color: rgb(110,110,110);
+    color:#2d8fc1;
+    text-decoration: underline;
+}   
+
+.logos {
+
+    display: -webkit-flex;
+    display:         flex;
+    display: -ms-flexbox;
+    -webkit-flex-flow: row wrap;
+            flex-flow: row wrap;
+    -webkit-justify-content: space-around;        
+            justify-content: space-around;
+    -webkit-align-items: center;
+           align-items: center;        
+}
+
+
+
+/*
  * container
  */
 
