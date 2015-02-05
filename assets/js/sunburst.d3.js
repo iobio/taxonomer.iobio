@@ -2,7 +2,7 @@ function sunburstD3() {
   var margin = {top: 10, right: 10, bottom: 10, left: 10},
       width = 200,
       height = 200,
-      options = {klass:'', 'text' : true, 'click': true, 'mouseover': true, 'idPrefix': ''},
+      options = {klass:'', 'text' : true, 'click': true, 'mouseover': true, 'idPrefix': '', transitionDuration:750},
       color = d3.scale.category20c(),
       radius = Math.min(width, height) / 2,            
       x = d3.scale.linear().range([0, 2 * Math.PI]),
@@ -13,7 +13,8 @@ function sunburstD3() {
         .innerRadius(function(d) { return Math.max(0, y(d.y)); })
         .outerRadius(function(d) { return Math.max(0, y(d.y + d.dy)); });
 
-  var partition = d3.layout.partition().value(function(d) { return d.count; });
+  var node;
+  var partition = d3.layout.partition().sort(null).value(function(d) { return d.count; });
 
   var click = function() { return; };
       
@@ -42,14 +43,15 @@ function sunburstD3() {
       var gEnter = g.enter().append("g")
           .attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");
 
-      if (options.drillTo != undefined) {
-        var d = options.drillTo
-        x.domain([d.x, d.x + d.dx]);
-        y.domain([d.y,1]).range([d.y ? 20 : 0, radius]);
-      }
+      // update
+           
+
+      // enter
 
       var path = g.selectAll(".path")
-              .data(partition.nodes(data), function(d) { return d.id; })            
+              .data(partition.nodes(data), function(d) { return d.id; })    
+      if (node == undefined)
+        node = path.data()[0];        
 
       // exit
       path.exit().remove();
@@ -83,7 +85,7 @@ function sunburstD3() {
                 div.transition()        
                    .duration(500)      
                    .style("opacity", 0);   
-             });
+             }).each(stash);
       
       if (options.text) {
         var text = gPath.append('text')                       
@@ -125,7 +127,7 @@ function sunburstD3() {
             .attr('alignment-baseline', "middle")
             .attr('text-anchor', "middle")
             .style('height', '10px')
-            .text(function(d,i) {               
+            .text(function(d,i) {              
               var pathId = d.id.split('-text')[0];
               var name = d.name.split(':')[1];              
               this.innerHTML = name;
@@ -142,14 +144,13 @@ function sunburstD3() {
             });
       }
 
-      // update
+      // update             
       g.selectAll('.path').select('path').transition()
-        .duration(750)
-        .attr('d', arc)
-        .attrTween("d", arcTween( partition.nodes(data)[0] ) )
-        // .each('interrupt', function(){
+        .duration(options.transitionDuration)
+        .attrTween("d", arcTweenData);      
+        
       g.selectAll('.path').select('text').transition()
-          .duration(750)
+          .duration(options.transitionDuration)
           .attr('x', function(d) { return x(d.x); })
           .attr('dy', function(d) {return (y(d.y + d.dy) - y(d.y))/2;})        
           .attr('dx', function(d) {
@@ -161,7 +162,7 @@ function sunburstD3() {
           })
 
       g.selectAll('.path').select('.textpath').transition()
-        .duration('750')
+        .duration(options.transitionDuration)
         .text(function(d,i) {
           var pathId = d.id.split('-text')[0];
           var name = d.name.split(':')[1];              
@@ -186,7 +187,8 @@ function sunburstD3() {
     }); // end selection.each
   
     // click hanlder
-    function clickHandler(d) {      
+    function clickHandler(d) {   
+      node = d;   
       if (options.click) {
         
         // if(y(d.y) <= 20) {return} // do nothing for center rings
@@ -222,7 +224,7 @@ function sunburstD3() {
         
       }
     }
-    // Interpolate the scales!
+    // When zooming: interpolate the scales.
     function arcTween(d) {            
       var xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
           yd = d3.interpolate(y.domain(), [d.y, 1]),
@@ -237,15 +239,37 @@ function sunburstD3() {
       };
     }
 
-    // Interpolate the scales!
-    function drill(d,i) {
-      if (i)
-        return arc
-      else {         
-        x.domain([d.x, d.x + d.dx]);
-        y.domain([d.y,1]).range([d.y ? 20 : 0, radius]);
-        return arc;
-      }      
+    // When switching data: interpolate the arcs in data space.
+    function arcTweenData(a, i) {
+      if (node == undefined) node = d3.select(this).data()[0]
+      if (a.x0 == undefined || a.dx0 == undefined) {
+        a.x0 = a.x + a.dx/2;
+        a.dx0 = 0;
+      }
+      var oi = d3.interpolate({x: a.x0, dx: a.dx0}, a);
+      function tween(t) {
+        var b = oi(t);
+        a.x0 = b.x;
+        a.dx0 = b.dx;
+        return arc(b);
+      }
+      if (i == 0) {
+       // If we are on the first arc, adjust the x domain to match the root node
+       // at the current zoom level. (We only need to do this once.)
+        var xd = d3.interpolate(x.domain(), [node.x, node.x + node.dx]);
+        return function(t) {
+          x.domain(xd(t));
+          return tween(t);
+        };
+      } else {
+        return tween;
+      }
+    }
+
+    // Setup for switching data: stash the old values for transition.
+    function stash(d) {
+      d.x0 = d.x;
+      d.dx0 = d.dx;
     }
 
     // end of transition solution

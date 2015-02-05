@@ -83,8 +83,8 @@
               <h2>Detection Threshold</h2>
               <svg></svg>
             </div>
-            <div id='unclassified' class="col-xs-6 col-sm-3 metric">              
-              <h2>Unknown</h2>
+            <div id='classified' class="col-xs-6 col-sm-3 metric">              
+              <h2>Reads Classified</h2>
               <span class="text-muted"></span>
             </div>
           </div>
@@ -213,8 +213,8 @@
                 <svg></svg>
               </div>
               <div id='reads-viewed'>                
-                <h4 id='total-reads' style="float:left">Total <span id='bin'></span> Reads Classified: <span class='iobio-txt-color'></span></h4>
-                <h4 id='viewed-reads' style="float:right">Displayed: <span class='iobio-txt-color'>100%</span></h4>
+                <h4 id='total-reads'>Total <span id='bin'></span> Reads Classified: <span class='iobio-txt-color'></span></h4>
+                <!-- <h4 id='viewed-reads' style="float:right">Displayed: <span class='iobio-txt-color'>100%</span></h4> -->
                 <div style="clear:both"></div>
               </div>
               <div id='viz-picker' style='display:none'>
@@ -242,7 +242,7 @@
     <!-- On load -->
     <script>
       var color = d3.scale.category20c();
-      window.bacterialColor = d3.scale.ordinal();      
+      window.bacterialColor = d3.scale.ordinal();        
       window.viralColor = d3.scale.ordinal()
       var fungiColor = d3.scale.ordinal();
       $(document).ready(function(){   
@@ -306,8 +306,7 @@
               addClassToInactive(d, 'inactive');
               updateReadsViewed();
               updateBreadcrumbs();              
-              $('#selected-name').html( d.name == 'root' ? 'All' : d.name );
-              updateSliderAvailability();
+              $('#selected-name').html( d.name == 'root' ? 'All' : d.name );              
             });
         var commaFormat = d3.format("0,000");
         
@@ -327,8 +326,7 @@
             total += data.binnerResult[key]
           })
           // update metrics
-          $('#reads-sampled span').html(numberFormatter(total));
-          $('#unclassified span').html(numberFormatter(data.binnerResult['unclassified']));          
+          $('#reads-sampled span').html(numberFormatter(total));                    
 
           // update small binner
           window.binnerData = binnerData;          
@@ -352,6 +350,9 @@
             else if (key == 'fungal') window.fungiColor.range(colorRange('green', '#bdeacb', 30));
           })
 
+          // update classified total
+          $('#classified span').html(numberFormatter(classifierRoot['count']));
+
           $.ajax({
             url: encodeURI("http://binomial.iobio.io/?cmd=solveP " + classifierRoot['count'] + " 03"),
             dataType: 'json',
@@ -372,21 +373,27 @@
             var arcBig = d3.select('#big-binner svg').selectAll(".arc")
                 .data(window.binnerPie(binnerData));
             window.bigBinnerChart(arcBig);            
-          } else {
-            var currRoot = getCurrRoot();
-            var currBinRoot = getBinRoot(currRoot.bin);
+          } else {               
+            var currTopRoot = d3.select('#main-viz path').data()[0];            
+            var currH = treeToHash(currTopRoot, 'id');
             var newDataCurrRoot;
-
             t.bfs(window.rootData, [], function(node, par, ctrl) {             
-                 if (node.id == currBinRoot.id) {
+                 if (node.id == currTopRoot.id) {
                    newDataCurrRoot = node;
+                   t.bfs(newDataCurrRoot, [], function(n, p, c) {                     
+                     if(currH[n.id] != undefined) {                                           
+                       n.x0 = currH[n.id].x0;
+                       n.dx0 = currH[n.id].dx0;
+                     }
+                   });
                    ctrl['stop'] = true;               
                  }           
-             })
-            console.log('curroot = ' + currRoot.name);
+             })            
             var selection = d3.select("#viz svg").datum( newDataCurrRoot );
             // window.sunburstChart(selection, {drillTo:currRoot});
-            window.sunburstChart(selection);
+            window.sunburstChart(selection, {transitionDuration:200});    
+            // update total reads in this bin
+            $('#total-reads .iobio-txt-color').html(getBinRoot(newDataCurrRoot.bin).count)        
           }
           
         })            
@@ -405,7 +412,7 @@
       }
 
       function resetSliders() {
-        $('#min-abundance input').each(function(s) {
+        $('#min-abundance input').each(function(i,s) {
           s.value = 0;
           updateSlider(s);
         })        
@@ -475,10 +482,18 @@
         return root;
       }
 
-      function updateReadsViewed() {        
-        var currRoot = getCurrRoot();
-        var percent = parseInt(currRoot.value / getBinRoot(currRoot.bin).value * 1000) / 10;
-        $('#viewed-reads span').html(percent + '%')
+      function updateReadsViewed(displayCount) { 
+        // var currRoot = getCurrRoot();
+        // // if (displayCount != undefined) {
+        //   var count = 0;
+        //   currRoot.children.forEach(function(child) {
+        //     count += child.count;
+        //   })
+        //   var percent = parseInt(count /  getBinRoot(currRoot.bin).count * 1000) / 10;
+        // // } else {          
+        // //   var percent = parseInt(currRoot.value / getBinRoot(currRoot.bin).value * 1000) / 10;
+        // // }
+        // $('#viewed-reads span').html(percent + '%')
       }
 
       function treeToArray(d, attr) {
@@ -490,6 +505,14 @@
             arr.push(node);     
         }) 
         return arr;
+      }
+
+      function treeToHash(d,key) {
+         var h = {};
+          t.dfs(d, [], function(node) {
+            h[node[key]] = node;     
+          }) 
+          return h; 
       }
 
       function updateGlobalHistory(d) {
@@ -633,39 +656,32 @@
         })
       }
 
-      function filterTree(val, expression) {    
-        var currVizRoot = getCurrRoot();
-        var currRoot = ''
-        t.bfs(window.rootData, [], function(node, par, ctrl) {
-             if(currVizRoot.name == node.name) {
-              currRoot = node;                    
-             }
-         })    
-        var fTree = t.filter(currRoot, [], function(node, par, ctrl) {             
-             if (expression(node, val))
-              return {name: node.name, count:node.count, bin:node.bin, id:node.id};
-             else
-              return false;
-         })                  
-        var selection = d3.select("#viz svg").datum(fTree)            
-        window.sunburstChart(selection);
-        updateReadsViewed();
-      }
+      function filterTree(val, expression) {            
+        var root = d3.select('#main-viz path').data()[0];
+        var displayCount = 0;
 
-      // function generateUrl(dataUrl) {        
-      //   var split = dataUrl.split('.');
-      //   var format = split[split.length-1];
-      //   var seperator = '@';
-      //   if (format == 'fa' || format == 'fasta' || format == 'fas') seperator = '">"';          
-      //   dataUrl = encodeURI('http://partialstream.iobio.io?cmd=--url ' + dataUrl + ' --range 0-' + window.bytesToSample + ' --separator ' + seperator);
-      //   console.log(dataUrl)
-      //   var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl)
-      //   console.log(fq2faUrl);
-      //   var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));
-      //   console.log(taxonomerUrl);
-      //   var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxonomerUrl);
-      //   return encodeURI(taxanglerUrl);
-      // } 
+        t.dfs(root, [], function(node, par, ctrl) {            
+          if (node._count != undefined) {
+            node.count = node._count;
+            node._count = undefined;
+          }
+          if (!expression(node, val)) {
+            t.dfs(node, [], function(n, par, ctrl) {  
+              if(n.count != undefined) {
+                n._count = n.count;
+                n.count = 0;
+              }
+            });
+            // ctrl['cutoff'] = true;            
+          } else {
+            displayCount += node.count
+          }
+          updateReadsViewed(displayCount);
+       }) 
+
+        var selection = d3.select("#viz svg").datum(root)            
+        window.sunburstChart(selection);        
+      }
 
       function generateUrl(dataUrl) {
         // var dataUrl = 'https://s3.amazonaws.com/iobio/SRR1714192_1.fastq,https://s3.amazonaws.com/iobio/SRR1714192_2.fastq';        
@@ -840,21 +856,7 @@
 
       function updateSlider(elem) {
         $('#' + elem.id + '-span').html(elem.value);
-      }
-
-      function updateSliderAvailability() {
-        var root = getCurrRoot();
-        if ( root.id == getBinRoot(root.bin).id ) {
-          // make slider available
-          $('#min-abundance').removeClass('disabled')
-          $('#min-abundance input').attr('disabled', false);
-        }
-        else {
-          // make slider disabled
-          $('#min-abundance').addClass('disabled')
-          $('#min-abundance input').attr('disabled', true);
-        }
-      }
+      }      
 
       function getUrlParameter(sParam) {
           var sPageURL = window.location.search.substring(1);
