@@ -26,6 +26,7 @@
     <script type="text/javascript" src='assets/js/t.js'></script>          
     <script type="text/javascript" src='assets/js/binary.js'></script>
     <script type="text/javascript" src='assets/js/filePicker.js'></script>
+    <script type="text/javascript" src='assets/js/sha1.js'></script>
 
     <!-- Analytics -->
     <script>
@@ -46,236 +47,244 @@
     <![endif]-->
   </head>
 
-  <body>
+  <body >
+    <div id='pw-prompt'>      
+        <input class='form-control' type="password" name="password" placeholder='Enter Password' onkeypress="onPwEnter(event)"></input>
+        <span >
+            <button class="btn btn-default" onClick="onPwEnter(event)" type="button">Enter</button>
+        </span>
+      
+    </div>
+    <div id='app' class='password'>
+      <nav class=" iobio-bg-color navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+          <div class="navbar-header">
+          <!--   <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button> -->
+            <a class="navbar-brand" href="/"><span class='iobio-txt-color'>taxonomer</span>.iobio</a>
+          </div>
 
-    <nav class=" iobio-bg-color navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-        <!--   <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button> -->
-          <a class="navbar-brand" href="/"><span class='iobio-txt-color'>taxonomer</span>.iobio</a>
-        </div>
 
-
-        <div class="nav navbar-nav navbar-right">
-            <a style="margin-right: 20px" href="info.html">more info</a>
-            <a style="margin-right: 20px" href="http://iobio.io">an iobio project</a>
-        </div>
-        
-
-        <!-- <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Help</a></li>
-          </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
-        </div> -->
-      </div>
-    </nav>
-
-    <div class="container-fluid">
-      <div class="row" style="height:100%">
-        <div class="col-sm-3 col-md-2 sidebar" style="display:none">
-          <h2>Zoom Level</h2>
-          <h4 style="font: italic 12px quicksand; color: rgb(180,180,180)">(use to navigate)</h4>
-          <!-- <svg style="width:100%;border:1px solid green;display:none;"></svg> -->
-        </div>
-        <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">  -->       
-        <div class="main"> 
-          <div id='metrics-container' class="row">
-            <div id='binner' class="col-xs-6 col-sm-3 metric">              
-              <h2>Read Bins</h2>
-              <svg></svg>
-            </div>
-            <div id='reads-sampled' class="col-xs-6 col-sm-3 metric">              
-              <h2>Reads Sampled</h2>
-              <span class="text-muted"></span>
-            </div>
-            <div id='sensitivity' class="col-xs-6 col-sm-3 metric">              
-              <h2>Detection Threshold</h2>
-              <svg></svg>
-            </div>
-            <div id='classified' class="col-xs-6 col-sm-3 metric">              
-              <h2>Reads Classified</h2>
-              <span class="text-muted"></span>
-            </div>
+          <div class="nav navbar-nav navbar-right">
+              <a style="margin-right: 20px" href="info.html">more info</a>
+              <a style="margin-right: 20px" href="http://iobio.io">an iobio project</a>
           </div>
           
-          <div id='main-panel'>            
-            <div id='top-controls' class="row">              
-              <div class="col-xs-3">
-                <div id='breadcrumbs' >
-                  <ul>
 
-                  </ul>
-                </div>                
+          <!-- <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">Settings</a></li>
+              <li><a href="#">Profile</a></li>
+              <li><a href="#">Help</a></li>
+            </ul>
+            <form class="navbar-form navbar-right">
+              <input type="text" class="form-control" placeholder="Search...">
+            </form>
+          </div> -->
+        </div>
+      </nav>
+
+      <div class="container-fluid">
+        <div class="row" style="height:100%">
+          <div class="col-sm-3 col-md-2 sidebar" style="display:none">
+            <h2>Zoom Level</h2>
+            <h4 style="font: italic 12px quicksand; color: rgb(180,180,180)">(use to navigate)</h4>
+            <!-- <svg style="width:100%;border:1px solid green;display:none;"></svg> -->
+          </div>
+          <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">  -->       
+          <div class="main"> 
+            <div id='metrics-container' class="row">
+              <div id='binner' class="col-xs-6 col-sm-3 metric">              
+                <h2>Read Bins</h2>
+                <svg></svg>
               </div>
-              <div class="col-xs-6">
-                <div class='composition' id='bacterial-composition'>
-                  Bacterial Community Composition
-                  <div style="font-size:12px">(Based on 16S rRNA Gene Reads)</div>
-                </div>
-                <div class='composition' id='viral-composition'>
-                  Viral Community Composition
-                  <div style="font-size:12px">(Based on Viral and Unbinned Reads Classified as Viral)</div>
-                </div>
-                <div class='composition' id='fungal-composition'>
-                  Fungal Community Composition
-                  <div style="font-size:12px">(Based on Internal Transcribed Spacer (ITS) Reads)</div>
-                </div>
+              <div id='reads-sampled' class="col-xs-6 col-sm-3 metric">              
+                <h2>Reads Sampled</h2>
+                <span class="text-muted"></span>
               </div>
-              <div class="col-xs-3">                              
-                <div id='min-abundance'>              
-                  <h4>Display Threshold</h4>
-                  <div style="text-align: left; width: 240px; margin: -5px auto 0px auto;">
-                    <!-- <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
-                    <input id="min-abundance-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterPercent(this.value)'></input> 
-                    <div style="clear:both"></div> -->
-                    <span id='min-read-count-slider-span'>0</span><span > reads</span>
-                    <input id="min-read-count-slider" type="range" value='0' max='20' oninput='updateSlider(this)' onchange='filterCount(this.value)'></input>
+              <div id='sensitivity' class="col-xs-6 col-sm-3 metric">              
+                <h2>Detection Threshold</h2>
+                <svg></svg>
+              </div>
+              <div id='classified' class="col-xs-6 col-sm-3 metric">              
+                <h2>Reads Classified</h2>
+                <span class="text-muted"></span>
+              </div>
+            </div>
+            
+            <div id='main-panel'>            
+              <div id='top-controls' class="row">              
+                <div class="col-xs-3">
+                  <div id='breadcrumbs' >
+                    <ul>
+
+                    </ul>
+                  </div>                
+                </div>
+                <div class="col-xs-6">
+                  <div class='composition' id='bacterial-composition'>
+                    Bacterial Community Composition
+                    <div style="font-size:12px">(Based on 16S rRNA Gene Reads)</div>
+                  </div>
+                  <div class='composition' id='viral-composition'>
+                    Viral Community Composition
+                    <div style="font-size:12px">(Based on Viral and Unbinned Reads Classified as Viral)</div>
+                  </div>
+                  <div class='composition' id='fungal-composition'>
+                    Fungal Community Composition
+                    <div style="font-size:12px">(Based on Internal Transcribed Spacer (ITS) Reads)</div>
                   </div>
                 </div>
-                <!-- <div class="input-group" style="margin-top:10px">
-                  <input type="text" class="form-control" placeholder="Search for e.g. taxon ...">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                  </span>
-                </div> -->
-              </div>              
-            </div>
-            <div style="clear:both"></div>            
-
-            <div id='spinner'><img  src='assets/images/loading_dots.gif'/></div>
-            <!-- file/url picker -->            
-            <div id="filepicker" >
-                <div class="btn-group" >
-                  <button  type="button" class="btn btn-default dropdown-toggle load-file" data-toggle="dropdown" aria-expanded="false">
-                    Select Reads <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" role="menu">
-                    <li>
-                         <div class="file" onClick="onFileButtonClicked()">
-                            <input type="file" name="files[]" id="fastq-file"  multiple />
-                            <label class="file-button" for="fastq-file" >Choose FASTQ File(s)</label>
-                        </div>
-                    </li>
-                    <li><a onClick="displayUrlBox()" href="#">Enter URL for FASTQ(s)</a></li> 
-                    
-                    <li role="presentation" class="divider"></li>
-
-                    <li class="disabled" style="text-align: center;color: grey" >Demo Datasets</li>
-
-
-                    <li style="padding-top: 4px;padding-bottom:  4px;">
-          
-                        <a href="#" 
-                             onClick="onSampleUrlEntered('https://s3.amazonaws.com/iobio/ebola_sample.fastq')" 
-                             style="display:inline;">Ebolavirus (Liberia)</a>                       
-
-                        <span style="float:right;padding-right: 20px;">
-                          <a href="info.html#sample1" style="display:inline;">More Info</a>
-                        </span>
-         
-                    </li>
-                    <li style="padding-top: 4px;padding-bottom:  4px;">
-                      <a href="#" 
-                         onClick="onSampleUrlEntered('https://s3.amazonaws.com/iobio/ERR501052_1.fastq')" 
-                         style="display:inline;">Intestinal microbiota</a> 
-                      <span style="float:right;padding-right: 20px;">
-                         <a href="info.html#sample2"  style="display:inline;">More Info</a>
-                      </span>
-                    </li>
-                    <li style="padding-top: 4px;padding-bottom:  4px;">
-                      <a href="#" 
-                         onClick="onSampleUrlEntered('https://s3.amazonaws.com/iobio/SRR533978_1.fastq')" 
-                         style="display:inline;padding-right:54px">Hemorrhagic fever</a> 
-                      <span style="float:right;padding-right: 20px;">
-                        <a href="info.html#sample3"  style="display:inline;">More Info</a>
-                      </span>
-                    </li>
-
-                  </ul>
-                </div>
-                <div id="url-input-group" class="input-group" style="min-width: 300px;max-width: 600px;">
-                    <input id="url-input" type="text" value="https://s3.amazonaws.com/iobio/ebola_sample.fastq" class="form-control" placeholder="http://..." >
+                <div class="col-xs-3">                              
+                  <div id='min-abundance'>              
+                    <h4>Display Threshold</h4>
+                    <div style="text-align: left; width: 240px; margin: -5px auto 0px auto;">
+                      <!-- <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
+                      <input id="min-abundance-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterPercent(this.value)'></input> 
+                      <div style="clear:both"></div> -->
+                      <span id='min-read-count-slider-span'>0</span><span > reads</span>
+                      <input id="min-read-count-slider" type="range" value='0' max='20' oninput='updateSlider(this)' onchange='filterCount(this.value)'></input>
+                    </div>
+                  </div>
+                  <!-- <div class="input-group" style="margin-top:10px">
+                    <input type="text" class="form-control" placeholder="Search for e.g. taxon ...">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" onClick="onUrlEntered()" type="button">Go</button>
+                      <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
                     </span>
-                </div>
-            </div> 
+                  </div> -->
+                </div>              
+              </div>
+              <div style="clear:both"></div>            
 
-            <!-- binner visualization -->
-            <div id="big-binner">
-              <div style="height: 100%; width: 100%;">
-                <svg></svg>
+              <div id='spinner'><img  src='assets/images/loading_dots.gif'/></div>
+              <!-- file/url picker -->            
+              <div id="filepicker" >
+                  <div class="btn-group" >
+                    <button  type="button" class="btn btn-default dropdown-toggle load-file" data-toggle="dropdown" aria-expanded="false">
+                      Select Reads <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      <li>
+                           <div class="file" onClick="onFileButtonClicked()">
+                              <input type="file" name="files[]" id="fastq-file"  multiple />
+                              <label class="file-button" for="fastq-file" >Choose FASTQ File(s)</label>
+                          </div>
+                      </li>
+                      <li><a onClick="displayUrlBox()" href="#">Enter URL for FASTQ(s)</a></li> 
+                      
+                      <li role="presentation" class="divider"></li>
+
+                      <li class="disabled" style="text-align: center;color: grey" >Sample Datasets</li>
+
+
+                      <li style="padding-top: 4px;padding-bottom:  4px;">
+            
+                          <a href="#" 
+                               onClick="onSampleUrlEntered('https://s3.amazonaws.com/iobio/ebola_sample.fastq')" 
+                               style="display:inline;">Ebolavirus (Liberia)</a>                       
+
+                          <span style="float:right;padding-right: 20px;">
+                            <a href="info.html#sample1" style="display:inline;">More Info</a>
+                          </span>
+           
+                      </li>
+                      <li style="padding-top: 4px;padding-bottom:  4px;">
+                        <a href="#" 
+                           onClick="onSampleUrlEntered('https://s3.amazonaws.com/iobio/ERR501052_1.fastq')" 
+                           style="display:inline;">Intestinal microbiota</a> 
+                        <span style="float:right;padding-right: 20px;">
+                           <a href="info.html#sample2"  style="display:inline;">More Info</a>
+                        </span>
+                      </li>
+                      <li style="padding-top: 4px;padding-bottom:  4px;">
+                        <a href="#" 
+                           onClick="onSampleUrlEntered('https://s3.amazonaws.com/iobio/SRR533978_1.fastq')" 
+                           style="display:inline;padding-right:54px">Hemorrhagic fever</a> 
+                        <span style="float:right;padding-right: 20px;">
+                          <a href="info.html#sample3"  style="display:inline;">More Info</a>
+                        </span>
+                      </li>
+
+                    </ul>
+                  </div>
+                  <div id="url-input-group" class="input-group" style="min-width: 300px;max-width: 600px;">
+                      <input id="url-input" type="text" value="https://s3.amazonaws.com/iobio/ebola_sample.fastq" class="form-control" placeholder="http://..." >
+                      <span class="input-group-btn">
+                          <button class="btn btn-default" onClick="onUrlEntered()" type="button">Go</button>
+                      </span>
+                  </div>
+              </div> 
+
+              <!-- binner visualization -->
+              <div id="big-binner">
+                <div style="height: 100%; width: 100%;">
+                  <svg></svg>
+                </div>              
+              </div>
+
+              <div id='cat-list'>
+                <div style="width:100px;"> 
+                  <div class='cat-group'>
+                    <button data-bin='human' type='button' class='category btn btn-default' style="background:#25aaff">
+                      Human
+                    </button>
+                    <div data-bin='human' class='human-binned-reads'>0</div>
+                  </div>
+                  <div class='cat-group'>
+                    <button data-bin='bacterial' type='button' class='category btn btn-default' onclick="toSunburst(this)" style="background:#ff6f03">
+                      Bacterial
+                    </button>
+                    <div> <a data-bin='bacterial' class='bacterial-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
+                  </div>
+                  <div class='cat-group'>
+                    <button data-bin='viral' type='button' class='category btn btn-default' onclick="toSunburst(this)" style='background:purple'>
+                      Viral
+                    </button>
+                    <div> <a data-bin='viral' class='viral-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
+                  </div>
+                  <div class='cat-group'>
+                    <button data-bin='fungal' type='button' class='category btn btn-default' onclick="toSunburst(this)" style='background:green'>
+                      Fungal
+                    </button>
+                    <div> <a data-bin='fungal' class='fungal-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
+                  </div>
+                  <div class='cat-group'>
+                    <button data-bin='ambiguous' type='button' class='category btn btn-default'  style='background:#5877ab'>
+                      Ambiguous
+                    </button>
+                    <div class='other-binned-reads'>0</div> 
+                  </div>
+                  <div class='cat-group'>
+                    <button data-bin='unknown' type='button' class='category btn btn-default'  style="background:rgb(120,120,120)">
+                      Unknown
+                    </button>
+                    <div class='unclassified-binned-reads'>0</div>  
+                  </div>                                                    
+                </div>
               </div>              
-            </div>
 
-            <div id='cat-list'>
-              <div style="width:100px;"> 
-                <div class='cat-group'>
-                  <button data-bin='human' type='button' class='category btn btn-default' style="background:#25aaff">
-                    Human
-                  </button>
-                  <div data-bin='human' class='human-binned-reads'>0</div>
+              <!-- sunburst visualization -->
+              <div id='main-viz'>
+                <div id='selected-name'>All</div>
+                <div id='viz'>                            
+                  <svg></svg>
                 </div>
-                <div class='cat-group'>
-                  <button data-bin='bacterial' type='button' class='category btn btn-default' onclick="toSunburst(this)" style="background:#ff6f03">
-                    Bacterial
-                  </button>
-                  <div> <a data-bin='bacterial' class='bacterial-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
+                <div id='reads-viewed'>                
+                  <h4 id='total-reads'>Total <span id='bin'></span> Reads Classified: <span class='iobio-txt-color'></span></h4>
+                  <!-- <h4 id='viewed-reads' style="float:right">Displayed: <span class='iobio-txt-color'>100%</span></h4> -->
+                  <div style="clear:both"></div>
                 </div>
-                <div class='cat-group'>
-                  <button data-bin='viral' type='button' class='category btn btn-default' onclick="toSunburst(this)" style='background:purple'>
-                    Viral
-                  </button>
-                  <div> <a data-bin='viral' class='viral-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
+                <div id='viz-picker' style='display:none'>
+                  <img src='assets/images/sunburst_icon_color.png'/>
+                  <img src='assets/images/bubble_icon.png'/>
+                  <img src='assets/images/tree_icon.png'/>
+                  <img src='assets/images/bar_chart_icon.png'/>
                 </div>
-                <div class='cat-group'>
-                  <button data-bin='fungal' type='button' class='category btn btn-default' onclick="toSunburst(this)" style='background:green'>
-                    Fungal
-                  </button>
-                  <div> <a data-bin='fungal' class='fungal-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
-                </div>
-                <div class='cat-group'>
-                  <button data-bin='ambiguous' type='button' class='category btn btn-default'  style='background:#5877ab'>
-                    Ambiguous
-                  </button>
-                  <div class='other-binned-reads'>0</div> 
-                </div>
-                <div class='cat-group'>
-                  <button data-bin='unknown' type='button' class='category btn btn-default'  style="background:rgb(120,120,120)">
-                    Unknown
-                  </button>
-                  <div class='unclassified-binned-reads'>0</div>  
-                </div>                                                    
-              </div>
-            </div>              
-
-            <!-- sunburst visualization -->
-            <div id='main-viz'>
-              <div id='selected-name'>All</div>
-              <div id='viz'>                            
-                <svg></svg>
-              </div>
-              <div id='reads-viewed'>                
-                <h4 id='total-reads'>Total <span id='bin'></span> Reads Classified: <span class='iobio-txt-color'></span></h4>
-                <!-- <h4 id='viewed-reads' style="float:right">Displayed: <span class='iobio-txt-color'>100%</span></h4> -->
-                <div style="clear:both"></div>
-              </div>
-              <div id='viz-picker' style='display:none'>
-                <img src='assets/images/sunburst_icon_color.png'/>
-                <img src='assets/images/bubble_icon.png'/>
-                <img src='assets/images/tree_icon.png'/>
-                <img src='assets/images/bar_chart_icon.png'/>
               </div>
             </div>
           </div>
@@ -300,6 +309,9 @@
       window.viralColor = d3.scale.ordinal()
       var fungiColor = d3.scale.ordinal();
       $(document).ready(function(){   
+        // focus password prompt
+        $('#pw-prompt input').focus();
+
         // initialize file/url picker
         $('#fastq-file').on('change', onFilesSelected);
 
@@ -463,6 +475,21 @@
       function goUrl(dataUrl) {        
         var url = generateUrl(dataUrl);
         go(url);
+      }
+
+      function onPwEnter(e) {
+        if(e.keyCode === 0 || e.keyCode === 13) {
+          var correct = '19ff94efc860acf54a5757f8c161f43357bf254e';
+          var pw = $('#pw-prompt input').val();
+          var pwHash = new jsSHA(pw, "TEXT").getHash("SHA-1", "HEX");
+          if (pwHash == correct) {
+            $('#app').removeClass('password');
+            $('#pw-prompt').css('display', 'none')
+          } else {
+            alert('Wrong password');
+          }
+          return false;
+        }
       }
 
       function resetSliders() {
@@ -751,12 +778,9 @@
           dataUrl = urls.join(' ');
         } else {
           dataUrl = encodeURI('http://partialstream.iobio.io?cmd=--url ' + dataUrl + ' --range 0-' + window.bytesToSample + ' --separator ' + seperator);
-        }
-        console.log(dataUrl)
-        var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl)
-        console.log(fq2faUrl);
-        var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));
-        console.log(taxonomerUrl);
+        }        
+        var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl)        
+        var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));        
         var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxonomerUrl);
         return encodeURI(taxanglerUrl);
       }     
