@@ -9,15 +9,20 @@ body {
 }
 
 /*
- *
+ * password
  */
-.password {
+
+ #app {
+  width: 100%;
+  height: 100%;
+ }
+.password {  
   pointer-events:none;
   -webkit-filter: blur(4px);
   -moz-filter: blur(4px);
   -o-filter: blur(4px);
   -ms-filter: blur(4px);
-  filter: blur(4px);
+  filter: blur(4px);  
 }
 #pw-prompt {
   -webkit-filter: blur(0px);

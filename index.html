@@ -248,6 +248,12 @@
                     <div> <a data-bin='viral' class='viral-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
                   </div>
                   <div class='cat-group'>
+                    <button data-bin='phage' type='button' class='category btn btn-default' onclick="toSunburst(this)" style='background:red'>
+                      Phage
+                    </button>
+                    <div> <a data-bin='phage' class='phage-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
+                  </div>
+                  <div class='cat-group'>
                     <button data-bin='fungal' type='button' class='category btn btn-default' onclick="toSunburst(this)" style='background:green'>
                       Fungal
                     </button>
@@ -257,7 +263,7 @@
                     <button data-bin='ambiguous' type='button' class='category btn btn-default'  style='background:#5877ab'>
                       Ambiguous
                     </button>
-                    <div class='other-binned-reads'>0</div> 
+                    <div class='ambiguous-binned-reads'>0</div> 
                   </div>
                   <div class='cat-group'>
                     <button data-bin='unknown' type='button' class='category btn btn-default'  style="background:rgb(120,120,120)">
@@ -307,7 +313,8 @@
       var color = d3.scale.category20c();
       window.bacterialColor = d3.scale.ordinal();        
       window.viralColor = d3.scale.ordinal()
-      var fungiColor = d3.scale.ordinal();
+      window.fungiColor = d3.scale.ordinal();
+      window.phageColor = d3.scale.ordinal();
       $(document).ready(function(){   
         // focus password prompt
         $('#pw-prompt input').focus();
@@ -321,8 +328,14 @@
         // check if url to bam file is supplied in url and sample it
         if (window.location.search != "") {
             var url = getUrlParameter('url');
-            if (url[url.length-1] == '#') url = url.slice(0,url.length-1);
-            goUrl(url);            
+            var full = getUrlParameter('full');
+
+            if (url != undefined) {
+              if (url[url.length-1] == '#') url = url.slice(0,url.length-1);
+              goUrl(url);            
+            } else if (full != undefined) {
+              goFull(full);
+            }
         }
       });
 
@@ -331,15 +344,14 @@
         $('#big-binner').css('visibility', 'visible')     
         $('#cat-list').css('visibility', 'visible')     
         $('#spinner').css('visibility', 'visible')  
-        window.mode = 'binner';      
+        window.mode = 'binner';         
 
         // create charts
         var radiusSmall = $('#binner svg').height()/2;
-        var radiusBig = $('#big-binner svg').height()/2;
-        console.log('radius = ' + radiusBig);
+        var radiusBig = $('#big-binner svg').height()/2;        
         var binnerColor = d3.scale.ordinal()
-              .domain(['bacterial', 'fungal', 'human', 'viral', 'unknown', 'ambiguous'])
-              .range(['#ff6f03', 'green', '#25aaff', 'purple', 'rgb(120,120,120)', '#5877ab'])
+              .domain(['bacterial', 'fungal', 'human', 'viral', 'unknown', 'ambiguous', 'phage'])
+              .range(['#ff6f03', 'green', '#25aaff', 'purple', 'rgb(120,120,120)', '#5877ab', 'red'])
         var binnerChart = donutD3()
               .radius(radiusSmall)
               .thickness(radiusSmall)
@@ -350,7 +362,7 @@
               .thickness(radiusBig)
               .klass("binnerArc")
               .click(function(d) { toSunburst(d.name) })
-              .color(function(d) { return binnerColor(d.data.name); })
+              .color(function(d) {   return binnerColor(d.data.name); })
         window.binnerPie = d3.layout.pie().sort(function(a,b) { return d3.ascending(a.name,b.name); }).value(function(d) { return d.count});         
         $('#cat-list').css('right', parseInt(($('#main-panel').width()/2 - radiusBig)/2) + 'px');
 
@@ -381,11 +393,11 @@
           $('#spinner').css('visibility', 'hidden')        
           // transform binner data
           var binnerData = [];
-          var total = 0;
+          var total = 0;          
+          if (data.binnerResult['phage'] == undefined) data.binnerResult['phage'] = 0;
           Object.keys(data.binnerResult).forEach(function(key){
-            if (key == 'other')
-                binnerData.push( {name:'ambiguous', count:data.binnerResult[key]} );
-            else if (key == 'unclassified')
+            
+            if (key == 'unclassified')
                 binnerData.push( {name:'unknown', count:data.binnerResult[key]} );
             else
               binnerData.push( {name:key, count:data.binnerResult[key]} );
@@ -397,9 +409,9 @@
           // update small binner
           window.binnerData = binnerData;          
           var arc = d3.select('#binner svg').selectAll(".arc")
-              .data(window.binnerPie(binnerData));
+              .data(window.binnerPie(binnerData), function(d) { return d.data.name; });
           binnerChart(arc, {text:false});
-          var rows = ['human', 'viral', 'bacterial', 'fungal', 'other', 'unclassified'];
+          var rows = ['human', 'viral', 'bacterial', 'fungal', 'ambiguous', 'unclassified', 'phage'];
            rows.forEach(function(key){ $('.' + key + '-binned-reads').html( commaFormat(data.binnerResult[key]) )});          
 
           // transform classifier data
@@ -413,7 +425,8 @@
             classifierRoot['count'] += count;
             if (key == 'bacterial') window.bacterialColor.range(colorRange('#ff6f03', '#ff9f7c', 30));
             else if (key == 'viral') window.viralColor.range(colorRange('purple', '#c9a9ea', 30));  
-            else if (key == 'fungal') window.fungiColor.range(colorRange('green', '#bdeacb', 30));
+            else if (key == 'fungal') window.fungiColor.range(colorRange('green', '#bdeacb', 30))
+            else if (key == 'phage') window.phageColor.range(colorRange('red', 'red', 30));
           })
 
           // update classified total
@@ -435,10 +448,10 @@
           // window.totalReads = d3.selectAll('#main-panel path').data()[0].value;
          
           // update correct chart
-          if ( window.mode == 'binner') {
+          if ( window.mode == 'binner') {            
             var arcBig = d3.select('#big-binner svg').selectAll(".arc")
-                .data(window.binnerPie(binnerData));
-            window.bigBinnerChart(arcBig);            
+                .data(window.binnerPie(binnerData), function(d) { return d.data.name; });
+            window.bigBinnerChart(arcBig);                        
           } else {               
             var currTopRoot = d3.select('#main-viz path').data()[0];            
             var currH = treeToHash(currTopRoot, 'id');
@@ -477,14 +490,22 @@
         go(url);
       }
 
+      function goFull(dataUrl) {        
+        var url = generateFullUrl(dataUrl);
+        go(url);
+      }
+
       function onPwEnter(e) {
         if(e.keyCode === 0 || e.keyCode === 13) {
           var correct = '19ff94efc860acf54a5757f8c161f43357bf254e';
           var pw = $('#pw-prompt input').val();
           var pwHash = new jsSHA(pw, "TEXT").getHash("SHA-1", "HEX");
           if (pwHash == correct) {
-            $('#app').removeClass('password');
-            $('#pw-prompt').css('display', 'none')
+            // $('#app').removeClass('password');
+
+            document.getElementById("app").setAttribute('class', '');
+            // $('#app').css('display', 'none');
+            $('#pw-prompt').css('display', 'none');
           } else {
             alert('Wrong password');
           }
@@ -512,7 +533,7 @@
         initBreadcrumbs(binNode);
         
         // drill into binner chart        
-        var data = [{"name":"viral","count":0},{"name":"unknown","count":0},{"name":"fungal","count":0},{"name":"bacterial","count":0},{"name":"human","count":0},{"name":"ambiguous","count":0}]  
+        var data = [{"name":"viral","count":0},{"name":"unknown","count":0},{"name":"fungal","count":0},{"name":"bacterial","count":0},{"name":"human","count":0},{"name":"ambiguous","count":0},{"name":"phage","count":0}]  
         data.forEach(function(d) { if (d.name==bin) d.count = 1; })
         // var data = [{"name":bin,"count":1}];  
         var arcBig = d3.select('#big-binner svg').selectAll(".arc")
@@ -704,6 +725,8 @@
           return window.fungiColor(d.id);
         else if (d.bin == 'viral')
           return window.viralColor(d.id);
+        else if (d.bin == 'phage')
+          return window.phageColor(d.id);
         else if (d.bin == 'human')
           return window.humanColor(d.id);
       }
@@ -782,6 +805,12 @@
         var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl)        
         var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));        
         var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxonomerUrl);
+        return encodeURI(taxanglerUrl);
+      } 
+
+      function generateFullUrl(dataUrl) {      
+        var taxsampleUrl = 'http://taxsample.iobio.io?cmd=' + dataUrl;
+        var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxsampleUrl);
         return encodeURI(taxanglerUrl);
       }     
 
@@ -870,7 +899,7 @@
         })
 
         // var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));
-        console.log(taxonomerUrl);
+        // console.log(taxonomerUrl);
         var taxanglerUrl = 'http://taxangler.iobio.io?protocol=websocket&cmd=' + encodeURIComponent(taxonomerUrl);
 
         var url = encodeURI(taxanglerUrl); 
