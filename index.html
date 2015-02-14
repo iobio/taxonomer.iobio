@@ -260,6 +260,12 @@
                     <div> <a data-bin='fungal' class='fungal-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
                   </div>
                   <div class='cat-group'>
+                    <button data-bin='phix' type='button' class='category btn btn-default'  style='background:#06ac61'>
+                      PhiX
+                    </button>
+                    <div class='phix-binned-reads'>0</div> 
+                  </div>
+                  <div class='cat-group'>
                     <button data-bin='ambiguous' type='button' class='category btn btn-default'  style='background:#5877ab'>
                       Ambiguous
                     </button>
@@ -339,7 +345,7 @@
         }
       });
 
-      function go(url) {
+      function go(url, options) {
         $('#filepicker').css('visibility', 'hidden')        
         $('#big-binner').css('visibility', 'visible')     
         $('#cat-list').css('visibility', 'visible')     
@@ -388,8 +394,12 @@
             });
         var commaFormat = d3.format("0,000");
         
+        if (options && options.full)
+          var start = startHttp;
+        else
+          var start = startWs;
 
-        startWs(url, function(data) {
+        start(url, function(data) {
           $('#spinner').css('visibility', 'hidden')        
           // transform binner data
           var binnerData = [];
@@ -411,7 +421,7 @@
           var arc = d3.select('#binner svg').selectAll(".arc")
               .data(window.binnerPie(binnerData), function(d) { return d.data.name; });
           binnerChart(arc, {text:false});
-          var rows = ['human', 'viral', 'bacterial', 'fungal', 'ambiguous', 'unclassified', 'phage'];
+          var rows = ['human', 'viral', 'bacterial', 'fungal', 'ambiguous', 'unclassified', 'phage', 'phix'];
            rows.forEach(function(key){ $('.' + key + '-binned-reads').html( commaFormat(data.binnerResult[key]) )});          
 
           // transform classifier data
@@ -492,7 +502,7 @@
 
       function goFull(dataUrl) {        
         var url = generateFullUrl(dataUrl);
-        go(url);
+        go(url, {full:true});
       }
 
       function onPwEnter(e) {
@@ -810,17 +820,31 @@
 
       function generateFullUrl(dataUrl) {      
         var taxsampleUrl = 'http://taxsample.iobio.io?cmd=' + dataUrl;
-        var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxsampleUrl);
-        return encodeURI(taxanglerUrl);
-      }     
+        // var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxsampleUrl);
+        return encodeURI(taxsampleUrl);
+      } 
 
-      function startWs(url, callback) {        
-        var client = BinaryClient('ws://taxangler.iobio.io');        
+      function startHttp(url, callback) {
+        $.ajax({
+            url: url,
+            dataType: 'json',
+            success: function(result) {
+              callback(result);
+            }            
+          })
+      }    
+
+      function startWs(url, callback) {
+        var domain = new URL(url).hostname
+        if (domain == 'taxsample.iobio.io')      
+          var client = BinaryClient('ws://taxsample.iobio.io');        
+        else
+          var client = BinaryClient('ws://taxangler.iobio.io');        
         var buffer = '';
         client.on('open', function(stream){
           var stream = client.createStream({event:'run', params : {'url':url}});          
           
-          stream.on('data', function(data, options) {
+          stream.on('data', function(data, options) {            
             if (data == undefined) return;
             var success = true;
             try {
@@ -833,7 +857,8 @@
               buffer = "";
               callback(obj); 
             }               
-          });                    
+          });   
+          
         });
       }
 
