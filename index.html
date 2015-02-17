@@ -429,7 +429,10 @@
           Object.keys(data.classifierResult).forEach(function(key) {
                         
             if (data.classifierResult[key].children != undefined) {
-              classifierRoot.children.push( data.classifierResult[key].children[0].children[0] );  
+              if (data.classifierResult[key].children[0].children == undefined)
+                classifierRoot.children.push( data.classifierResult[key].children[0] );  
+              else
+                classifierRoot.children.push( data.classifierResult[key].children[0].children[0] );  
             }            
             var count = data.classifierResult[key].count || 0;
             classifierRoot['count'] += count;
