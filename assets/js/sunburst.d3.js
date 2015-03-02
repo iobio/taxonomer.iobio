@@ -74,9 +74,9 @@ function sunburstD3() {
                    .style("opacity", .9);   
                 var category = d.name.split(':')[0];  
                 if (category == 'no rank')
-                  div.html(d.name.split(':')[1] + ' - ' + d.value)
+                  div.html(d.name.split(':')[1] + ' - ' + d.count)
                 else
-                  div.html(d.name + ' - ' + d.value)
+                  div.html(d.name + ' - ' + d.count)
              .style("left", (d3.event.pageX) + "px") 
              .style("text-align", 'left')    
              .style("top", (d3.event.pageY - 24) + "px");    
