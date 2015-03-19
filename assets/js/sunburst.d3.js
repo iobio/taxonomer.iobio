@@ -14,7 +14,7 @@ function sunburstD3() {
         .outerRadius(function(d) { return Math.max(0, y(d.y + d.dy)); });
 
   var node;
-  var partition = d3.layout.partition().sort(null).value(function(d) { return d.count; });
+  var partition = d3.layout.cumulativePartition().sort(null).value(function(d) { return d.count; });
 
   var click = function() { return; };
       
@@ -189,6 +189,10 @@ function sunburstD3() {
     // click hanlder
     function clickHandler(d) {   
       node = d;   
+      // if (node.name == 'root:root') return; // ignore root clicks
+      if (node.parent && node.parent.name == 'root:root') {
+        d = node.parent;        
+      }
       if (options.click) {
         
         // if(y(d.y) <= 20) {return} // do nothing for center rings
@@ -200,7 +204,7 @@ function sunburstD3() {
           .duration(750)
           .attrTween("d", arcTween(d))
           .call(endall, function() { 
-            click(d); 
+            click(node); 
             selection.selectAll('.textpath')
               .text(function(d,i) {             
                 if (d.x < x.domain()[0] || d.x >= x.domain()[1])
