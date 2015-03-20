@@ -546,13 +546,15 @@
         if (bin == 'human' || bin == 'ambiguous' || bin == 'unknown') return;
 
         var binNode = getBinRoot(bin);
-        var dfc = getDefaultCountFilter(getBinRoot(bin).count);
+        // var dfc = getDefaultCountFilter(getBinRoot(bin).count);
 
-        $('#min-read-count-slider').val(dfc)
-        updateSlider($('#min-read-count-slider')[0]);
+        // $('#min-read-count-slider').val(dfc)
+        // updateSlider($('#min-read-count-slider')[0]);
         var selection = d3.select("#viz svg").datum(binNode);
         
-        window.sunburstChart(selection, {filter: function(d){ return d.count >= $('#min-read-count-slider').val()}} );
+        window.sunburstChart(selection, {filter: function(d){ 
+          return d.dx > 0.0005;          
+        }} );
         
         initBreadcrumbs(binNode.children[0]);
         
@@ -578,7 +580,7 @@
           $('#' + binNode.id).d3Click();
           $('#total-reads #bin').html(bin.charAt(0).toUpperCase() + bin.slice(1))
           $('#total-reads .iobio-txt-color').html(getBinRoot(bin).count)
-          $('#min-read-count-slider').val(dfc)
+          // $('#min-read-count-slider').val(dfc)
           updateSlider($('#min-read-count-slider')[0]);
         });          
       }
