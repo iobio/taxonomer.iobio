@@ -148,8 +148,8 @@
                       <!-- <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
                       <input id="min-abundance-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterPercent(this.value)'></input> 
                       <div style="clear:both"></div> -->
-                      <span id='min-read-count-slider-span'>0</span><span > reads</span>
-                      <input id="min-read-count-slider" type="range" value='0' max='20' oninput='updateSlider(this)' onchange='filterCount(this.value)'></input>
+                      <span id='min-read-count-slider-span'>0</span><span > read(s)</span>
+                      <input id="min-read-count-slider" type="range" value='1' min='1' max='50' oninput='updateSlider(this)' onchange='filterCount(this.value)'></input>
                     </div>
                   </div>
                   <!-- <div class="input-group" style="margin-top:10px">
@@ -331,6 +331,7 @@
 
         // defaults        
         window.bytesToSample=11000000;
+        window.defaultCountFilter = 1;
 
         // check if url to bam file is supplied in url and sample it
         if (window.location.search != "") {
@@ -341,6 +342,7 @@
               if (url[url.length-1] == '#') url = url.slice(0,url.length-1);
               goUrl(url);            
             } else if (full != undefined) {
+              window.defaultCountFilter = function(val) { return parseInt(Math.max(5, val * 0.001))};
               goFull(full);
             }
         }
@@ -535,7 +537,7 @@
         })        
       }
 
-      function toSunburst(elem) {
+      function toSunburst(elem) {        
         window.mode = 'sunburst';
         if (typeof elem == 'string' || elem instanceof String)
           var bin = elem;
@@ -543,13 +545,15 @@
           var bin = elem.getAttribute('data-bin');
         if (bin == 'human' || bin == 'ambiguous' || bin == 'unknown') return;
 
-        if( window.defaultCountFilter && window.defaultCountFilter > 0) {
+        var binNode = getBinRoot(bin);
+        var dfc = getDefaultCountFilter(getBinRoot(bin).count);
 
-        } else {
-          var binNode = getBinRoot(bin);
-          var selection = d3.select("#viz svg").datum(binNode);
-          window.sunburstChart(selection);
-        }
+        $('#min-read-count-slider').val(dfc)
+        updateSlider($('#min-read-count-slider')[0]);
+        var selection = d3.select("#viz svg").datum(binNode);
+        
+        window.sunburstChart(selection, {filter: function(d){ return d.count >= $('#min-read-count-slider').val()}} );
+        
         initBreadcrumbs(binNode.children[0]);
         
         // drill into binner chart        
@@ -561,7 +565,7 @@
         window.bigBinnerChart(arcBig, {events:true});
         // do this horrible event b\c i don't know how to tell when binner transition is over
         $('#selected-name').html( binNode.children[0].name );              
-        $(document).on("binnerTransitionOver", function() {          
+        $(document).on("binnerTransitionOver", function() {              
           $('#big-binner').css('visibility', 'hidden');
           // reset sliders
           resetSliders();
@@ -574,7 +578,16 @@
           $('#' + binNode.id).d3Click();
           $('#total-reads #bin').html(bin.charAt(0).toUpperCase() + bin.slice(1))
           $('#total-reads .iobio-txt-color').html(getBinRoot(bin).count)
+          $('#min-read-count-slider').val(dfc)
+          updateSlider($('#min-read-count-slider')[0]);
         });          
+      }
+
+      function getDefaultCountFilter(val) {
+        if (typeof(window.defaultCountFilter) == 'function')
+          return window.defaultCountFilter( val );
+        else
+          return window.defaultCountFilter;
       }
 
       function atRoot() {
@@ -793,14 +806,14 @@
         })
       }
 
-      function filterCount(val) {
+      function filterCount(val, root) {
         filterTree(val, function(node, val) {
-          return (node.name == 'root' || node.count  > parseInt(val))
-        })
+          return (node.name == 'root' || node.count  >= parseInt(val))
+        }, root)
       }
 
-      function filterTree(val, expression) {            
-        var root = d3.select('#main-viz path').data()[0];
+      function filterTree(val, expression, root) {            
+        root = root || d3.select('#main-viz path').data()[0];
         var displayCount = 0;
 
         t.dfs(root, [], function(node, par, ctrl) {            
@@ -815,7 +828,7 @@
                 n.count = 0;
               }
             });
-            // ctrl['cutoff'] = true;            
+            ctrl['cutoff'] = true;            
           } else {
             displayCount += node.count
           }
@@ -824,7 +837,7 @@
 
         var selection = d3.select("#viz svg").datum(root)            
         window.sunburstChart(selection);        
-      }
+      }      
 
       function generateUrl(dataUrl) {
         // var dataUrl = 'https://s3.amazonaws.com/iobio/SRR1714192_1.fastq,https://s3.amazonaws.com/iobio/SRR1714192_2.fastq';        

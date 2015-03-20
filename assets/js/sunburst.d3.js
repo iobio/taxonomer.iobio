@@ -2,7 +2,7 @@ function sunburstD3() {
   var margin = {top: 10, right: 10, bottom: 10, left: 10},
       width = 200,
       height = 200,
-      options = {klass:'', 'text' : true, 'click': true, 'mouseover': true, 'idPrefix': '', transitionDuration:750},
+      defaultOptions = {klass:'', 'text' : true, 'click': true, 'mouseover': true, 'idPrefix': '', transitionDuration:750},
       color = d3.scale.category20c(),
       radius = Math.min(width, height) / 2,            
       x = d3.scale.linear().range([0, 2 * Math.PI]),
@@ -20,7 +20,7 @@ function sunburstD3() {
       
   function chart(selection, opts) {
     // merge options and defaults
-    options = $.extend(options, opts);    
+    var options = $.extend({}, defaultOptions, opts);    
     var innerHeight = height - margin.top - margin.bottom;
     // recalc radius & y scale & arc
     radius = Math.min(width, height) / 2;              
@@ -43,18 +43,26 @@ function sunburstD3() {
       var gEnter = g.enter().append("g")
           .attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");
 
-      // update
-           
+      // update      
+      partition.nodes(data); // call to set depth data
+      // downSampleTree(data,4);     
 
       // enter
-
-      var path = g.selectAll(".path")
-              .data(partition.nodes(data), function(d) { return d.id; })    
+      if (options.filter)
+        var path = g.selectAll(".path")
+                .data(partition.nodes(data).filter(options.filter), function(d) { return d.id; })
+      else
+        var path = g.selectAll(".path")
+                .data(partition.nodes(data), function(d) { return d.id; })
       if (node == undefined)
         node = path.data()[0];        
 
       // exit
       path.exit().remove();
+      // path.exit().transition()
+      //   .duration(options.transitionDuration)
+      //   .attrTween("d", arcTweenData);  
+      //remove();
 
       // enter
       var gPath = path.enter().append('g')
@@ -65,6 +73,7 @@ function sunburstD3() {
             .attr('id', function(d) { return options.idPrefix + d.id; })
             .style("fill", function(d,i) { 
               if(i == 0) return 'white';
+              else if(d.name == 'many') { return 'rgb(200,200,200)'}
               else return color((d.children ? d : d.parent)); })
             .on("click", clickHandler)
             .on("mouseover", function(d,i) {
@@ -282,6 +291,40 @@ function sunburstD3() {
       transition 
           .each(function() { ++n; }) 
           .each("end", function() { if (!--n) callback.apply(this, arguments); }); 
+    }
+
+    // creates a tree with less nodes. replaces all the nodes past a certain depth with 
+    // a single gray node per level. Allows huge trees to be visualized
+    function downSampleTree(root, depth) {
+      t.dfs(root, [], function(node, par, ctrl) {            
+        if (node.depth > depth) {
+          var sumCount = 0;
+          var childrenList = undefined;
+          if(node.children) {
+            node.children.forEach(function(child){
+              sumCount += child.count;
+              if (child.children) {
+                childrenList = childrenList || [];
+                child.children.forEach(function(c){ childrenList.push(c); })
+              }
+            })
+            node.children = [ {
+              count : sumCount,
+              children : childrenList,
+              id : node.children[0].id,
+              depth : node.children[0].depth,
+              name : 'many',
+              bin : node.children[0].bin,
+              parent : node,
+              x : node.children[0].x,
+              y : node.children[0].y,
+              dx : node.children[0].dx,
+              dy : node.children[0].dy,
+              value : sumCount
+            }]
+          }
+        } 
+     }) 
     }
   } // end chart function   
 
