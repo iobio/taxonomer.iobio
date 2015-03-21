@@ -835,8 +835,9 @@
           updateReadsViewed(displayCount);
        }) 
 
-        var selection = d3.select("#viz svg").datum(root)            
-        window.sunburstChart(selection);        
+        var selection = d3.select("#viz svg").datum(root)   
+        var options = getUrlParameter('full') != undefined ? {} : {pixelFilter:false};         
+        window.sunburstChart(selection, options);        
       }      
 
       function generateUrl(dataUrl) {
