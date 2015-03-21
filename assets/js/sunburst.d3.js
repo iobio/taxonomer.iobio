@@ -2,7 +2,7 @@ function sunburstD3() {
   var margin = {top: 10, right: 10, bottom: 10, left: 10},
       width = 200,
       height = 200,
-      defaultOptions = {klass:'', 'text' : true, 'click': true, 'mouseover': true, 'idPrefix': '', transitionDuration:750},
+      defaultOptions = {klass:'', 'text' : true, 'click': true, 'mouseover': true, 'idPrefix': '', transitionDuration:750, pixelFilter:true},
       color = d3.scale.category20c(),
       radius = Math.min(width, height) / 2,            
       x = d3.scale.linear().range([0, 2 * Math.PI]),
@@ -19,6 +19,7 @@ function sunburstD3() {
   var click = function() { return; };
       
   function chart(selection, opts) {
+    var me  = this;
     // merge options and defaults
     var options = $.extend({}, defaultOptions, opts);    
     var innerHeight = height - margin.top - margin.bottom;
@@ -33,6 +34,7 @@ function sunburstD3() {
 
     // process selection
     selection.each(function(data) {
+      me.data = data;
       // set svg element
       var svg = d3.select(this);
 
@@ -44,13 +46,16 @@ function sunburstD3() {
           .attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");
 
       // update      
-      partition.nodes(data); // call to set depth data
+      //partition.nodes(data); // call to set depth data
       // downSampleTree(data,4);     
 
       // enter
-      if (options.filter)
+      if (options.pixelFilter)
         var path = g.selectAll(".path")
-                .data(partition.nodes(data).filter(options.filter), function(d) { return d.id; })
+                .data(partition.nodes(data).filter(function(d){
+                  return x(d.dx) > 0.003;
+                }),
+                function(d) { return d.id; })
       else
         var path = g.selectAll(".path")
                 .data(partition.nodes(data), function(d) { return d.id; })
@@ -206,8 +211,51 @@ function sunburstD3() {
         
         // if(y(d.y) <= 20) {return} // do nothing for center rings
         // selection.selectAll('text').remove();
+        var endX = d3.scale.linear().range([0, 2 * Math.PI]).domain([d.x, d.x+d.dx])
 
        // selection.selectAll('path')
+       if (options.pixelFilter)
+        var path = selection.select('g').selectAll(".path")
+                .data(partition.nodes(data).filter( function(n) {
+                  return ((endX(n.x+n.dx) - endX(n.x)) > 0.003);
+                }), 
+                function(d) { return d.id; })
+      else
+        var path = selection.select('g').selectAll(".path")
+                .data(partition.nodes(data), function(d) { return d.id; })
+
+      path.exit().remove();
+
+      var gPath = path.enter().append('g')
+              .attr('class', 'path');
+
+      gPath.append("path")            
+            .attr("d", arc)
+            .attr('id', function(d) { return options.idPrefix + d.id; })
+            .style("fill", function(d,i) { 
+              if(i == 0) return 'white';
+              else if(d.name == 'many') { return 'rgb(200,200,200)'}
+              else return color((d.children ? d : d.parent)); })
+            .on("click", clickHandler)
+            .on("mouseover", function(d,i) {
+              if(i == 0 || !options.mouseover) return;  
+                div.transition()        
+                   .duration(200)      
+                   .style("opacity", .9);   
+                var category = d.name.split(':')[0];  
+                if (category == 'no rank')
+                  div.html(d.name.split(':')[1] + ' - ' + d.count)
+                else
+                  div.html(d.name + ' - ' + d.count)
+             .style("left", (d3.event.pageX) + "px") 
+             .style("text-align", 'left')    
+             .style("top", (d3.event.pageY - 24) + "px");    
+             })                  
+             .on("mouseout", function(d) {       
+                div.transition()        
+                   .duration(500)      
+                   .style("opacity", 0);   
+             }).each(stash);
 
         selection.selectAll('.path').select('path').transition()
           .duration(750)

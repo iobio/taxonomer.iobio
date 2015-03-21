@@ -22,7 +22,7 @@
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 
     <!-- JS -->
-    <script type="text/javascript" src='assets/js/d3.js'></script>  
+    <script type="text/javascript" src='assets/js/d3.min.js'></script>  
     <script type="text/javascript" src='assets/js/cumulativeHierarchy.js'></script>  
     <script type="text/javascript" src='assets/js/t.js'></script>          
     <script type="text/javascript" src='assets/js/binary.js'></script>
@@ -552,9 +552,7 @@
         // updateSlider($('#min-read-count-slider')[0]);
         var selection = d3.select("#viz svg").datum(binNode);
         
-        window.sunburstChart(selection, {filter: function(d){ 
-          return d.dx > 0.0005;          
-        }} );
+        window.sunburstChart(selection);
         
         initBreadcrumbs(binNode.children[0]);
         
