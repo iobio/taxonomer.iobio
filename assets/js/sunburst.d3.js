@@ -204,7 +204,7 @@ function sunburstD3() {
     function clickHandler(d) {   
       node = d;   
       // if (node.name == 'root:root') return; // ignore root clicks
-      if (node.parent && node.parent.name == 'root:root') {
+      if (node.parent && node.parent.name.split(':')[1] == 'root') {
         d = node.parent;        
       }
       if (options.click) {
