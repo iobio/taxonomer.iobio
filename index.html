@@ -234,49 +234,49 @@
                     <button data-bin='human' type='button' class='category btn btn-default' style="background:#25aaff">
                       Human
                     </button>
-                    <div data-bin='human' class='human-binned-reads'>0</div>
+                    <div data-bin='human' class='human-binned-reads' title="Total Reads (Classified Reads)">0</div>
                   </div>
                   <div class='cat-group'>
                     <button data-bin='bacterial' type='button' class='category btn btn-default' onclick="toSunburst(this)" style="background:#ff6f03">
                       Bacterial
                     </button>
-                    <div> <a data-bin='bacterial' class='bacterial-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
+                    <div> <a data-bin='bacterial' title="Total Reads (Classified Reads)" class='bacterial-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
                   </div>
                   <div class='cat-group'>
                     <button data-bin='viral' type='button' class='category btn btn-default' onclick="toSunburst(this)" style='background:purple'>
                       Viral
                     </button>
-                    <div> <a data-bin='viral' class='viral-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
+                    <div> <a data-bin='viral' title="Total Reads (Classified Reads)" class='viral-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
                   </div>
                   <div class='cat-group'>
                     <button data-bin='phage' type='button' class='category btn btn-default' onclick="toSunburst(this)" style='background:red'>
                       Phage
                     </button>
-                    <div> <a data-bin='phage' class='phage-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
+                    <div> <a data-bin='phage' title="Total Reads (Classified Reads)" class='phage-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
                   </div>
                   <div class='cat-group'>
                     <button data-bin='fungal' type='button' class='category btn btn-default' onclick="toSunburst(this)" style='background:green'>
                       Fungal
                     </button>
-                    <div> <a data-bin='fungal' class='fungal-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
+                    <div> <a data-bin='fungal' title="Total Reads (Classified Reads)" class='fungal-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
                   </div>
                   <div class='cat-group'>
                     <button data-bin='phix' type='button' class='category btn btn-default'  style='background:#06ac61'>
                       PhiX
                     </button>
-                    <div class='phix-binned-reads'>0</div> 
+                    <div title="Total Reads (Classified Reads)" class='phix-binned-reads'>0</div> 
                   </div>
                   <div class='cat-group'>
                     <button data-bin='ambiguous' type='button' class='category btn btn-default'  style='background:#5877ab'>
                       Ambiguous
                     </button>
-                    <div class='ambiguous-binned-reads'>0</div> 
+                    <div title="Total Reads (Classified Reads)" class='ambiguous-binned-reads'>0</div> 
                   </div>
                   <div class='cat-group'>
                     <button data-bin='unknown' type='button' class='category btn btn-default'  style="background:rgb(120,120,120)">
                       Unknown
                     </button>
-                    <div class='unclassified-binned-reads'>0</div>  
+                    <div title="Total Reads (Classified Reads)" class='unclassified-binned-reads'>0</div>  
                   </div>                                                    
                 </div>
               </div>              
@@ -424,9 +424,7 @@
           window.binnerData = binnerData;          
           var arc = d3.select('#binner svg').selectAll(".arc")
               .data(window.binnerPie(binnerData), function(d) { return d.data.name; });
-          binnerChart(arc, {text:false});
-          var rows = ['human', 'viral', 'bacterial', 'fungal', 'ambiguous', 'unclassified', 'phage', 'phix'];
-           rows.forEach(function(key){ $('.' + key + '-binned-reads').html( commaFormat(data.binnerResult[key]) )});          
+          binnerChart(arc, {text:false});          
 
           // transform classifier data
           var classifierRoot = { 'name' : 'root', 'id' : 'root', 'count' : 0,  'children' : [] };
@@ -445,6 +443,14 @@
             else if (key == 'fungal') window.fungiColor.range(colorRange('green', '#bdeacb', 30))
             else if (key == 'phage') window.phageColor.range(colorRange('red', 'red', 30));
           })
+
+          var rows = ['human', 'viral', 'bacterial', 'fungal', 'ambiguous', 'unclassified', 'phage', 'phix'];
+          rows.forEach(function(key){ 
+            var cCount = data.classifierResult[key] ? data.classifierResult[key].count : undefined;
+            if (cCount == undefined) cCount = '';
+            else cCount = ' (' + commaFormat(cCount) + ')'
+            $('.' + key + '-binned-reads').html( commaFormat(data.binnerResult[key]) + cCount )
+          });          
 
           // update classified total
           $('#classified span').html(numberFormatter(classifierRoot['count']));
