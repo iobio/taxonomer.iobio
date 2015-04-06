@@ -170,10 +170,13 @@
                       Select Reads <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                      <li>
+                      <li style="padding-bottom:30px">
                            <div class="file" onClick="onFileButtonClicked()">
                               <input type="file" name="files[]" id="fastq-file"  multiple />
-                              <label class="file-button" for="fastq-file" >Choose FASTQ File(s)</label>
+                              <label class="file-button" for="fastq-file" >
+                                Choose FASTQ File(s)
+                                <div style="margin:-3px 0px 0px 10px;color:rgb(190,190,190); font-size: 11px">(hold shift to select 2 mate-pair files)</div>
+                              </label>
                           </div>
                       </li>
                       <li><a onClick="displayUrlBox()" href="#">Enter URL for FASTQ(s)</a></li> 
@@ -214,10 +217,22 @@
                     </ul>
                   </div>
                   <div id="url-input-group" class="input-group" style="min-width: 300px;max-width: 600px;">
-                      <input id="url-input" type="text" value="https://s3.amazonaws.com/iobio/ebola_sample.fastq" class="form-control" placeholder="http://..." >
+                    <div style="width:100%">
+                      <div style="color:rgb(80,80,80)">Add URL to reads (fasta or fastq)</div>
+                      <input id="url-input" type="text" value="https://s3.amazonaws.com/iobio/ebola_sample.fastq" class="form-control" placeholder="http://..." />
                       <span class="input-group-btn">
                           <button class="btn btn-default" onClick="onUrlEntered()" type="button">Go</button>
                       </span>
+
+                    </div>
+                    <div style="width:100%; margin-top: 20px">
+                      <div style="color:rgb(120,120,120)">Add second URL if using mate pairs (optional)</div>
+                      <input id="url-input" type="text" value="" class="form-control" placeholder="http://..." />
+                      <span class="input-group-btn">
+                          <button class="btn btn-default" onClick="onUrlEntered()" type="button">Go</button>
+                      </span>
+
+                    </div>
                   </div>
               </div> 
 
