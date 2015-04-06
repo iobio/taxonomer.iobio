@@ -336,7 +336,12 @@
         // check if url to bam file is supplied in url and sample it
         if (window.location.search != "") {
             var url = getUrlParameter('url');
-            var full = getUrlParameter('full');
+            var full = getUrlParameter('full');            
+
+            // check for flag to do more sampling
+            if (getUrlParameter('big')) {
+              window.bytesToSample=200000000
+            }
 
             if (url != undefined) {
               if (url[url.length-1] == '#') url = url.slice(0,url.length-1);
