@@ -26,7 +26,8 @@ function onUrlEntered() {
 
   // stream your file here
   goUrl(url);
-  window.location.search = 'url=' + url;
+  window.history.pushState({'index.html' : 'bar'},null,"?url=" + url);
+  // window.location.search = 'url=' + url;
 }
 
 function onSampleUrlEntered(url) {
@@ -34,7 +35,8 @@ function onSampleUrlEntered(url) {
 
   // stream your file here
   goUrl(url);
-  window.location.search = 'url=' + url;
+  window.history.pushState({'index.html' : 'bar'},null,"?url=" + url);
+  //window.location.search = 'url=' + url;
 }
 
 function displayUrlBox() {
