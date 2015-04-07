@@ -519,8 +519,8 @@
         })            
       }
 
-      function goFile(file) {
-        generateFileUrl(file, function(url){
+      function goFile(files) {
+        generateFileUrl(files, function(url){
           go(url);  
         });
         
@@ -866,6 +866,7 @@
 
       function generateUrl(dataUrl) {
         // var dataUrl = 'https://s3.amazonaws.com/iobio/SRR1714192_1.fastq,https://s3.amazonaws.com/iobio/SRR1714192_2.fastq';        
+        var partialStream = 'http://partialstream.iobio.io'
         var split = dataUrl.split('.');
         var format = split[split.length-1];
         var seperator = '@';
@@ -873,17 +874,21 @@
         if (dataUrl.split(',').length == 2) {
           var urls = [];
           dataUrl.split(',').forEach(function(u) {
-            urls.push(encodeURI('http://partialstream.iobio.io?cmd=--url ' + u.trim() + ' --range 0-' + window.bytesToSample + ' --separator ' + seperator));
+            urls.push(encodeURI( partialStream + '?cmd=--url ' + u.trim() + ' --bytes ' + window.bytesToSample + ' --separator ' + seperator));
           });
           dataUrl = urls.join(' ');
         } else {
-          dataUrl = encodeURI('http://partialstream.iobio.io?cmd=--url ' + dataUrl + ' --range 0-' + window.bytesToSample + ' --separator ' + seperator);
+          dataUrl = encodeURI( partialStream + '?cmd=--url ' + dataUrl + ' --bytes ' + window.bytesToSample + ' --separator ' + seperator);
         }        
-        var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl)        
+        var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl);
         var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));        
         var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxonomerUrl);
         return encodeURI(taxanglerUrl);
       } 
+
+      function showMatePair() {
+        document.getElementById('mate-pair-url').style.display = 'block';
+      }
 
       function generateFullUrl(dataUrl) {      
         var taxsampleUrl = 'http://taxsample.iobio.io?cmd=' + dataUrl;
@@ -903,10 +908,11 @@
 
       function startWs(url, callback) {
         var domain = new URL(url).hostname
-        if (domain == 'taxsample.iobio.io')      
-          var client = BinaryClient('ws://taxsample.iobio.io');        
-        else
-          var client = BinaryClient('ws://taxangler.iobio.io');        
+        var client = BinaryClient('ws://' + domain);        
+        // if (domain == 'taxsample.iobio.io')      
+        //   var client = BinaryClient('ws://taxsample.iobio.io');        
+        // else
+        //   var client = BinaryClient('ws://taxangler.iobio.io');        
         var buffer = '';
         client.on('open', function(stream){
           var stream = client.createStream({event:'run', params : {'url':url}});          
@@ -929,77 +935,64 @@
         });
       }
 
-      function generateFileUrl(file, callback) {
+      function generateFileUrl(files, callback) {
+        // var file = files[0];
         var me = this;
+        var fq2faService = 'ws://fq2fa.iobio.io';
         var taxonomerService = 'ws://thetaxonomer.iobio.io';
-        var connectionID = generateUid();
-        var client = BinaryClient(taxonomerService + '?id=', {'connectionID' : connectionID} );
-
-
-        var taxonomerUrl = encodeURI(taxonomerService + "?protocol=websocket&cmd=" + encodeURIComponent("http://client?&id="+connectionID));
+        var connectionID;
+        var client;
+        var dataUrl;
+        var url;
         var ended = 0;
         var me = this;
-        // send data to sevice when it asks for it         
-        client.on('stream', function(stream, options) {    
-          var reader = new FileReader();
-          var cutEnd = ""
-          var bufferSize = 1000000;
-          
-          var curr = 0;
-          reader.onloadend = function(evt) 
-          {
-              if (evt.target.readyState == FileReader.DONE) 
-                // evt.target.result = cutEnd + evt.target.result;
-                var lines = evt.target.result.split("\n");
-                var cut = 0;
-                for (var i= lines.length-5 ; i <lines.length; i++) {
-                  if (lines[i][0] == '@') {
-                    for ( var k=i; k < lines.length; k++) {
-                      cut += lines[k].length + 1; // plus one for end of line
+        files.forEach(function(file) {
+          var connectionID = generateUid();
+          // var client = BinaryClient(taxonomerService + '?id=', {'connectionID' : connectionID} );
+          var client = BinaryClient(fq2faService + '?id=', {'connectionID' : connectionID} );
+          dataUrl = encodeURI('http://partialstream.iobio.io?cmd=' + encodeURIComponent("http://client?&id="+connectionID));
+
+          // send data to sevice when it asks for it         
+          client.on('stream', function(stream, options) {    
+            var reader = new FileReader();
+            var cutEnd = ""
+            var bufferSize = 1000000;
+            
+            var curr = 0;
+            reader.onloadend = function(evt) 
+            {
+                if (evt.target.readyState == FileReader.DONE) 
+                  // evt.target.result = cutEnd + evt.target.result;
+                  var lines = evt.target.result.split("\n");
+                  var cut = 0;
+                  for (var i= lines.length-5 ; i <lines.length; i++) {
+                    if (lines[i][0] == '@') {
+                      for ( var k=i; k < lines.length; k++) {
+                        cut += lines[k].length + 1; // plus one for end of line
+                      }
+                      break;
                     }
-                    break;
                   }
-                }
-                // save cut end
-               // cutEnd = evt.target.result.slice(evt.target.result.length - cut, evt.target.result.length)
-                // write data to service
-                stream.write(evt.target.result.slice(0, evt.target.result.length - cut));
+                  // write data to service
+                  stream.write(evt.target.result.slice(0, evt.target.result.length - cut));                
+            };
+            
+            var blob = file.slice(0, 5000000);
+            reader.readAsBinaryString(blob);
+          })
 
-                // read next chunk
-                // var start = curr;
-                // curr = Math.min(curr+bufferSize, window.bytesToSample);
-                // reader.readAsBinaryString( file.slice(location, curr ) );  
-                
-                // var  id = undefined;
-                // var sequence = undefined;
-                // var record = [];
-                // evt.target.result.split('\n').forEach(function(line){
-                //   record.push(line);
-                //   if (record.length == 4) {
-                //     var output = '>' + record[0].slice(1, record[0].length-1) + "\n" + record[1] + "\n"
-                //     record = [];
-                //     stream.write(output);
-                //   }
-                // })
-          };
-          // var start = curr;
-          // curr = Math.min(curr+bufferSize, window.bytesToSample);
-          // reader.readAsBinaryString( file.slice(start, curr ) );  
-          
-          var blob = file.slice(0, 7000000);
-          reader.readAsBinaryString(blob);
-        })
-
-        // var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));
-        // console.log(taxonomerUrl);
-        var taxanglerUrl = 'http://taxangler.iobio.io?protocol=websocket&cmd=' + encodeURIComponent(taxonomerUrl);
-
-        var url = encodeURI(taxanglerUrl); 
-        client.on('open', function(stream){
-          var stream = client.createStream({event:'setID', 'connectionID':connectionID});
-          stream.end();
-          callback(url);
-        })
+          client.on('open', function(stream){
+            var stream = client.createStream({event:'setID', 'connectionID':connectionID});
+            stream.end();
+            callback(url);
+          })
+        });
+        var fq2faUrl     = encodeURI(fq2faService + "?protocol=websocket&cmd=" + dataUrl);
+        var taxonomerUrl = encodeURI(taxonomerService + "?protocol=websocket&cmd=" + encodeURIComponent(fq2faUrl));
+        var taxanglerUrl = encodeURI('http://taxangler.iobio.io?protocol=websocket&cmd=' + encodeURIComponent(taxonomerUrl));
+        var url = fq2faUrl; 
+        
+        
       }
 
       function updateTextSize() {
