@@ -948,9 +948,10 @@
         var me = this;
         files.forEach(function(file) {
           var connectionID = generateUid();
-          // var client = BinaryClient(taxonomerService + '?id=', {'connectionID' : connectionID} );
-          var client = BinaryClient(fq2faService + '?id=', {'connectionID' : connectionID} );
-          dataUrl = encodeURI('http://partialstream.iobio.io?cmd=' + encodeURIComponent("http://client?&id="+connectionID));
+          var client = BinaryClient(taxonomerService + '?id=', {'connectionID' : connectionID} );
+          // var client = BinaryClient('ws://partialstream.io' + '?id=', {'connectionID' : connectionID} );
+          // dataUrl = encodeURI('http://partialstream.iobio.io?protocol=websocket&cmd=' + encodeURIComponent("http://client?&id="+connectionID));
+          dataUrl = "http://client?&id="+connectionID;
 
           // send data to sevice when it asks for it         
           client.on('stream', function(stream, options) {    
@@ -988,9 +989,10 @@
           })
         });
         var fq2faUrl     = encodeURI(fq2faService + "?protocol=websocket&cmd=" + dataUrl);
-        var taxonomerUrl = encodeURI(taxonomerService + "?protocol=websocket&cmd=" + encodeURIComponent(fq2faUrl));
+        // var taxonomerUrl = encodeURI(taxonomerService + "?protocol=websocket&cmd=" + encodeURIComponent(fq2faUrl));
+        var taxonomerUrl = encodeURI(taxonomerService + "?protocol=websocket&cmd=" + encodeURIComponent(dataUrl));
         var taxanglerUrl = encodeURI('http://taxangler.iobio.io?protocol=websocket&cmd=' + encodeURIComponent(taxonomerUrl));
-        var url = fq2faUrl; 
+        var url = taxanglerUrl; 
         
         
       }
