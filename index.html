@@ -225,13 +225,11 @@
                       </span>
 
                     </div>
-                    <div style="width:100%; margin-top: 20px">
-                      <div style="color:rgb(120,120,120)">Add second URL if using mate pairs (optional)</div>
-                      <input id="url-input" type="text" value="" class="form-control" placeholder="http://..." />
-                      <span class="input-group-btn">
-                          <button class="btn btn-default" onClick="onUrlEntered()" type="button">Go</button>
-                      </span>
-
+                    <div style="text-align:left; margin-top: 15px">
+                      <a href="#" onclick='showMatePair()'>Add Mate Pair (optional)</a>
+                    </div>
+                    <div id='mate-pair-url' style="width:100%; display:none">                      
+                      <input id="mate-pair-url-input" type="text" value="" class="form-control" placeholder="http://..." />                      
                     </div>
                   </div>
               </div> 

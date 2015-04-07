@@ -436,8 +436,9 @@ h4 {
 #url-input {
   padding: 6px 4px !important;
   line-height: 24px;
-  max-width: 600px;
-  min-width: 600px;  
+  width: 555px;
+  /*max-width: 600px;
+  min-width: 600px;  */
 }
 .file {
   padding-left: 10px;
