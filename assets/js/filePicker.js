@@ -4,14 +4,14 @@ function onFileButtonClicked() {
 
 function onFilesSelected(event) {
 	if (event.target.files.length == 2) {
-		// merge fastq mate pair files
+		goFile(event.target.files)
 	
 	} else if (event.target.files.length == 1) {
 		// read fastq
 		var fileType0 = /[^.]+$/.exec(event.target.files[0].name)[0];
 		if (fileType0 != 'fastq') { alert('file must be a .fastq file'); return; }
 		var file = event.target.files[0];
-		goFile(file);
+		goFile([file]);
 	} else {
 		alert('select 1 fastq file or 2 fastq files that are mate pairs')
 	}
@@ -60,4 +60,4 @@ var generateUid = function (separator) {
     }
 
     return (S4() + S4() + delim + S4() + delim + S4() + delim + S4() + delim + S4() + S4() + S4());
-};ß
+};
