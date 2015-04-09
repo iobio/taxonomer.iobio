@@ -963,25 +963,10 @@
             var bufferSize = 1000000;
             
             var curr = 0;
-            reader.onloadend = function(evt) 
-            {
-                if (evt.target.readyState == FileReader.DONE) 
-                  // evt.target.result = cutEnd + evt.target.result;
-                  var lines = evt.target.result.split("\n");
-                  var cut = 0;
-                  for (var i= lines.length-5 ; i <lines.length; i++) {
-                    if (lines[i][0] == '@') {
-                      for ( var k=i; k < lines.length; k++) {
-                        cut += lines[k].length + 1; // plus one for end of line
-                      }
-                      break;
-                    }
-                  }
-                  // write data to service
-                  stream.write(evt.target.result.slice(0, evt.target.result.length - cut));                
-            };
+            reader.onload = function(evt) { stream.write(evt.target.result); }
+            reader.onloadend = function(evt) { stream.end();}
             
-            var blob = file.slice(0, 5000000);
+            var blob = file.slice(0, window.bytesToSample);
             reader.readAsBinaryString(blob);
           })
 
