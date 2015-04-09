@@ -544,7 +544,8 @@
           if (pwHash == correct) {
             // $('#app').removeClass('password');
 
-            document.getElementById("app").setAttribute('class', '');
+            // document.getElementById("app").setAttribute('class', '');
+            $('#app').removeClass('password');
             // $('#app').css('display', 'none');
             $('#pw-prompt').css('display', 'none');
           } else {
@@ -646,6 +647,7 @@
              }           
          })
         return root;
+        // return root.children[0];
       }
 
       function updateReadsViewed(displayCount) { 
@@ -938,20 +940,21 @@
       function generateFileUrl(files, callback) {
         // var file = files[0];
         var me = this;
+        var partialstreamService = 'ws://partialstream.iobio.io';
         var fq2faService = 'ws://fq2fa.iobio.io';
         var taxonomerService = 'ws://thetaxonomer.iobio.io';
         var connectionID;
         var client;
-        var dataUrl;
+        var dataUrl = [];
         var url;
         var ended = 0;
         var me = this;
         files.forEach(function(file) {
           var connectionID = generateUid();
-          var client = BinaryClient(taxonomerService + '?id=', {'connectionID' : connectionID} );
-          // var client = BinaryClient('ws://partialstream.io' + '?id=', {'connectionID' : connectionID} );
-          // dataUrl = encodeURI('http://partialstream.iobio.io?protocol=websocket&cmd=' + encodeURIComponent("http://client?&id="+connectionID));
-          dataUrl = "http://client?&id="+connectionID;
+          var client = BinaryClient(partialstreamService + '?id=', {'connectionID' : connectionID} );
+          
+          // hold onto urls
+          dataUrl.push('"' + encodeURI('http://partialstream.iobio.io' + "?protocol=websocket&cmd=" + encodeURIComponent("http://client?&id="+connectionID)) + '"');        
 
           // send data to sevice when it asks for it         
           client.on('stream', function(stream, options) {    
@@ -987,10 +990,9 @@
             stream.end();
             callback(url);
           })
-        });
-        var fq2faUrl     = encodeURI(fq2faService + "?protocol=websocket&cmd=" + dataUrl);
-        // var taxonomerUrl = encodeURI(taxonomerService + "?protocol=websocket&cmd=" + encodeURIComponent(fq2faUrl));
-        var taxonomerUrl = encodeURI(taxonomerService + "?protocol=websocket&cmd=" + encodeURIComponent(dataUrl));
+        });                       
+        var fq2faUrl     = encodeURI(fq2faService + '?protocol=websocket&cmd=' + dataUrl.join(' '));
+        var taxonomerUrl = encodeURI(taxonomerService + "?protocol=websocket&cmd=" + encodeURIComponent(fq2faUrl));
         var taxanglerUrl = encodeURI('http://taxangler.iobio.io?protocol=websocket&cmd=' + encodeURIComponent(taxonomerUrl));
         var url = taxanglerUrl; 
         

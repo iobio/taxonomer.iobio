@@ -4,7 +4,12 @@ function onFileButtonClicked() {
 
 function onFilesSelected(event) {
 	if (event.target.files.length == 2) {
-		goFile(event.target.files)
+    var files = [];
+    // convert to array
+    var fileList = event.target.files;
+    for (var i=0; i < fileList.length; i++) { files.push(fileList[i]);}
+    // analyze
+		goFile(files)
 	
 	} else if (event.target.files.length == 1) {
 		// read fastq
