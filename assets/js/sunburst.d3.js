@@ -76,10 +76,21 @@ function sunburstD3() {
       gPath.append("path")            
             .attr("d", arc)
             .attr('id', function(d) { return options.idPrefix + d.id; })
-            .style("fill", function(d,i) { 
-              if(i == 0) return 'white';
-              else if(d.name == 'many') { return 'rgb(200,200,200)'}
-              else return color((d.children ? d : d.parent)); })
+            .style("fill", function(d,i) {               
+              if(i == 0) return 'white';              
+              else if(d.depth ==1 || d.depth == 2) return color(d)(d.id);
+              else {
+                var datum = d;
+                var depth = Math.min(d.depth,6);
+                while (datum.depth > 2) {
+                  datum = datum.parent;
+                }
+                var cscale = color(datum);
+                var c = d3.hsl(cscale(datum.id)).brighter(depth/5);
+                return c;
+                // return color((d.children ? d : d.parent)); })
+              }
+            })
             .on("click", clickHandler)
             .on("mouseover", function(d,i) {
               if(i == 0 || !options.mouseover) return;  
@@ -88,9 +99,9 @@ function sunburstD3() {
                    .style("opacity", .9);   
                 var category = d.name.split(':')[0];  
                 if (category == 'no rank')
-                  div.html(d.name.split(':')[1] + ' - ' + d.count)
+                  div.html(d.name.split(':')[1] + ' - ' + d.count + ' read(s)')
                 else
-                  div.html(d.name + ' - ' + d.count)
+                  div.html(d.name + ' - ' + d.count + ' read(s)')
              .style("left", (d3.event.pageX) + "px") 
              .style("text-align", 'left')    
              .style("top", (d3.event.pageY - 24) + "px");    
@@ -233,9 +244,20 @@ function sunburstD3() {
             .attr("d", arc)
             .attr('id', function(d) { return options.idPrefix + d.id; })
             .style("fill", function(d,i) { 
-              if(i == 0) return 'white';
-              else if(d.name == 'many') { return 'rgb(200,200,200)'}
-              else return color((d.children ? d : d.parent)); })
+              if(i == 0) return 'white';              
+              else if(d.depth ==1 || d.depth == 2) return color(d)(d.id);
+              else {
+                var datum = d;
+                var depth = Math.min(d.depth,6);
+                while (datum.depth > 2) {
+                  datum = datum.parent;
+                }
+                var cscale = color(datum);
+                var c = d3.hsl(cscale(datum.id)).brighter(depth/5);
+                return c;
+                // return color((d.children ? d : d.parent)); })
+              }
+            })
             .on("click", clickHandler)
             .on("mouseover", function(d,i) {
               if(i == 0 || !options.mouseover) return;  

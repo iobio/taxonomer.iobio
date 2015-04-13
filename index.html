@@ -449,17 +449,22 @@
           Object.keys(data.classifierResult).forEach(function(key) {
                         
             if (data.classifierResult[key].children != undefined) {
-              if (data.classifierResult[key].children[0].children == undefined)
-                classifierRoot.children.push( data.classifierResult[key] );  
-              else
-                classifierRoot.children.push( data.classifierResult[key].children[0] );  
+              if (data.classifierResult[key].children[0].children == undefined) {
+                var root = data.classifierResult[key];                
+                classifierRoot.children.push( root );  
+              }
+              else {
+                var root = data.classifierResult[key].children[0]
+                classifierRoot.children.push( root );  
+              }
             }            
             var count = data.classifierResult[key].count || 0;
             classifierRoot['count'] += count;
-            if (key == 'bacterial') window.bacterialColor.range(colorRange('#ff6f03', '#ff9f7c', 30));
-            else if (key == 'viral') window.viralColor.range(colorRange('purple', '#c9a9ea', 30));  
-            else if (key == 'fungal') window.fungiColor.range(colorRange('green', '#bdeacb', 30))
-            else if (key == 'phage') window.phageColor.range(colorRange('red', 'red', 30));
+            if (key == 'bacterial') colorRange(window.bacterialColor,'#FF5C00', '#FFBF00', root);
+            else if (key == 'viral') colorRange(window.viralColor,'#7404B4', '#CC00D3', root);  
+            // else if (key == 'viral') window.viralColor.range(colorRange('purple', '#c9a9ea', 30));              
+            else if (key == 'fungal') colorRange(window.fungiColor,'#009E13', '#00B57E', root);              
+            else if (key == 'phage') colorRange(window.phageColor,'#CC0627', '#F20054', root);
           })
 
           var rows = ['human', 'viral', 'bacterial', 'fungal', 'ambiguous', 'unclassified', 'phage', 'phix'];
@@ -797,25 +802,41 @@
       }
 
       function colorByCategory(d) {        
+        // if (d.bin == 'bacterial')
+        //   return window.bacterialColor(d.id);
+        // else if (d.bin == 'fungal')
+        //   return window.fungiColor(d.id);
+        // else if (d.bin == 'viral')
+        //   return window.viralColor(d.id);
+        // else if (d.bin == 'phage')
+        //   return window.phageColor(d.id);
+        // else if (d.bin == 'human')
+        //   return window.humanColor(d.id);
         if (d.bin == 'bacterial')
-          return window.bacterialColor(d.id);
+          return window.bacterialColor;
         else if (d.bin == 'fungal')
-          return window.fungiColor(d.id);
+          return window.fungiColor;
         else if (d.bin == 'viral')
-          return window.viralColor(d.id);
+          return window.viralColor;
         else if (d.bin == 'phage')
-          return window.phageColor(d.id);
+          return window.phageColor;
         else if (d.bin == 'human')
-          return window.humanColor(d.id);
+          return window.humanColor;
       }
 
-      function colorRange(c1, c2, count) {
-        var color = d3.interpolateHcl(c1, c2);
-        var colors = [];
-        for (var i=0; i < count; i++) {
-          colors.push( color(i/count) );
-        }
-        return colors;
+      function colorRange(cscale, c1, c2, root) {
+        if (root == undefined || root.children == undefined) return cscale;
+        if (root.children[0].children != undefined) var toplevels = [root.children[0]].concat(root.children[0].children);
+        else var toplevels = [root.children[0]];
+        var color = d3.interpolateRgb(c1, c2);
+        var range = [];
+        var domain = [];
+        for (var i=0; i < toplevels.length; i++) {          
+          range.push( color(i/toplevels.length) );
+          domain.push( toplevels[i].id )  
+        }        
+        cscale.range(range).domain(domain);
+        return cscale;
       }
 
       function addClassToInactive(node, klass) {
@@ -964,7 +985,7 @@
             
             var curr = 0;
             reader.onload = function(evt) { stream.write(evt.target.result); }
-            reader.onloadend = function(evt) { stream.end();}
+            reader.onloadend = function(evt) { stream.end(); }
             
             var blob = file.slice(0, window.bytesToSample);
             reader.readAsBinaryString(blob);
