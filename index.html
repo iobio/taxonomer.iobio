@@ -446,8 +446,9 @@
             }
             // gather data for classified portion of binner pie chart
             if (data.classifierResult[key] != undefined) {
-              binnerClassifiedData.push( {name: key, count: data.classifierResult[key].count, type:'classified'});
-              binnerClassifiedData.push( {name:key+'-binner', count:data.binnerResult[key]-data.classifierResult[key].count, type:'binner'} );
+              var cCount = data.classifierResult[key].count || 0;
+              binnerClassifiedData.push( {name: key, count: cCount, type:'classified'});              
+              binnerClassifiedData.push( {name:key+'-binner', count:data.binnerResult[key]-cCount, type:'binner'} );
             } else {
               binnerClassifiedData.push( {name:key+'-binner', count:data.binnerResult[key], type:'binner'} );
             }
