@@ -328,6 +328,7 @@ h4 {
   visibility: hidden;
   height: calc(100% - 120px) ;
   margin: 0px 30px;
+  position: relative;
 }
 
 #main-panel #big-binner svg {  
@@ -342,6 +343,10 @@ h4 {
 #main-panel #big-binner text {
   font-size: 16px;
   fill: rgb(100,100,100);
+}
+
+#main-panel #big-binner-classified text {
+  display: none;
 }
 
 #main-panel #cat-list {

@@ -236,9 +236,12 @@
 
               <!-- binner visualization -->
               <div id="big-binner">
-                <div style="height: 100%; width: 100%;">
-                  <svg></svg>
+                <div style="height: 100%; width: 100%;position:absolute; ">
+                  <svg id='big-binner-classified'></svg>
                 </div>              
+                <div style="height: 100%; width: 100%;position:absolute; ">
+                  <svg id='big-binner-binner'></svg>
+                </div>                
               </div>
 
               <div id='cat-list'>
@@ -375,7 +378,7 @@
 
         // create charts
         var radiusSmall = $('#binner svg').height()/2;
-        var radiusBig = $('#big-binner svg').height()/2;        
+        var radiusBig = $('#big-binner-binner').height()/2;        
         var binnerColor = d3.scale.ordinal()
               .domain(['bacterial', 'fungal', 'human', 'viral', 'unknown', 'ambiguous', 'phage'])
               .range(['#ff6f03', 'green', '#25aaff', 'purple', 'rgb(120,120,120)', '#5877ab', 'red'])
@@ -390,6 +393,12 @@
               .klass("binnerArc")
               .click(function(d) { toSunburst(d.name) })
               .color(function(d) {   return binnerColor(d.data.name); })
+        window.bigBinnerClassifiedChart = donutD3()
+              .radius(radiusBig-5)
+              .thickness(radiusBig)
+              .klass("binnerArc")
+              .click(function(d) { toSunburst(d.name) })
+              .color(function(d) {   if(d.data.type=='binner') {return 'white'} else {return binnerColor(d.data.name);} })
         window.binnerPie = d3.layout.pie().sort(function(a,b) { return d3.ascending(a.name,b.name); }).value(function(d) { return d.count});         
         $('#cat-list').css('right', parseInt(($('#main-panel').width()/2 - radiusBig)/2) + 'px');
 
@@ -425,14 +434,23 @@
           $('#spinner').css('visibility', 'hidden')        
           // transform binner data
           var binnerData = [];
+          window.binnerClassifiedData = [];
           var total = 0;          
           if (data.binnerResult['phage'] == undefined) data.binnerResult['phage'] = 0;
           Object.keys(data.binnerResult).forEach(function(key){
             
-            if (key == 'unclassified')
-                binnerData.push( {name:'unknown', count:data.binnerResult[key]} );
-            else
+            if (key == 'unclassified') {
+                binnerData.push( {name:'unknown', count:data.binnerResult[key]} );                
+            } else {
               binnerData.push( {name:key, count:data.binnerResult[key]} );
+            }
+            // gather data for classified portion of binner pie chart
+            if (data.classifierResult[key] != undefined) {
+              binnerClassifiedData.push( {name: key, count: data.classifierResult[key].count, type:'classified'});
+              binnerClassifiedData.push( {name:key+'-binner', count:data.binnerResult[key]-data.classifierResult[key].count, type:'binner'} );
+            } else {
+              binnerClassifiedData.push( {name:key+'-binner', count:data.binnerResult[key], type:'binner'} );
+            }
             total += data.binnerResult[key]
           })
           // update metrics
@@ -494,10 +512,13 @@
           // window.totalReads = d3.selectAll('#main-panel path').data()[0].value;
          
           // update correct chart
-          if ( window.mode == 'binner') {            
-            var arcBig = d3.select('#big-binner svg').selectAll(".arc")
+          if ( window.mode == 'binner') {                        
+            var arcClassifiedBig = d3.select('#big-binner-classified').selectAll(".arc")
+                .data(window.binnerPie(binnerClassifiedData), function(d) { return d.data.name; });
+            window.bigBinnerClassifiedChart(arcClassifiedBig);                        
+            var arcBig = d3.select('#big-binner-binner').selectAll(".arc")
                 .data(window.binnerPie(binnerData), function(d) { return d.data.name; });
-            window.bigBinnerChart(arcBig);                        
+            window.bigBinnerChart(arcBig);
           } else {               
             var currTopRoot = d3.select('#main-viz path').data()[0];            
             var currH = treeToHash(currTopRoot, 'id');
@@ -590,7 +611,10 @@
         var data = [{"name":"viral","count":0},{"name":"unknown","count":0},{"name":"fungal","count":0},{"name":"bacterial","count":0},{"name":"human","count":0},{"name":"ambiguous","count":0},{"name":"phage","count":0}]  
         data.forEach(function(d) { if (d.name==bin) d.count = 1; })
         // var data = [{"name":bin,"count":1}];  
-        var arcBig = d3.select('#big-binner svg').selectAll(".arc")
+        var arcClassifiedBig = d3.select('#big-binner-classified').selectAll(".arc")
+            .data(window.binnerPie(data), function(d) { return d.data.name; });
+        window.bigBinnerClassifiedChart(arcClassifiedBig, {events:true});                        
+        var arcBig = d3.select('#big-binner-binner').selectAll(".arc")
             .data(window.binnerPie(data), function(d) { return d.data.name; });
         window.bigBinnerChart(arcBig, {events:true});
         // do this horrible event b\c i don't know how to tell when binner transition is over
@@ -782,7 +806,10 @@
           $('#main-viz').css('visibility', 'hidden');
           $('#top-controls').css('visibility', 'hidden');
           $('#big-binner').css('visibility', 'visible');
-          var arcBig = d3.select('#big-binner svg').selectAll(".arc")
+          var arcClassifiedBig = d3.select('#big-binner-classified').selectAll(".arc")
+              .data(window.binnerPie(window.binnerClassifiedData), function(d) { return d.data.name; });
+          window.bigBinnerClassifiedChart(arcClassifiedBig, {events:false});                        
+          var arcBig = d3.select('#big-binner-binner').selectAll(".arc")
               .data(window.binnerPie(window.binnerData), function(d) { return d.data.name; });
           window.bigBinnerChart(arcBig, {events: false});          
         } else 
