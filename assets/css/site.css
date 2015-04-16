@@ -281,6 +281,14 @@ h4 {
   margin-top: 10px;
 }
 
+#main-panel #top-controls #file-name { text-align: right}
+#main-panel #top-controls #file-name .glyphicon { 
+  color: #268bd2;
+  font-size: 15px;
+  margin-left: 3px;
+}
+
+#main-panel #top-controls #min-abundance { margin-top: 80px;}
 #main-panel #top-controls #min-abundance h4 {
   text-align:left;
   width: 216px;  

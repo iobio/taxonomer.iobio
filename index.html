@@ -141,13 +141,33 @@
                     <div style="font-size:12px">(Based on Internal Transcribed Spacer (ITS) Reads)</div>
                   </div>
                 </div>
-                <div class="col-xs-3">                              
+                <div class="col-xs-3">                  
+                  <div id='file-name' class="dropdown">  
+                    <span class='name'></span>
+                    <span id='dl-drop-down' class="dropdown-toggle"  data-toggle="dropdown" aria-expanded="true">
+                      <a href="#">
+                          <span style="margin-left:5px">Download</span>
+                          <span class="caret"></span>
+                      </a>
+                    </span>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dl-drop-down">
+                      <li role="presentation"><a id="hierachalJsonUrl" role="menuitem" tabindex="-1" href="#" download="chase.json">
+                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                        Download Hierachal JSON
+                      </a></li>
+                      <li role="presentation"><a id="taxonomerUrl" role="menuitem" tabindex="-1" href="#" download>
+                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>                        
+                        Download Taxonomer Results
+                      </a></li>                      
+                    </ul>
+                  </div>
+                  <!-- <h4 id="file-name"><span class="name"></span><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></h4> -->
                   <div id='min-abundance'>              
                     <h4>Display Threshold</h4>
                     <div style="text-align: left; width: 240px; margin: -5px auto 0px auto;">
                       <!-- <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
                       <input id="min-abundance-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterPercent(this.value)'></input> 
-                      <div style="clear:both"></div> -->
+                      <div style="clear:both"></div> -->                      
                       <span id='min-read-count-slider-span'>0</span><span > read(s)</span>
                       <input id="min-read-count-slider" type="range" value='1' min='1' max='50' oninput='updateSlider(this)' onchange='filterCount(this.value)'></input>
                     </div>
@@ -346,7 +366,7 @@
         $('#fastq-file').on('change', onFilesSelected);
 
         // defaults        
-        window.bytesToSample=11000000;
+        window.bytesToSample=11000000;        
         window.defaultCountFilter = 3;
 
         // check if url to bam file is supplied in url and sample it
@@ -400,7 +420,7 @@
               .click(function(d) { toSunburst(d.name) })
               .color(function(d) {   if(d.data.type=='binner') {return 'white'} else {return binnerColor(d.data.name);} })
         window.binnerPie = d3.layout.pie().sort(function(a,b) { return d3.ascending(a.name,b.name); }).value(function(d) { return d.count});         
-        $('#cat-list').css('right', parseInt(($('#main-panel').width()/2 - radiusBig)/2) + 'px');
+        $('#cat-list').css('left', parseInt(($('#main-panel').width()/2 - radiusBig)/2) + 'px');
 
         var radius = $('#sensitivity svg').height();
         window.sensitivityChart = gaugeD3().radius(radius).thickness(6).klass("sensitivityArc");        
@@ -547,13 +567,20 @@
       }
 
       function goFile(files) {
+        // set title
+        $('#file-name .name').html(files[0])
+        // generate file url
         generateFileUrl(files, function(url){
           go(url);  
         });
         
       }
 
-      function goUrl(dataUrl) {        
+      function goUrl(dataUrl) { 
+        // set title
+        var name = dataUrl.split('/')[ dataUrl.split('/').length-1 ];
+        $('#file-name .name').html(name);
+        // generate url
         var url = generateUrl(dataUrl);
         go(url);
       }
@@ -916,6 +943,7 @@
       }      
 
       function generateUrl(dataUrl) {
+        var name = dataUrl.split('/')[ dataUrl.split('/').length-1 ];
         // var dataUrl = 'https://s3.amazonaws.com/iobio/SRR1714192_1.fastq,https://s3.amazonaws.com/iobio/SRR1714192_2.fastq';        
         var partialStream = 'http://partialstream.iobio.io'
         var split = dataUrl.split('.');
@@ -934,6 +962,14 @@
         var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl);
         var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));        
         var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxonomerUrl);
+        // set urls for user download
+        
+        $('#hierachalJsonUrl').attr('href', encodeURI(taxanglerUrl));
+        $('#hierachalJsonUrl').attr('download', name + ".json");
+        $('#taxonomerUrl').attr('href', taxonomerUrl);        
+        $('#taxonomerUrl').attr('download', name + ".taxonomer");
+
+        // return url
         return encodeURI(taxanglerUrl);
       } 
 
@@ -1012,7 +1048,11 @@
             var bufferSize = 1000000;
             
             var curr = 0;
-            reader.onload = function(evt) { stream.write(evt.target.result); }
+            reader.onload = function(evt) { 
+              console.log('stream = ' + evt.target.result);
+              stream.write(evt.target.result); 
+              // stream.write('hi hi hi'); 
+            }
             reader.onloadend = function(evt) { stream.end(); }
             
             var blob = file.slice(0, window.bytesToSample);
