@@ -281,7 +281,11 @@ h4 {
   margin-top: 10px;
 }
 
-#main-panel #top-controls #file-name { text-align: right}
+#main-panel #file-name { 
+  position: absolute;
+  right: 20px;
+  text-align: right
+}
 #main-panel #top-controls #file-name .glyphicon { 
   color: #268bd2;
   font-size: 15px;

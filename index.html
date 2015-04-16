@@ -118,7 +118,26 @@
               </div>
             </div>
             
-            <div id='main-panel'>            
+            <div id='main-panel'>       
+              <div id='file-name' class="dropdown">  
+                <span class='name'></span>
+                <span id='dl-drop-down' class="dropdown-toggle"  data-toggle="dropdown" aria-expanded="true">
+                  <a href="#">
+                      <span style="margin-left:5px">Download</span>
+                      <span class="caret"></span>
+                  </a>
+                </span>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dl-drop-down">
+                  <li role="presentation"><a id="hierachalJsonUrl" role="menuitem" tabindex="-1" href="#" download="chase.json">
+                    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                    Download Hierachal JSON
+                  </a></li>
+                  <li role="presentation"><a id="taxonomerUrl" role="menuitem" tabindex="-1" href="#" download>
+                    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>                        
+                    Download Taxonomer Results
+                  </a></li>                      
+                </ul>
+              </div>     
               <div id='top-controls' class="row">              
                 <div class="col-xs-3">
                   <div id='breadcrumbs' >
@@ -141,26 +160,7 @@
                     <div style="font-size:12px">(Based on Internal Transcribed Spacer (ITS) Reads)</div>
                   </div>
                 </div>
-                <div class="col-xs-3">                  
-                  <div id='file-name' class="dropdown">  
-                    <span class='name'></span>
-                    <span id='dl-drop-down' class="dropdown-toggle"  data-toggle="dropdown" aria-expanded="true">
-                      <a href="#">
-                          <span style="margin-left:5px">Download</span>
-                          <span class="caret"></span>
-                      </a>
-                    </span>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dl-drop-down">
-                      <li role="presentation"><a id="hierachalJsonUrl" role="menuitem" tabindex="-1" href="#" download="chase.json">
-                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-                        Download Hierachal JSON
-                      </a></li>
-                      <li role="presentation"><a id="taxonomerUrl" role="menuitem" tabindex="-1" href="#" download>
-                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>                        
-                        Download Taxonomer Results
-                      </a></li>                      
-                    </ul>
-                  </div>
+                <div class="col-xs-3">                                    
                   <!-- <h4 id="file-name"><span class="name"></span><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></h4> -->
                   <div id='min-abundance'>              
                     <h4>Display Threshold</h4>
