@@ -428,6 +428,7 @@
               .color(function(d) {   if(d.data.type=='binner') {return 'white'} else {return binnerColor(d.data.name);} })
         window.binnerPie = d3.layout.pie().sort(function(a,b) { return d3.ascending(a.name,b.name); }).value(function(d) { return d.count});         
         $('#cat-list').css('left', parseInt(($('#main-panel').width()/2 - radiusBig)/2) + 'px');
+        $('#cat-list').css('top', parseInt(($('#main-panel').height()/2 - $('#cat-list').height()/2)+20) + 'px');
 
         var radius = $('#sensitivity svg').height();
         window.sensitivityChart = gaugeD3().radius(radius).thickness(6).klass("sensitivityArc");        
