@@ -119,6 +119,7 @@
             </div>
             
             <div id='main-panel'>       
+              
               <div id='file-name' class="dropdown">  
                 <span class='name'></span>
                 <span id='dl-drop-down' class="dropdown-toggle"  data-toggle="dropdown" aria-expanded="true">
@@ -126,16 +127,22 @@
                       <span style="margin-left:5px">Download</span>
                       <span class="caret"></span>
                   </a>
+                  <!-- url used to programmatically click for local files to be downloaded -->
+                  <a style="display:none" id='hierachalJsonUrl-click'  download>Hierachal</a>
                 </span>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dl-drop-down">
-                  <li role="presentation"><a id="hierachalJsonUrl" role="menuitem" tabindex="-1" href="#" download="chase.json">
+                  <li role="presentation"><a id="hierachalJsonUrl" role="menuitem" tabindex="-1" href="#" onclick="startDownload(this)" >
                     <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
                     Download Hierachal JSON
-                  </a></li>
-                  <li role="presentation"><a id="taxonomerUrl" role="menuitem" tabindex="-1" href="#" download>
+                    </a>
+                  </li>
+                  <li role="presentation"><a id="taxonomerUrl" role="menuitem" tabindex="-1" href="#" onclick="startDownload(this)" >
                     <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>                        
                     Download Taxonomer Results
-                  </a></li>                      
+                    </a>
+                    <!-- url used to programmatically click for local files to be downloaded -->
+                    <a style="display:none" id='taxonomerUrl-click'  download></a>
+                  </li>                      
                 </ul>
               </div>     
               <div id='top-controls' class="row">              
@@ -567,6 +574,7 @@
       }
 
       function goFile(files) {
+        window.sourceFiles = files;
         // set title
         $('#file-name .name').html(files[0])
         // generate file url
@@ -963,11 +971,8 @@
         var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));        
         var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxonomerUrl);
         // set urls for user download
-        
-        $('#hierachalJsonUrl').attr('href', encodeURI(taxanglerUrl));
-        $('#hierachalJsonUrl').attr('download', name + ".json");
-        $('#taxonomerUrl').attr('href', taxonomerUrl);        
-        $('#taxonomerUrl').attr('download', name + ".taxonomer");
+
+        setDownloadUrls(encodeURI(taxanglerUrl), taxonomerUrl);
 
         // return url
         return encodeURI(taxanglerUrl);
@@ -1032,6 +1037,7 @@
         var client;
         var dataUrl = [];
         var url;
+        var taxonomerUrl;
         var ended = 0;
         var me = this;
         files.forEach(function(file) {
@@ -1048,11 +1054,7 @@
             var bufferSize = 1000000;
             
             var curr = 0;
-            reader.onload = function(evt) { 
-              console.log('stream = ' + evt.target.result);
-              stream.write(evt.target.result); 
-              // stream.write('hi hi hi'); 
-            }
+            reader.onload = function(evt) { stream.write(evt.target.result); }
             reader.onloadend = function(evt) { stream.end(); }
             
             var blob = file.slice(0, window.bytesToSample);
@@ -1062,7 +1064,7 @@
           client.on('open', function(stream){
             var stream = client.createStream({event:'setID', 'connectionID':connectionID});
             stream.end();
-            callback(url);
+            callback(url, taxonomerUrl);
           })
         });                       
         var fq2faUrl     = encodeURI(fq2faService + '?protocol=websocket&cmd=' + dataUrl.join(' '));
@@ -1071,6 +1073,29 @@
         var url = taxanglerUrl; 
         
         
+      }
+
+      function startDownload(elem) {
+        if (window.sourceFiles != undefined) {
+          generateFileUrl(window.sourceFiles, function(hierachalJsonUrl, taxonomerUrl) {
+            var id = $(elem).attr('id') + '-click';            
+            $('#hierachalJsonUrl-click').attr('href', hierachalJsonUrl); 
+
+            // switch protocol to http if needed
+            if (taxonomerUrl.slice(0,2) == 'ws') 
+              taxonomerUrl = 'http' + taxonomerUrl.slice(2,taxonomerUrl.length);   
+            $('#taxonomerUrl-click').attr('href', taxonomerUrl);        
+            console.log($('#' + id).attr('href'))
+            $('#' + id).get(0).click();            
+          })
+        }
+      }
+
+      function setDownloadUrls(taxanglerUrl, taxonomerUrl) {
+        $('#hierachalJsonUrl').attr('href', taxanglerUrl);
+        $('#hierachalJsonUrl').attr('download', name + ".json");
+        $('#taxonomerUrl').attr('href', taxonomerUrl);        
+        $('#taxonomerUrl').attr('download', name + ".taxonomer");
       }
 
       function updateTextSize() {
