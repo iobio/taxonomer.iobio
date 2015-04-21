@@ -374,7 +374,7 @@
 
         // defaults        
         window.bytesToSample=11000000;        
-        window.defaultCountFilter = 3;
+        window.defaultCountFilter = 1;
 
         // check if url to bam file is supplied in url and sample it
         if (window.location.search != "") {
@@ -577,7 +577,7 @@
       function goFile(files) {
         window.sourceFiles = files;
         // set title
-        $('#file-name .name').html(files[0])
+        $('#file-name .name').html(files[0].name)
         // generate file url
         generateFileUrl(files, function(url){
           go(url);  
@@ -634,11 +634,15 @@
         if (bin == 'human' || bin == 'ambiguous' || bin == 'unknown') return;
 
         var binNode = getBinRoot(bin);                
+        $('#min-read-count-slider').val(window.defaultCountFilter);
+        updateSlider($('#min-read-count-slider')[0]);
+        
         var selection = d3.select("#viz svg").datum(binNode);
         
         window.sunburstChart(selection);
         
         initBreadcrumbs(binNode.children[0]);
+
         
         // drill into binner chart        
         var data = [{"name":"viral","count":0},{"name":"unknown","count":0},{"name":"fungal","count":0},{"name":"bacterial","count":0},{"name":"human","count":0},{"name":"ambiguous","count":0},{"name":"phage","count":0}]  
@@ -667,7 +671,7 @@
           $('#total-reads .iobio-txt-color').html(getBinRoot(bin).count)
           $('#min-read-count-slider').val(window.defaultCountFilter);
           updateSlider($('#min-read-count-slider')[0]);
-          $('#min-read-count-slider').change();
+          $('#min-read-count-slider').change()
         });          
       }
 
