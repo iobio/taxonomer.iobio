@@ -167,9 +167,9 @@
                     <div style="font-size:12px">(Based on Internal Transcribed Spacer (ITS) Reads)</div>
                   </div>
                 </div>
-                <div class="col-xs-3">                                    
+                <div class="col-xs-3"  style="z-index: 20">                                    
                   <!-- <h4 id="file-name"><span class="name"></span><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></h4> -->
-                  <div id='min-abundance'>              
+                  <div id='min-abundance' style="z-index: 20">              
                     <h4>Display Threshold</h4>
                     <div style="text-align: left; width: 240px; margin: -5px auto 0px auto;">
                       <!-- <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
@@ -390,7 +390,7 @@
               if (url[url.length-1] == '#') url = url.slice(0,url.length-1);
               goUrl(url);            
             } else if (full != undefined) {
-              window.defaultCountFilter = function(val) { return parseInt(Math.max(5, val * 0.001))};
+              // window.defaultCountFilter = function(val) { return parseInt(Math.max(5, val * 0.001))};
               goFull(full);
             }
         }
@@ -633,11 +633,7 @@
           var bin = elem.getAttribute('data-bin');
         if (bin == 'human' || bin == 'ambiguous' || bin == 'unknown') return;
 
-        var binNode = getBinRoot(bin);
-        // var dfc = getDefaultCountFilter(getBinRoot(bin).count);
-
-        // $('#min-read-count-slider').val(dfc)
-        // updateSlider($('#min-read-count-slider')[0]);
+        var binNode = getBinRoot(bin);                
         var selection = d3.select("#viz svg").datum(binNode);
         
         window.sunburstChart(selection);
@@ -669,8 +665,9 @@
           $('#' + binNode.id).d3Click();
           $('#total-reads #bin').html(bin.charAt(0).toUpperCase() + bin.slice(1))
           $('#total-reads .iobio-txt-color').html(getBinRoot(bin).count)
-          // $('#min-read-count-slider').val(dfc)
+          $('#min-read-count-slider').val(window.defaultCountFilter);
           updateSlider($('#min-read-count-slider')[0]);
+          $('#min-read-count-slider').change();
         });          
       }
 

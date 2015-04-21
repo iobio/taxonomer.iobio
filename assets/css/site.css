@@ -293,7 +293,7 @@ h4 {
   margin-left: 3px;
 }
 
-#main-panel #top-controls #min-abundance { margin-top: 80px;}
+#main-panel #top-controls #min-abundance { margin-top: 80px; z-index: 9;}
 #main-panel #top-controls #min-abundance h4 {
   text-align:left;
   width: 216px;  
