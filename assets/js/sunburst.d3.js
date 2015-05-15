@@ -86,7 +86,7 @@ function sunburstD3() {
                   datum = datum.parent;
                 }
                 var cscale = color(datum);
-                var c = d3.hsl(cscale(datum.id)).brighter(depth/5);
+                var c = d3.hsl(cscale(datum.id)).brighter(depth/4);
                 return c;
                 // return color((d.children ? d : d.parent)); })
               }
