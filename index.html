@@ -379,7 +379,8 @@
         // check if url to bam file is supplied in url and sample it
         if (window.location.search != "") {
             var url = getUrlParameter('url');
-            var full = getUrlParameter('full');            
+            var full = getUrlParameter('full');  
+            var sra = getUrlParameter('sra');            
 
             // check for flag to do more sampling
             if (getUrlParameter('big')) {
@@ -392,6 +393,8 @@
             } else if (full != undefined) {
               // window.defaultCountFilter = function(val) { return parseInt(Math.max(5, val * 0.001))};
               goFull(full);
+            } else if (sra != undefined) {
+              goSra(sra);
             }
         }
       });
@@ -583,6 +586,11 @@
           go(url);  
         });
         
+      }
+
+      function goSra(sra_ids) {
+        var url = generateSraUrl(sra_ids)
+        go(url);
       }
 
       function goUrl(dataUrl) { 
@@ -979,6 +987,28 @@
         // return url
         return encodeURI(taxanglerUrl);
       } 
+
+      function generateSraUrl(sra_ids) {
+        var sratoolkit = 'http://sratoolkit.iobio.io';
+        if (sra_ids.split(',').length == 2) {
+          var urls = [];
+          sra_ids.split(',').forEach(function(u) {
+            urls.push(encodeURI( sratoolkit + '?cmd=fastq-dump -X 50000 -Z --fasta ' + u.trim()));
+          });
+          dataUrl = urls.join(' ');
+        } else {
+          dataUrl = encodeURI( sratoolkit + '?cmd=fastq-dump -X 50000 -Z --fasta ' + sra_ids);
+        }        
+        var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl);
+        var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));        
+        var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxonomerUrl);
+        // set urls for user download
+
+        setDownloadUrls(encodeURI(taxanglerUrl), taxonomerUrl);
+
+        // return url
+        return encodeURI(taxanglerUrl);
+      }
 
       function showMatePair() {
         document.getElementById('mate-pair-url').style.display = 'block';
