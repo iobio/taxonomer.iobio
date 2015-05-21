@@ -445,13 +445,20 @@ h4 {
 
 /*#filepicker button .caret { color: #cb0808;}*/
 
-#url-input-group {
- visibility: hidden;
+.input-group {
+ display: none;
  margin-top: 15px;
  /*display: block;*/
 }
 
 #url-input {
+  padding: 6px 4px !important;
+  line-height: 24px;
+  width: 555px;
+  /*max-width: 600px;
+  min-width: 600px;  */
+}
+#sra-input {
   padding: 6px 4px !important;
   line-height: 24px;
   width: 555px;

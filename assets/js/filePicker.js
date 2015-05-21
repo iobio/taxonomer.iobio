@@ -42,8 +42,21 @@ function onUrlEntered() {
   // window.location.search = 'url=' + url;
 }
 
+function onSraEntered() {
+
+  // Grab the url here
+  var sra_id = $('#sra-input').val();
+
+  $('#sra-input-group').css('display', 'none');
+
+  // stream your file here
+  goSra(sra_id);
+  window.history.pushState({'index.html' : 'bar'},null,"?sra=" + sra_id);
+  // window.location.search = 'url=' + url;
+}
+
 function onSampleUrlEntered(url) {
-  $('#url-input-group').css('visibility', 'hidden');
+  $('#url-input-group').css('display', 'none');
 
   // stream your file here
   goUrl(url);
@@ -52,8 +65,16 @@ function onSampleUrlEntered(url) {
 }
 
 function displayUrlBox() {
-  $('#url-input-group').css('visibility', 'visible');
+  $('.input-group').css('display', 'none');
+  $('#url-input-group').css('display', 'block');
   $("#url-input").focus();
+
+}
+
+function displaySraBox() {
+  $('.input-group').css('display', 'none');
+  $('#sra-input-group').css('display', 'block');
+  $("#sra-input").focus();
 
 }
 
