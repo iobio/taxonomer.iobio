@@ -120,7 +120,7 @@
             
             <div id='main-panel'>       
               
-              <div id='file-name' class="dropdown">  
+              <div id='file-name' class="dropdown" style="z-index:10">  
                 <span class='name'></span>
                 <span id='dl-drop-down' class="dropdown-toggle"  data-toggle="dropdown" aria-expanded="true">
                   <a href="#">
@@ -130,7 +130,7 @@
                   <!-- url used to programmatically click for local files to be downloaded -->
                   <a style="display:none" id='hierachalJsonUrl-click'  download>Hierachal</a>
                 </span>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dl-drop-down" style="margin-left: -30px">
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dl-drop-down" style="margin-left: -130px">
                   <li role="presentation"><a id="hierachalJsonUrl" role="menuitem" tabindex="-1" href="#" onclick="startDownload(this)" >
                     <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
                     Download Hierachal JSON
@@ -145,7 +145,7 @@
                   </li>                      
                 </ul>
               </div>     
-              <div id='top-controls' class="row">              
+              <div id='top-controls' class="row" style="z-index:1">              
                 <div class="col-xs-3">
                   <div id='breadcrumbs' >
                     <ul>
@@ -167,9 +167,9 @@
                     <div style="font-size:12px">(Based on Internal Transcribed Spacer (ITS) Reads)</div>
                   </div>
                 </div>
-                <div class="col-xs-3"  style="z-index: 20">                                    
+                <div class="col-xs-3"  style="z-index: 5">                                    
                   <!-- <h4 id="file-name"><span class="name"></span><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></h4> -->
-                  <div id='min-abundance' style="z-index: 20">              
+                  <div id='min-abundance' style="z-index: 5">              
                     <h4>Display Threshold</h4>
                     <div style="text-align: left; width: 240px; margin: -5px auto 0px auto;">
                       <!-- <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
