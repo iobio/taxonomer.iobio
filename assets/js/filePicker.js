@@ -11,8 +11,11 @@ function onFilesSelected(event) {
     // check for supported file types
     var fileType0 = /[^.]+$/.exec(event.target.files[0].name)[0];
     var fileType1 = /[^.]+$/.exec(event.target.files[1].name)[0];
-    if (fileType0 != 'fastq' & fileType0 != 'fq' & fileType0 != 'fasta' & fileType0 != 'fas' & fileType0 != 'fa') { alert('file must be a fasta or fastq file'); return; }
-    if (fileType1 != 'fastq' & fileType1 != 'fq' & fileType1 != 'fasta' & fileType1 != 'fas' & fileType1 != 'fa') { alert('file must be a fasta or fastq file'); return; }
+    if (fileType0 == 'gz' || fileType1 == 'gz') { alert( 'Unzip .gz file to and use the .fasta or .fastq file');return}
+    else {
+      if (fileType0 != 'fastq' & fileType0 != 'fq' & fileType0 != 'fasta' & fileType0 != 'fas' & fileType0 != 'fa') { alert('file must be a fasta or fastq file'); return; }
+      if (fileType1 != 'fastq' & fileType1 != 'fq' & fileType1 != 'fasta' & fileType1 != 'fas' & fileType1 != 'fa') { alert('file must be a fasta or fastq file'); return; }
+    }
     
     for (var i=0; i < fileList.length; i++) { files.push(fileList[i]);}
     // analyze
@@ -21,7 +24,10 @@ function onFilesSelected(event) {
 	} else if (event.target.files.length == 1) {
 		// read fastq
 		var fileType0 = /[^.]+$/.exec(event.target.files[0].name)[0];    
-		if (fileType0 != 'fastq' & fileType0 != 'fq' & fileType0 != 'fasta' & fileType0 != 'fas' & fileType0 != 'fa') { alert('file must be a fasta(.gz) or fastq(.gz) file'); return; }
+     if (fileType0 == 'gz') { alert( 'Unzip .gz file to and use the .fasta or .fastq file'); return}
+    else {
+		  if (fileType0 != 'fastq' & fileType0 != 'fq' & fileType0 != 'fasta' & fileType0 != 'fas' & fileType0 != 'fa') { alert('file must be a fasta or fastq file'); return; }
+    }
 		var file = event.target.files[0];
 		goFile([file]);
 	} else {
