@@ -571,7 +571,7 @@
             var currH = treeToHash(currTopRoot, 'id');
             var newDataCurrRoot;
             t.bfs(window.rootData, [], function(node, par, ctrl) {             
-                 if (node.id == currTopRoot.id) {
+                 if (node.id == currTopRoot.id && node.bin == currTopRoot.bin) {
                    newDataCurrRoot = node;
                    t.bfs(newDataCurrRoot, [], function(n, p, c) {                     
                      if(currH[n.id] != undefined) {                                           
@@ -581,7 +581,7 @@
                    });
                    ctrl['stop'] = true;               
                  }           
-             })            
+             })
             var selection = d3.select("#viz svg").datum( newDataCurrRoot );
             // window.sunburstChart(selection, {drillTo:currRoot});
             window.sunburstChart(selection, {transitionDuration:200});    
