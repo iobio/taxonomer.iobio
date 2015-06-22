@@ -201,12 +201,12 @@
                            <div class="file" onClick="onFileButtonClicked()">
                               <input type="file" name="files[]" id="fastq-file"  multiple />
                               <label class="file-button" for="fastq-file" >
-                                Choose FASTQ File(s)
+                                Choose FASTQ/FASTA File(s)
                                 <div style="margin:-3px 0px 0px 10px;color:rgb(190,190,190); font-size: 11px">(hold shift to select 2 mate-pair files)</div>
                               </label>
                           </div>
                       </li>
-                      <li><a onClick="displayUrlBox()" href="#">Enter URL for FASTQ(s)</a></li> 
+                      <li><a onClick="displayUrlBox()" href="#">Enter URL for FASTQ/FASTA(s)</a></li> 
 
                       <li><a onClick="displaySraBox()" href="#">Enter SRA Run ID</a></li> 
                       
@@ -1078,6 +1078,7 @@
         // var file = files[0];
         var me = this;
         var partialstreamService = 'ws://partialstream.iobio.io';
+        // var partialstreamService = 'ws://0.0.0.0:7107';
         var fq2faService = 'ws://fq2fa.iobio.io';
         var taxonomerService = 'ws://thetaxonomer.iobio.io';
         var connectionID;
@@ -1091,8 +1092,13 @@
           var connectionID = generateUid();
           var client = BinaryClient(partialstreamService + '?id=', {'connectionID' : connectionID} );
           
+          // determine format
+          var format = file.name.split('.')[file.name.split('.').length-1];
+          var separator = '@';
+          if (format == 'fa' || format == 'fasta' || format == 'fas') separator = '">"';
+
           // hold onto urls
-          dataUrl.push('"' + encodeURI('http://partialstream.iobio.io' + "?protocol=websocket&cmd=" + encodeURIComponent("http://client?&id="+connectionID)) + '"');        
+          dataUrl.push('"' + encodeURI('http://partialstream.iobio.io' + "?protocol=websocket&cmd=" + encodeURIComponent("http://client?&id="+connectionID) + '  --separator ' + separator) + '"');          
 
           // send data to sevice when it asks for it         
           client.on('stream', function(stream, options) {    
