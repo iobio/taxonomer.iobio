@@ -623,7 +623,8 @@
       }
 
       function onPwEnter(e) {
-        if(e.keyCode === 0 || e.keyCode === 13) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if(code === 13) {
           var correct = '19ff94efc860acf54a5757f8c161f43357bf254e';
           var pw = $('#pw-prompt input').val();
           var pwHash = new jsSHA(pw, "TEXT").getHash("SHA-1", "HEX");
