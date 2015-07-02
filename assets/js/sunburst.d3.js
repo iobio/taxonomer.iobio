@@ -64,10 +64,24 @@ function sunburstD3() {
 
       // exit
       path.exit().remove();
-      // path.exit().transition()
-      //   .duration(options.transitionDuration)
-      //   .attrTween("d", arcTweenData);  
-      //remove();
+      
+      //  update any paths that stuck around (e.g. viruses is in both phage and viral sunbursts)
+      g.selectAll('.path').select('path')
+        .style("fill", function(d,i) {                             
+            if(i == 0) return 'white';              
+            else if(d.depth ==1 || d.depth == 2) return color(d)(d.id);
+            else {
+              var datum = d;
+              var depth = Math.min(d.depth,6);
+              while (datum.depth > 2) {
+                datum = datum.parent;
+              }
+              var cscale = color(datum);
+              var c = d3.hsl(cscale(datum.id)).brighter(depth/4);
+              return c;
+              // return color((d.children ? d : d.parent)); })
+            };
+        })
 
       // enter
       var gPath = path.enter().append('g')
@@ -76,7 +90,7 @@ function sunburstD3() {
       gPath.append("path")            
             .attr("d", arc)
             .attr('id', function(d) { return options.idPrefix + d.id; })
-            .style("fill", function(d,i) {               
+            .style("fill", function(d,i) {                             
               if(i == 0) return 'white';              
               else if(d.depth ==1 || d.depth == 2) return color(d)(d.id);
               else {
@@ -153,10 +167,10 @@ function sunburstD3() {
             });
       }
 
-      // update             
+      // update       
       g.selectAll('.path').select('path').transition()
         .duration(options.transitionDuration)
-        .attrTween("d", arcTweenData);      
+        .attrTween("d", arcTweenData);          
         
       g.selectAll('.path').select('text').transition()
           .duration(options.transitionDuration)          
