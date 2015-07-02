@@ -1,7 +1,8 @@
 function donutD3() {
    var radius = 90,
        thickness = 7,
-       labelr = radius + 30;
+       labelr = radius + 30,
+       klass = 'arc';
 
    var arc = d3.svg.arc();
    var color = d3.scale.category20c();
@@ -21,7 +22,7 @@ function donutD3() {
       var bbox = selection[0].parentNode.getBoundingClientRect();
       
       var g = selection.enter().append("g")
-         .attr("class", "arc")
+         .attr("class", klass)
          .attr("transform", "translate("+ bbox.width/2 + "," + bbox.height/2 + ")");
 
       // if ( g.data()[0] != undefined )

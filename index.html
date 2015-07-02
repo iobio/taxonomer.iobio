@@ -276,12 +276,12 @@
 
               <!-- binner visualization -->
               <div id="big-binner">
-                <div style="height: 100%; width: 100%;position:absolute; ">
+                <!-- <div style="height: 100%; width: 100%;position:absolute; ">
                   <svg id='big-binner-classified'></svg>
-                </div>              
-                <div style="height: 100%; width: 100%;position:absolute; ">
+                </div>                 -->
+                <div style="height: 100%; width: 100%;position:absolute;">
                   <svg id='big-binner-binner'></svg>
-                </div>                
+                </div>                                              
               </div>
 
               <div id='cat-list'>
@@ -440,8 +440,8 @@
               .color(function(d) {   return binnerColor(d.data.name); })
         window.bigBinnerClassifiedChart = donutD3()
               .radius(radiusBig-20)
-              .thickness(radiusBig)
-              .klass("binnerArc")
+              .thickness(20)
+              .klass("binnerClassArc")
               .click(function(d) { toSunburst(d.name) })
               .color(function(d) {   if(d.data.type=='binner') {return 'white'} else {return binnerColor(d.data.name);} })
         window.binnerPie = d3.layout.pie().sort(function(a,b) { return d3.ascending(a.name,b.name); }).value(function(d) { return d.count});         
@@ -559,13 +559,13 @@
           // window.totalReads = d3.selectAll('#main-panel path').data()[0].value;
          
           // update correct chart
-          if ( window.mode == 'binner') {                        
-            var arcClassifiedBig = d3.select('#big-binner-classified').selectAll(".arc")
-                .data(window.binnerPie(binnerClassifiedData), function(d) { return d.data.name; });
-            window.bigBinnerClassifiedChart(arcClassifiedBig);                        
-            var arcBig = d3.select('#big-binner-binner').selectAll(".arc")
+          if ( window.mode == 'binner') {                                    
+            var arcBig = d3.select('#big-binner-binner').selectAll(".binnerArc")
                 .data(window.binnerPie(binnerData), function(d) { return d.data.name; });
             window.bigBinnerChart(arcBig);
+            var arcClassifiedBig = d3.select('#big-binner-binner').selectAll(".binnerClassArc")
+                .data(window.binnerPie(binnerClassifiedData), function(d) { return d.data.name; });
+            window.bigBinnerClassifiedChart(arcClassifiedBig);                        
           } else {               
             var currTopRoot = d3.select('#main-viz path').data()[0];            
             var currH = treeToHash(currTopRoot, 'id');
@@ -671,13 +671,13 @@
         // drill into binner chart        
         var data = [{"name":"viral","count":0},{"name":"unknown","count":0},{"name":"fungal","count":0},{"name":"bacterial","count":0},{"name":"human","count":0},{"name":"ambiguous","count":0},{"name":"phage","count":0}]  
         data.forEach(function(d) { if (d.name==bin) d.count = 1; })
-        // var data = [{"name":bin,"count":1}];  
-        var arcClassifiedBig = d3.select('#big-binner-classified').selectAll(".arc")
-            .data(window.binnerPie(data), function(d) { return d.data.name; });
-        window.bigBinnerClassifiedChart(arcClassifiedBig, {events:true});                        
-        var arcBig = d3.select('#big-binner-binner').selectAll(".arc")
+        // var data = [{"name":bin,"count":1}];          
+        var arcBig = d3.select('#big-binner').selectAll(".binnerArc")
             .data(window.binnerPie(data), function(d) { return d.data.name; });
         window.bigBinnerChart(arcBig, {events:true});
+        var arcClassifiedBig = d3.select('#big-binner').selectAll(".binnerClassArc")
+            .data(window.binnerPie(data), function(d) { return d.data.name; });
+        window.bigBinnerClassifiedChart(arcClassifiedBig, {events:true});                        
         // do this horrible event b\c i don't know how to tell when binner transition is over
         $('#selected-name').html( binNode.children[0].name );              
         $(document).on("binnerTransitionOver", function() {              
@@ -868,10 +868,10 @@
           $('#main-viz').css('visibility', 'hidden');
           $('#top-controls').css('visibility', 'hidden');
           $('#big-binner').css('visibility', 'visible');
-          var arcClassifiedBig = d3.select('#big-binner-classified').selectAll(".arc")
+          var arcClassifiedBig = d3.select('#big-binner').selectAll(".binnerClassArc")
               .data(window.binnerPie(window.binnerClassifiedData), function(d) { return d.data.name; });
           window.bigBinnerClassifiedChart(arcClassifiedBig, {events:false});                        
-          var arcBig = d3.select('#big-binner-binner').selectAll(".arc")
+          var arcBig = d3.select('#big-binner').selectAll(".binnerArc")
               .data(window.binnerPie(window.binnerData), function(d) { return d.data.name; });
           window.bigBinnerChart(arcBig, {events: false});          
         } else 
@@ -1150,49 +1150,6 @@
         $('#hierachalJsonUrl').attr('download', name + ".json");
         $('#taxonomerUrl').attr('href', taxonomerUrl);        
         $('#taxonomerUrl').attr('download', name + ".taxonomer");
-      }
-
-      function updateTextSize() {
-        var text = d3.selectAll('#viz path').append('text')                       
-              .attr('x', function(d) { return x(d.x); })
-              .attr('dy', function(d) {return (y(d.y + d.dy) - y(d.y))/2;})        
-              .attr('dx', function(d) {
-                var sa = x(d.x);
-                var ea = x(d.x + d.dx);
-                var angle = ea - sa;
-                var r = y(d.y) + (y(d.y + d.dy) - y(d.y))/2;
-                return (angle*r)/2 ;
-              })
-              .on("mouseover", function(d) {  
-                  div.transition()        
-                     .duration(200)      
-                     .style("opacity", .9);      
-                  div.html(d.name + ' - ' + d.value)                                 
-               .style("left", (d3.event.pageX) + "px") 
-               .style("text-align", 'left')    
-               .style("top", (d3.event.pageY - 24) + "px");    
-               })                  
-               .on("mouseout", function(d) {       
-                  div.transition()        
-                     .duration(500)      
-                     .style("opacity", 0);   
-               });  
-        d3.selectAll('text').append("textPath")   
-            .attr('id', function(d) { return d.id + '-text'})     
-            .attr('class', 'textpath')       
-            .attr("xlink:href",function(d) { return '#' + d.id; })
-            .attr('alignment-baseline', "middle")
-            .attr('text-anchor', "middle")
-            .style('height', '10px')
-            .text(function(d,i) {               
-              var pathId = d.id.split('-text')[0];
-              var name = d.name.split(':')[1];              
-              this.innerHTML = name;
-              if (i==0 || this.getComputedTextLength() > document.getElementById(pathId).getBBox().width)            
-                return ''              
-              else         
-                return name;                      
-            });
       }
       
       function numberFormatter (d) {

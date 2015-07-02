@@ -349,16 +349,18 @@ h4 {
   width: 100%;
 }
 
+
+
 #main-panel #big-binner .arc{  
   cursor: pointer;
 }
 
 #main-panel #big-binner text {
   font-size: 16px;
-  fill: rgb(100,100,100);
+  fill: rgb(100,100,100);  
 }
 
-#main-panel #big-binner-classified text {
+#main-panel #big-binner .binnerClassArc text {
   display: none;
 }
 
