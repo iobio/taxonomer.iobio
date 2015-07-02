@@ -7,7 +7,8 @@ function donutD3() {
    var arc = d3.svg.arc();
    var color = d3.scale.category20c();
    var options = { text:true }
-   var click = function() { return; };   
+   var click = function() { return; };  
+   var tooltip = function() { return; };   
    
    var formatter = d3.format(",.1f"); 
    var commaFormatter = d3.format(",0f");    
@@ -40,7 +41,7 @@ function donutD3() {
              div.transition()        
                 .duration(200)      
                 .style("opacity", .9);      
-             div.html(d.data.name + ' ' + commaFormatter(d.value))                                 
+             div.html(tooltip(d))                                 
           .style("left", (d3.event.pageX) + "px") 
           .style("text-align", 'left')    
           .style("top", (d3.event.pageY - 24) + "px");    
@@ -160,6 +161,12 @@ function donutD3() {
   my.click = function(_) {
     if (!arguments.length) return click;
     click = _;
+    return my;
+  } 
+
+  my.tooltip = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
     return my;
   } 
 

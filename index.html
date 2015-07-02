@@ -422,6 +422,7 @@
         window.mode = 'binner';         
 
         // create charts
+        var commaFormatter = d3.format(",0f");   
         var radiusSmall = $('#binner svg').height()/2;
         var radiusBig = $('#big-binner-binner').height()/2;        
         var binnerColor = d3.scale.ordinal()
@@ -438,12 +439,14 @@
               .klass("binnerArc")
               .click(function(d) { toSunburst(d.name) })
               .color(function(d) {   return binnerColor(d.data.name); })
+              .tooltip(function(d) { return d.data.name + ' binned: ' + commaFormatter(d.value) });
         window.bigBinnerClassifiedChart = donutD3()
               .radius(radiusBig-20)
               .thickness(20)
               .klass("binnerClassArc")
               .click(function(d) { toSunburst(d.name) })
               .color(function(d) {   if(d.data.type=='binner') {return 'white'} else {return binnerColor(d.data.name);} })
+              .tooltip(function(d) { return d.data.name.split('-')[0] + ' classified: ' + commaFormatter(d.value) });
         window.binnerPie = d3.layout.pie().sort(function(a,b) { return d3.ascending(a.name,b.name); }).value(function(d) { return d.count});         
         $('#cat-list').css('left', parseInt(($('#main-panel').width()/2 - radiusBig)/2) + 'px');
         $('#cat-list').css('top', parseInt(($('#main-panel').height()/2 - $('#cat-list').height()/2)+20) + 'px');
