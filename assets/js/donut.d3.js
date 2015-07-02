@@ -13,7 +13,7 @@ function donutD3() {
 
    function my(selection, opts) {
       options = $.extend(options, opts); 
-      labelr = radius + 20;
+      labelr = radius + 30;
       arc = d3.svg.arc()
       .outerRadius(radius)
       .innerRadius(radius - thickness);
