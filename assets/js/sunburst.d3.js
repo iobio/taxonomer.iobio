@@ -123,25 +123,7 @@ function sunburstD3() {
                 var r = y(d.y) + (y(d.y + d.dy) - y(d.y))/2;
                 return (angle*r)/2 ;
               })
-              // .on("mouseover", function(d) {  
-              //     div.transition()        
-              //        .duration(200)      
-              //        .style("opacity", .9);      
-              //     div.html(d.name + ' - ' + d.value)                                 
-              //  .style("left", (d3.event.pageX) + "px") 
-              //  .style("text-align", 'left')    
-              //  .style("top", (d3.event.pageY - 24) + "px");    
-              //  })                  
-              //  .on("mouseout", function(d) {       
-              //     div.transition()        
-              //        .duration(500)      
-              //        .style("opacity", 0);   
-              //  });                       
 
-        // text.filter(function(d,i){
-        //   if (i == 0) return false;
-        //   return d.value > 7000;
-        // })
         text.append("textPath")   
             .attr('id', function(d) { return d.id + '-text'})     
             .attr('class', 'textpath')       
@@ -152,7 +134,7 @@ function sunburstD3() {
             .text(function(d,i) {              
               var pathId = d.id.split('-text')[0];
               var name = d.name.split(':')[1];              
-              this.innerHTML = name;
+              this.textContent = name;
               
               // get arc length, s
               var sa = x(d.x);
@@ -164,13 +146,8 @@ function sunburstD3() {
               var fontsize = 15;
               for (var k=fontsize; k >=9; k--) {
                 this.style.fontSize = k;
-                // if (i==0 || this.getComputedTextLength() > document.getElementById(pathId).getBBox().width)               
-                // if (this.getComputedTextLength() <= document.getElementById(pathId).getBBox().width)
-                // if (this.getComputedTextLength() <= document.getElementById(pathId).getTotalLength() / 2 - 17*2)
                 if (this.getComputedTextLength() <= s)
                   return name;
-                // else  
-                //   return name; 
               }
               return '';
             });
@@ -198,7 +175,7 @@ function sunburstD3() {
         .text(function(d,i) {
           var pathId = d.id.split('-text')[0];
           var name = d.name.split(':')[1];              
-          this.innerHTML = name;
+          this.textContent = name;          
 
           // get arc length, s
           var sa = x(d.x);
@@ -207,7 +184,7 @@ function sunburstD3() {
           var r = y(d.y) + (y(d.y + d.dy) - y(d.y))/2;
           var s = angle*r-2;
 
-          if (pathId == 'b64686') {
+          if (pathId == 'b192') {
             console.log('s = ' + s)
             var h = 5;
           }
@@ -215,20 +192,11 @@ function sunburstD3() {
           var fontsize = 15;
           for (var k=fontsize; k >=9; k--) {
             this.style.fontSize = k;
-            // if (i==0 || this.getComputedTextLength() > document.getElementById(pathId).getBBox().width)               
-            // if (this.getComputedTextLength() <= document.getElementById(pathId).getBBox().width)
-            // if (this.getComputedTextLength() <= document.getElementById(pathId).getTotalLength() / 2 - 17*2)
-            if (pathId == 'b64686') {
-              console.log('ctl = ' + this.getComputedTextLength());
-            }
             if (this.getComputedTextLength() <= s)
               return name;
-            // else  
-            //   return name; 
           }
           return '';
       })    
-      //});
       
 
 
@@ -320,7 +288,7 @@ function sunburstD3() {
                 return (angle*r)/2;
               })
             selection.selectAll('.textpath')
-              .text(function(d,i) {             
+              .text(function(d,i) {                             
                 if (d.x < x.domain()[0] || d.x >= x.domain()[1])
                   return '';
                 
@@ -333,19 +301,12 @@ function sunburstD3() {
 
                 var pathId = d.id.split('-text')[0];                                
                 var name = d.name.split(':')[1];              
-                this.innerHTML = name;
+                this.textContent = name;
                 var fontsize = 15;
                 for (var k=fontsize; k >=9; k--) {
                   this.style.fontSize = k;
-                  // if (i==0 || this.getComputedTextLength() > document.getElementById(pathId).getBBox().width)               
-                  // if (this.getComputedTextLength() <= document.getElementById(pathId).getBBox().width)
-                  
-
-                  // if (this.getComputedTextLength() <= document.getElementById(pathId).getTotalLength() / 2 - 17*2)
                   if (this.getComputedTextLength() <= s)
-                    return name;
-                  // else  
-                  //   return name; 
+                    return name;                  
                 }
                 return '';
               })
