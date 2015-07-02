@@ -114,16 +114,13 @@ function sunburstD3() {
       
       if (options.text) {
         var text = gPath.append('text')                       
-              .attr('x', function(d) { return x(d.x); })
+              .attr('x', function(d) { return 0; })
               .attr('dy', function(d) {return (y(d.y + d.dy) - y(d.y))/2;})        
               .attr('dx', function(d) {
                 var sa = x(d.x);
                 var ea = x(d.x + d.dx);
                 var angle = ea - sa;
                 var r = y(d.y) + (y(d.y + d.dy) - y(d.y))/2;
-                if (d.id == 'b136') {
-                  console.log('b136 dx = ' + (angle*r)/2 );
-                }
                 return (angle*r)/2 ;
               })
               // .on("mouseover", function(d) {  
@@ -156,11 +153,21 @@ function sunburstD3() {
               var pathId = d.id.split('-text')[0];
               var name = d.name.split(':')[1];              
               this.innerHTML = name;
+              
+              // get arc length, s
+              var sa = x(d.x);
+              var ea = x(d.x + d.dx);
+              var angle = ea - sa;
+              var r = y(d.y) + (y(d.y + d.dy) - y(d.y))/2;
+              var s = angle*r;
+
               var fontsize = 15;
               for (var k=fontsize; k >=9; k--) {
                 this.style.fontSize = k;
                 // if (i==0 || this.getComputedTextLength() > document.getElementById(pathId).getBBox().width)               
-                if (this.getComputedTextLength() <= document.getElementById(pathId).getBBox().width)
+                // if (this.getComputedTextLength() <= document.getElementById(pathId).getBBox().width)
+                // if (this.getComputedTextLength() <= document.getElementById(pathId).getTotalLength() / 2 - 17*2)
+                if (this.getComputedTextLength() <= s)
                   return name;
                 // else  
                 //   return name; 
@@ -175,8 +182,8 @@ function sunburstD3() {
         .attrTween("d", arcTweenData);      
         
       g.selectAll('.path').select('text').transition()
-          .duration(options.transitionDuration)
-          .attr('x', function(d) { return x(d.x); })
+          .duration(options.transitionDuration)          
+          .attr('x', function(d) { return 0; })
           .attr('dy', function(d) {return (y(d.y + d.dy) - y(d.y))/2;})        
           .attr('dx', function(d) {
             var sa = x(d.x);
@@ -192,11 +199,29 @@ function sunburstD3() {
           var pathId = d.id.split('-text')[0];
           var name = d.name.split(':')[1];              
           this.innerHTML = name;
+
+          // get arc length, s
+          var sa = x(d.x);
+          var ea = x(d.x + d.dx);
+          var angle = ea - sa;
+          var r = y(d.y) + (y(d.y + d.dy) - y(d.y))/2;
+          var s = angle*r-2;
+
+          if (pathId == 'b64686') {
+            console.log('s = ' + s)
+            var h = 5;
+          }
+
           var fontsize = 15;
           for (var k=fontsize; k >=9; k--) {
             this.style.fontSize = k;
             // if (i==0 || this.getComputedTextLength() > document.getElementById(pathId).getBBox().width)               
-            if (this.getComputedTextLength() <= document.getElementById(pathId).getBBox().width)
+            // if (this.getComputedTextLength() <= document.getElementById(pathId).getBBox().width)
+            // if (this.getComputedTextLength() <= document.getElementById(pathId).getTotalLength() / 2 - 17*2)
+            if (pathId == 'b64686') {
+              console.log('ctl = ' + this.getComputedTextLength());
+            }
+            if (this.getComputedTextLength() <= s)
               return name;
             // else  
             //   return name; 
@@ -284,19 +309,40 @@ function sunburstD3() {
           .attrTween("d", arcTween(d))
           .call(endall, function() { 
             click(node); 
+            selection.selectAll('text')
+              .attr('x', function(d) { return 0; })
+              .attr('dy', function(d) {return (y(d.y + d.dy) - y(d.y))/2;})        
+              .attr('dx', function(d) {
+                var sa = x(d.x);
+                var ea = x(d.x + d.dx);
+                var angle = ea - sa;
+                var r = y(d.y) + (y(d.y + d.dy) - y(d.y))/2;
+                return (angle*r)/2;
+              })
             selection.selectAll('.textpath')
               .text(function(d,i) {             
                 if (d.x < x.domain()[0] || d.x >= x.domain()[1])
                   return '';
                 
-                var pathId = d.id.split('-text')[0];
+                // get arc length, s
+                var sa = x(d.x);
+                var ea = x(d.x + d.dx);
+                var angle = ea - sa;
+                var r = y(d.y) + (y(d.y + d.dy) - y(d.y))/2;
+                var s = angle*r;
+
+                var pathId = d.id.split('-text')[0];                                
                 var name = d.name.split(':')[1];              
                 this.innerHTML = name;
                 var fontsize = 15;
                 for (var k=fontsize; k >=9; k--) {
                   this.style.fontSize = k;
                   // if (i==0 || this.getComputedTextLength() > document.getElementById(pathId).getBBox().width)               
-                  if (this.getComputedTextLength() <= document.getElementById(pathId).getBBox().width)
+                  // if (this.getComputedTextLength() <= document.getElementById(pathId).getBBox().width)
+                  
+
+                  // if (this.getComputedTextLength() <= document.getElementById(pathId).getTotalLength() / 2 - 17*2)
+                  if (this.getComputedTextLength() <= s)
                     return name;
                   // else  
                   //   return name; 
