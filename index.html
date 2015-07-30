@@ -1008,7 +1008,8 @@
       } 
 
       function generateSraUrl(sra_ids) {
-        var sratoolkit = 'http://sratoolkit.iobio.io';
+        // var sratoolkit = 'http://sratoolkit.iobio.io';
+        var sratoolkit = 'http://nv-green.iobio.io/sratoolkit/';
         if (sra_ids.split(',').length == 2) {
           var urls = [];
           sra_ids.split(',').forEach(function(u) {
@@ -1081,10 +1082,10 @@
       function generateFileUrl(files, callback) {
         // var file = files[0];
         var me = this;
-        var partialstreamService = 'ws://partialstream.iobio.io';
-        // var partialstreamService = 'ws://0.0.0.0:7107';
+        var partialstreamService = 'ws://partialstream.iobio.io';        
         var fq2faService = 'ws://fq2fa.iobio.io';
         var taxonomerService = 'ws://thetaxonomer.iobio.io';
+        var taxanglerService = 'ws://taxangler.iobio.io'        
         var connectionID;
         var client;
         var dataUrl = [];
@@ -1126,7 +1127,7 @@
         });                       
         var fq2faUrl     = encodeURI(fq2faService + '?protocol=websocket&cmd=' + dataUrl.join(' '));
         var taxonomerUrl = encodeURI(taxonomerService + "?protocol=websocket&cmd=" + encodeURIComponent(fq2faUrl));
-        var taxanglerUrl = encodeURI('http://taxangler.iobio.io?protocol=websocket&cmd=' + encodeURIComponent(taxonomerUrl));
+        var taxanglerUrl = encodeURI(taxanglerService + '?protocol=websocket&cmd=' + encodeURIComponent(taxonomerUrl));
         var url = taxanglerUrl; 
         
         
