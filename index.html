@@ -333,6 +333,12 @@
                       Unknown
                     </button>
                     <div title="Total Reads (Classified Reads)" class='unclassified-binned-reads'>0</div>  
+                  </div>
+                  <div id='repeat-button' class='cat-group' style="display:none">
+                    <button data-bin='Repeat' type='button' class='category btn btn-default'  style="background:#133063">
+                      Repeat
+                    </button>
+                    <div title="Total Reads (Classified Reads)" class='Repeat-binned-reads'>0</div>  
                   </div>                                                    
                 </div>
               </div>              
@@ -378,6 +384,7 @@
       window.viralColor = d3.scale.ordinal()
       window.fungiColor = d3.scale.ordinal();
       window.phageColor = d3.scale.ordinal();
+      window.teColor = d3.scale.ordinal();
       $(document).ready(function(){   
         // focus password prompt
         $('#pw-prompt input').focus();
@@ -394,6 +401,7 @@
         if (window.location.search != "") {
             var url = getUrlParameter('url');
             var full = getUrlParameter('full');  
+            var te = getUrlParameter('te');  
             var sra = getUrlParameter('sra');            
 
             // check for flag to do more sampling
@@ -408,6 +416,10 @@
             } else if (full != undefined) {
               // window.defaultCountFilter = function(val) { return parseInt(Math.max(5, val * 0.001))};
               goFull(full);
+            } else if (te != undefined) {
+              // window.defaultCountFilter = function(val) { return parseInt(Math.max(5, val * 0.001))};
+              goTe(te);
+              $('#repeat-button').css('display', 'block');
             } else if (sra != undefined) {
               goSra(sra);
             }
@@ -426,8 +438,8 @@
         var radiusSmall = $('#binner svg').height()/2;
         var radiusBig = $('#big-binner-binner').height()/2;        
         var binnerColor = d3.scale.ordinal()
-              .domain(['bacterial', 'fungal', 'human', 'viral', 'unknown', 'ambiguous', 'phage'])
-              .range(['#ff6f03', 'green', '#25aaff', 'purple', 'rgb(120,120,120)', '#5877ab', 'red'])
+              .domain(['bacterial', 'fungal', 'human', 'viral', 'unknown', 'ambiguous', 'phage', 'Repeat'])
+              .range(['#ff6f03', 'green', '#25aaff', 'purple', 'rgb(120,120,120)', '#5877ab', 'red', '#133063'])
         var binnerChart = donutD3()
               .radius(radiusSmall)
               .thickness(radiusSmall)
@@ -533,11 +545,12 @@
             // else if (key == 'viral') window.viralColor.range(colorRange('purple', '#c9a9ea', 30));              
             else if (key == 'fungal') colorRange(window.fungiColor,'#009E13', '#00B57E', root);              
             else if (key == 'phage') colorRange(window.phageColor,'#CC0627', '#F20054', root);
+            else if (key == 'Repeat') colorRange(window.teColor, '#0A1A36', '#7DA6FF', root);
           })
 
-          var rows = ['human', 'viral', 'bacterial', 'fungal', 'ambiguous', 'unclassified', 'phage', 'phix'];
+          var rows = ['human', 'viral', 'bacterial', 'fungal', 'ambiguous', 'unclassified', 'phage', 'phix', 'Repeat'];
           rows.forEach(function(key){ 
-            var cCount = data.classifierResult[key] ? data.classifierResult[key].count : undefined;
+            var cCount = data.classifierResult[key] ? data.classifierResult[key].count : undefined;            
             if (cCount == undefined) cCount = '';
             else cCount = ' (' + commaFormat(cCount) + ')'
             $('.' + key + '-binned-reads').html( commaFormat(data.binnerResult[key]) + cCount )
@@ -625,6 +638,11 @@
         go(url, {full:true});
       }
 
+      function goTe(dataUrl) {        
+        var url = generateTeUrl(dataUrl);
+        go(url);
+      }
+
       function onPwEnter(e) {
         var code = (e.keyCode ? e.keyCode : e.which);
         if(code === 13) {
@@ -672,7 +690,7 @@
 
         
         // drill into binner chart        
-        var data = [{"name":"viral","count":0},{"name":"unknown","count":0},{"name":"fungal","count":0},{"name":"bacterial","count":0},{"name":"human","count":0},{"name":"ambiguous","count":0},{"name":"phage","count":0}]  
+        var data = [{"name":"viral","count":0},{"name":"unknown","count":0},{"name":"fungal","count":0},{"name":"bacterial","count":0},{"name":"human","count":0},{"name":"ambiguous","count":0},{"name":"phage","count":0}, {"name":"te","count":0}]  
         data.forEach(function(d) { if (d.name==bin) d.count = 1; })
         // var data = [{"name":bin,"count":1}];          
         var arcBig = d3.select('#big-binner').selectAll(".binnerArc")
@@ -914,6 +932,8 @@
           return window.phageColor;
         else if (d.bin == 'human')
           return window.humanColor;
+        else if (d.bin == 'Repeat')
+          return window.teColor;
       }
 
       function colorRange(cscale, c1, c2, root) {
@@ -1038,6 +1058,12 @@
         var taxsampleUrl = 'http://taxsample.iobio.io?cmd=' + dataUrl;
         // var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxsampleUrl);
         return encodeURI(taxsampleUrl);
+      } 
+
+      function generateTeUrl(dataUrl) {      
+        var tesampleUrl = 'http://aureliesample.iobio.io?cmd=' + dataUrl;
+        // var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxsampleUrl);
+        return encodeURI(tesampleUrl);
       } 
 
       function startHttp(url, callback) {
