@@ -1029,7 +1029,7 @@
 
       function generateSraUrl(sra_ids) {
         // var sratoolkit = 'http://sratoolkit.iobio.io';
-        var sratoolkit = 'http://nv-green.iobio.io/sratoolkit/';
+        var sratoolkit = 'http://services.iobio.io/sratoolkit/';
         if (sra_ids.split(',').length == 2) {
           var urls = [];
           sra_ids.split(',').forEach(function(u) {
@@ -1087,8 +1087,8 @@
         client.on('open', function(stream){
           var stream = client.createStream({event:'run', params : {'url':url}});          
           
-          stream.on('data', function(datas, options) {            
-            datas.split(';').forEach(function(data) {
+          stream.on('data', function(datas, options) {
+            (buffer + datas).split(';').forEach(function(data) {
               if (data == undefined) return;
               var success = true;
               try {
