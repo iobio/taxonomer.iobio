@@ -279,8 +279,8 @@
                 <!-- <div style="height: 100%; width: 100%;position:absolute; ">
                   <svg id='big-binner-classified'></svg>
                 </div>                 -->
-                <div style="height: 100%; width: 100%;position:absolute;">
-                  <svg id='big-binner-binner'></svg>
+                <div style="height: 100%; width: 100%;position:absolute;">                  
+                  <svg id='big-binner-binner'></svg>                  
                 </div>                                              
               </div>
 
@@ -445,6 +445,7 @@
               .thickness(radiusSmall)
               .klass("binnerArc")
               .color(function(d) { return binnerColor(d.data.name); })
+              .tooltip(null)
         window.bigBinnerChart = donutD3()
               .radius(radiusBig-40)
               .thickness(radiusBig)
@@ -474,7 +475,7 @@
 
         window.sunburstChart = sunburstD3()
             .width( $('#viz svg').width() )
-            .height( $('#viz svg').height() )
+            .height( $('#viz svg').height() - 15 )
             .color(colorByCategory)
             .click( function(d) {  
               //updateParentHistory(d);              

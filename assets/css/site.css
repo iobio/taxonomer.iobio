@@ -347,6 +347,7 @@ h4 {
 #main-panel #big-binner svg {  
   height: 100%;
   width: 100%;
+  border: 1px solid red;
 }
 
 
@@ -389,7 +390,6 @@ h4 {
 }
 
 #main-panel #main-viz {
-  /*width: 80%;*/
   z-index: 1;
   visibility: hidden;
   position: absolute;
@@ -404,6 +404,7 @@ h4 {
 #main-panel #viz svg {
   width: 100%;
   height: 100%;  
+  border: 1px solid red;
 }
 
 #main-panel #viz-picker {

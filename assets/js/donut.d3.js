@@ -31,27 +31,31 @@ function donutD3() {
       // else
       //    var total = selection.data()[0].data + selection.data()[1].data
 
-      g.append("path")
+      var path = g.append("path")
          .attr("d", arc)         
          .style('fill', function(d,i) { return color(d) })
          .on('click', function(d){
             click(d.data);
          })
-         .on("mouseover", function(d,i) {           
-             div.transition()        
-                .duration(200)      
-                .style("opacity", .9);      
-             div.html(tooltip(d))                                 
-          .style("left", (d3.event.pageX) + "px") 
-          .style("text-align", 'left')    
-          .style("top", (d3.event.pageY - 24) + "px");    
-          })                  
-          .on("mouseout", function(d) {       
-             div.transition()        
-                .duration(500)      
-                .style("opacity", 0);   
-          })
           .each(function(d) { this._current = d; });
+
+      if (tooltip) {
+        path
+          .on("mouseover", function(d,i) {           
+               div.transition()        
+                  .duration(200)      
+                  .style("opacity", .9);      
+               div.html(tooltip(d))                                 
+            .style("left", (d3.event.pageX) + "px") 
+            .style("text-align", 'left')    
+            .style("top", (d3.event.pageY - 24) + "px");    
+            })                  
+            .on("mouseout", function(d) {       
+               div.transition()        
+                  .duration(500)      
+                  .style("opacity", 0);   
+            })
+      }      
          
       selection.exit().remove();
       if (options.text) {         
