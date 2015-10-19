@@ -280,104 +280,58 @@
                   <svg id='big-binner-classified'></svg>
                 </div>                 -->
                 <div style="height: 100%; width: 100%;position:absolute;">                  
-                  <svg id='big-binner-binner' viewBox="0 0 1370 440" preserveAspectRatio="xMidYMid"></svg>                  
+                  <svg id='big-binner-binner' viewBox="0 0 600 440" preserveAspectRatio="xMidYMid"></svg>                  
                 </div>                                              
               </div>
 
               <div id='cat-list'>
-                <svg style="width:100px;"> 
-                  <g transform="translate(0,20)">
+                <svg viewBox="0 0 100 444" preserveAspectRatio="xMidYMid"> 
+                  <g transform="translate(0,0)">
                     <rect data-bin='human' x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#25aaff"></rect>
                     <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Human </text>
                     <text x="50" y="47" data-bin='human' class='human-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
                   </g>
-                  <g transform="translate(0,70)">
+                  <g transform="translate(0,50)">
                     <rect data-bin='bacterial' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#ff6f03"></rect>
                     <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Bacterial </text>
+                    <text x="50" y="47" data-bin='baterial' class='bacterial-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
                   </g>                  
-                  <g transform="translate(0,120)">
+                  <g transform="translate(0,100)">
                     <rect data-bin='viral' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:purple"></rect>
                     <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Viral </text>
+                    <text x="50" y="47" data-bin='viral' class='viral-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
                   </g>                  
-                  <g transform="translate(0,170)">
+                  <g transform="translate(0,150)">
                     <rect data-bin='phage' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:red"></rect>
                     <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Phage </text>
+                    <text x="50" y="47" data-bin='phage' class='phage-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
                   </g>   
-                  <g transform="translate(0,220)">
-                    <rect data-bin='fungal' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#green"></rect>
+                  <g transform="translate(0,200)">
+                    <rect data-bin='fungal' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:green"></rect>
                     <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Fungal </text>
+                    <text x="50" y="47" data-bin='fungal' class='fungal-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
                   </g>                  
-                  <g transform="translate(0,270)">
+                  <g transform="translate(0,250)">
                     <rect data-bin='phix' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#06ac61"></rect>
                     <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> PhiX </text>
+                    <text x="50" y="47" data-bin='phix' class='phix-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
                   </g>        
-                  <g transform="translate(0,270)">
+                  <g transform="translate(0,300)">
                     <rect data-bin='ambiguous' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#5877ab"></rect>
                     <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Ambiguous </text>
+                    <text x="50" y="47"  class='ambiguous-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
                   </g>        
-                  <g transform="translate(0,270)">
+                  <g transform="translate(0,350)">
                     <rect data-bin='unknown' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:rgb(120,120,120)"></rect>
                     <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Unknown </text>
+                    <text x="50" y="47"  class='unclassified-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
                   </g>        
-                  <g transform="translate(0,270)">
+<!--                   <g transform="translate(0,400)">
                     <rect data-bin='repeat' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#133063"></rect>
                     <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Repeat </text>
-                  </g>        
-
-                 <!--  <div class='cat-group'>
-                    <button data-bin='human' type='button' class='category btn btn-default' style="background:#25aaff">
-                      Human
-                    </button>
-                    <div data-bin='human' class='human-binned-reads' title="Total Reads (Classified Reads)">0</div>
-                  </div>
-                  <div class='cat-group'>
-                    <button data-bin='bacterial' type='button' class='category btn btn-default' onclick="toSunburst(this)" style="background:#ff6f03">
-                      Bacterial
-                    </button>
-                    <div> <a data-bin='bacterial' title="Total Reads (Classified Reads)" class='bacterial-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
-                  </div>
-                  <div class='cat-group'>
-                    <button data-bin='viral' type='button' class='category btn btn-default' onclick="toSunburst(this)" style='background:purple'>
-                      Viral
-                    </button>
-                    <div> <a data-bin='viral' title="Total Reads (Classified Reads)" class='viral-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
-                  </div>
-                  <div class='cat-group'>
-                    <button data-bin='phage' type='button' class='category btn btn-default' onclick="toSunburst(this)" style='background:red'>
-                      Phage
-                    </button>
-                    <div> <a data-bin='phage' title="Total Reads (Classified Reads)" class='phage-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
-                  </div>
-                  <div class='cat-group'>
-                    <button data-bin='fungal' type='button' class='category btn btn-default' onclick="toSunburst(this)" style='background:green'>
-                      Fungal
-                    </button>
-                    <div> <a data-bin='fungal' title="Total Reads (Classified Reads)" class='fungal-binned-reads' href="#" onclick="toSunburst(this)">0</a></div>
-                  </div>
-                  <div class='cat-group'>
-                    <button data-bin='phix' type='button' class='category btn btn-default'  style='background:#06ac61'>
-                      PhiX
-                    </button>
-                    <div title="Total Reads (Classified Reads)" class='phix-binned-reads'>0</div> 
-                  </div>
-                  <div class='cat-group'>
-                    <button data-bin='ambiguous' type='button' class='category btn btn-default'  style='background:#5877ab'>
-                      Ambiguous
-                    </button>
-                    <div title="Total Reads (Classified Reads)" class='ambiguous-binned-reads'>0</div> 
-                  </div>
-                  <div class='cat-group'>
-                    <button data-bin='unknown' type='button' class='category btn btn-default'  style="background:rgb(120,120,120)">
-                      Unknown
-                    </button>
-                    <div title="Total Reads (Classified Reads)" class='unclassified-binned-reads'>0</div>  
-                  </div>
-                  <div id='repeat-button' class='cat-group' style="display:none">
-                    <button data-bin='Repeat' type='button' class='category btn btn-default'  style="background:#133063">
-                      Repeat
-                    </button>
-                    <div title="Total Reads (Classified Reads)" class='Repeat-binned-reads'>0</div>  
-                  </div>                          -->                           
+                    <text x="50" y="47"  class='Repeat-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
+                  </g>    -->     
+                        
                 </svg>
               </div>              
 
@@ -385,7 +339,7 @@
               <div id='main-viz'>
                 <div id='selected-name'>All</div>
                 <div id='viz'>                            
-                  <svg viewBox="0 0 1370 440" preserveAspectRatio="xMidYMid"></svg>
+                  <svg viewBox="0 0 600 440" preserveAspectRatio="xMidYMid"></svg>
                 </div>
                 <div id='reads-viewed'>                
                   <h4 id='total-reads'>Total <span id='bin'></span> Reads Classified: <span class='iobio-txt-color'></span></h4>
@@ -499,8 +453,8 @@
               .color(function(d) {   if(d.data.type=='binner') {return 'white'} else {return binnerColor(d.data.name);} })
               .tooltip(function(d) { return d.data.name.split('-')[0] + ' classified: ' + commaFormatter(d.value) });
         window.binnerPie = d3.layout.pie().sort(function(a,b) { return d3.ascending(a.name,b.name); }).value(function(d) { return d.count});         
-        $('#cat-list').css('left', parseInt(($('#main-panel').width()/2 - radiusBig)/2) + 'px');
-        $('#cat-list').css('top', parseInt(($('#main-panel').height()/2 - $('#cat-list').height()/2)+20) + 'px');
+        // $('#cat-list').css('left', parseInt(($('#main-panel').width()/2 - radiusBig)/2) + 'px');
+        $('#cat-list').css('top', parseInt(($('#main-panel').height()/2 - $('#cat-list').height()/2)+60) + 'px');
 
         var radius = $('#sensitivity svg').height();
         window.sensitivityChart = gaugeD3().radius(radius).thickness(6).klass("sensitivityArc");        
