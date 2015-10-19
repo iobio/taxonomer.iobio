@@ -381,6 +381,11 @@ h4 {
   color: white;
 }
 
+#main-panel #cat-list .reads {
+  fill:black;
+  text-anchor:middle;
+}
+
 #main-panel #selected-name {
   font-size: 15px;  
   width: 100%;

@@ -280,13 +280,51 @@
                   <svg id='big-binner-classified'></svg>
                 </div>                 -->
                 <div style="height: 100%; width: 100%;position:absolute;">                  
-                  <svg id='big-binner-binner'></svg>                  
+                  <svg id='big-binner-binner' viewBox="0 0 1370 440" preserveAspectRatio="xMidYMid"></svg>                  
                 </div>                                              
               </div>
 
               <div id='cat-list'>
-                <div style="width:100px;"> 
-                  <div class='cat-group'>
+                <svg style="width:100px;"> 
+                  <g transform="translate(0,20)">
+                    <rect data-bin='human' x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#25aaff"></rect>
+                    <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Human </text>
+                    <text x="50" y="47" data-bin='human' class='human-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
+                  </g>
+                  <g transform="translate(0,70)">
+                    <rect data-bin='bacterial' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#ff6f03"></rect>
+                    <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Bacterial </text>
+                  </g>                  
+                  <g transform="translate(0,120)">
+                    <rect data-bin='viral' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:purple"></rect>
+                    <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Viral </text>
+                  </g>                  
+                  <g transform="translate(0,170)">
+                    <rect data-bin='phage' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:red"></rect>
+                    <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Phage </text>
+                  </g>   
+                  <g transform="translate(0,220)">
+                    <rect data-bin='fungal' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#green"></rect>
+                    <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Fungal </text>
+                  </g>                  
+                  <g transform="translate(0,270)">
+                    <rect data-bin='phix' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#06ac61"></rect>
+                    <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> PhiX </text>
+                  </g>        
+                  <g transform="translate(0,270)">
+                    <rect data-bin='ambiguous' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#5877ab"></rect>
+                    <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Ambiguous </text>
+                  </g>        
+                  <g transform="translate(0,270)">
+                    <rect data-bin='unknown' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:rgb(120,120,120)"></rect>
+                    <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Unknown </text>
+                  </g>        
+                  <g transform="translate(0,270)">
+                    <rect data-bin='repeat' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#133063"></rect>
+                    <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Repeat </text>
+                  </g>        
+
+                 <!--  <div class='cat-group'>
                     <button data-bin='human' type='button' class='category btn btn-default' style="background:#25aaff">
                       Human
                     </button>
@@ -339,15 +377,15 @@
                       Repeat
                     </button>
                     <div title="Total Reads (Classified Reads)" class='Repeat-binned-reads'>0</div>  
-                  </div>                                                    
-                </div>
+                  </div>                          -->                           
+                </svg>
               </div>              
 
               <!-- sunburst visualization -->
               <div id='main-viz'>
                 <div id='selected-name'>All</div>
                 <div id='viz'>                            
-                  <svg></svg>
+                  <svg viewBox="0 0 1370 440" preserveAspectRatio="xMidYMid"></svg>
                 </div>
                 <div id='reads-viewed'>                
                   <h4 id='total-reads'>Total <span id='bin'></span> Reads Classified: <span class='iobio-txt-color'></span></h4>
