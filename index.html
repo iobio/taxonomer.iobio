@@ -838,12 +838,16 @@
 
       function updateSliderActive() {
         if (atRoot()) {
-          $('#min-read-count-slider').removeAttr('disabled');
-          $('#min-abundance').removeClass('disabled');
+          $('#min-read-count-slider').css('visibility', 'visible');
+          $('#min-abundance').css('visibility', 'visible');
+          // $('#min-read-count-slider').removeAttr('disabled');
+          // $('#min-abundance').removeClass('disabled');
         }
         else {
-          $('#min-read-count-slider').attr('disabled', 'disabled')
-          $('#min-abundance').addClass('disabled');
+          // $('#min-read-count-slider').attr('disabled', 'disabled')
+          // $('#min-abundance').addClass('disabled');
+          $('#min-read-count-slider').css('visibility', 'hidden');
+          $('#min-abundance').css('visibility', 'hidden');
         }
       }
 
