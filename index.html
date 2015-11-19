@@ -22,6 +22,7 @@
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 
     <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src='assets/js/d3.min.js'></script>  
     <script type="text/javascript" src='assets/js/cumulativeHierarchy.js'></script>  
     <script type="text/javascript" src='assets/js/t.js'></script>          
@@ -276,11 +277,14 @@
 
               <!-- binner visualization -->
               <div id="big-binner">
-                <!-- <div style="height: 100%; width: 100%;position:absolute; ">
-                  <svg id='big-binner-classified'></svg>
-                </div>                 -->
-                <div style="height: 100%; width: 100%;position:absolute;">                  
-                  <svg id='big-binner-binner' viewBox="0 0 600 440" preserveAspectRatio="xMidYMid"></svg>                  
+                <!-- <div style="height: 100%; width: 100%;position:absolute;">                  
+                  <svg id='big-binner-binner' viewBox="0 0 600 440" preserveAspectRatio="xMidYMid"></svg>                   -->
+                <div id='b' style="height: 100%; width: 100%; position:absolute;">
+                  <script>
+                    var w = $('#big-binner').width();
+                    var h = $('#big-binner').height();                    
+                    $('#big-binner #b').append("<svg id='big-binner-binner' viewbox='0 0 " + w + " " + h + "'  preserveAspectRatio='xMidYMid'></svg>");
+                  </script>
                 </div>                                              
               </div>
 
@@ -339,7 +343,12 @@
               <div id='main-viz'>
                 <div id='selected-name'>All</div>
                 <div id='viz'>                            
-                  <svg viewBox="0 0 600 440" preserveAspectRatio="xMidYMid"></svg>
+                  <!-- <svg viewBox="0 0 600 440" preserveAspectRatio="xMidYMid"></svg> -->
+                  <script>
+                    var w = $('#viz').width();
+                    var h = $('#viz').height();
+                    $('#viz').append("<svg viewbox='0 0 " + w + " " + h + "'  preserveAspectRatio='xMidYMid' style='margin-top:15px; margin-bottom:15px;'></svg>");
+                  </script>
                 </div>
                 <div id='reads-viewed'>                
                   <h4 id='total-reads'>Total <span id='bin'></span> Reads Classified: <span class='iobio-txt-color'></span></h4>
@@ -361,8 +370,7 @@
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Placed at the end of the document so the pages load faster -->    
     <script src="assets/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- D3 Visualizations -->
     <script type="text/javascript" src='assets/js/sunburst.d3.js'></script>   

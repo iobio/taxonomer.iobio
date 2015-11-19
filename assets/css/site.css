@@ -340,7 +340,8 @@ h4 {
 #main-panel #big-binner {
   visibility: hidden;
   height: calc(100% - 120px) ;
-  width: 600px;
+  width: 100%;
+/*  width: 600px;*/
   /*width: calc(100% - 120px) ;*/
   margin: 0px auto;
   position: relative;
