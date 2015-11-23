@@ -383,6 +383,8 @@ h4 {
   width: 100%;
 }
 
+#main-panel #cat-list .title { pointer-events: none; }
+
 #main-panel #cat-list #cat-group {
   margin-bottom: 20px;
 }
