@@ -371,7 +371,7 @@ h4 {
   visibility: hidden;
   position: absolute;
   top: 78px; 
-  left: calc(50% - 400px);
+  /*left: calc(50% - 400px);*/
   text-align: center;
   z-index: 10;
   width: 110px;  

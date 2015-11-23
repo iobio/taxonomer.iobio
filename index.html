@@ -100,20 +100,20 @@
           </div>
           <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">  -->       
           <div class="main"> 
-            <div id='metrics-container' class="row">
+            <div title='Pie chart of the reads binned' id='metrics-container' class="row">
               <div id='binner' class="col-xs-6 col-sm-3 metric">              
                 <h2>Read Bins</h2>
                 <svg></svg>
               </div>
-              <div id='reads-sampled' class="col-xs-6 col-sm-3 metric">              
+              <div title='Total number of reads sampled' id='reads-sampled' class="col-xs-6 col-sm-3 metric">              
                 <h2>Reads Sampled</h2>
                 <span class="text-muted"></span>
               </div>
-              <div id='sensitivity' class="col-xs-6 col-sm-3 metric">              
+              <div title='Displays minimum abundance that a read must be in the sample to likely be included in the analysis' id='sensitivity' class="col-xs-6 col-sm-3 metric">              
                 <h2>Detection Threshold</h2>
                 <svg></svg>
               </div>
-              <div id='classified' class="col-xs-6 col-sm-3 metric">              
+              <div title='The number of reads classified beyond simple binning' id='classified' class="col-xs-6 col-sm-3 metric">              
                 <h2>Reads Classified</h2>
                 <span class="text-muted"></span>
               </div>
@@ -283,7 +283,7 @@
                   <script>
                     var w = $('#big-binner').width();
                     var h = $('#big-binner').height();                    
-                    $('#big-binner #b').append("<svg id='big-binner-binner' viewbox='0 0 " + w + " " + h + "'  preserveAspectRatio='xMidYMid'></svg>");
+                    $('#big-binner #b').append("<svg id='big-binner-binner' viewbox='0 0 " + w + " " + h + "'  preserveAspectRatio='xMidYMid'></svg>");                                      
                   </script>
                 </div>                                              
               </div>
@@ -337,7 +337,7 @@
                   </g>    -->     
                         
                 </svg>
-              </div>              
+              </div>                  
 
               <!-- sunburst visualization -->
               <div id='main-viz'>
@@ -461,7 +461,7 @@
               .color(function(d) {   if(d.data.type=='binner') {return 'white'} else {return binnerColor(d.data.name);} })
               .tooltip(function(d) { return d.data.name.split('-')[0] + ' classified: ' + commaFormatter(d.value) });
         window.binnerPie = d3.layout.pie().sort(function(a,b) { return d3.ascending(a.name,b.name); }).value(function(d) { return d.count});         
-        // $('#cat-list').css('left', parseInt(($('#main-panel').width()/2 - radiusBig)/2) + 'px');
+        $('#cat-list').css('left', parseInt(($('#main-panel').width()/2 - radiusBig)/2) + 'px');
         $('#cat-list').css('top', parseInt(($('#main-panel').height()/2 - $('#cat-list').height()/2)+60) + 'px');
 
         var radius = $('#sensitivity svg').height();
