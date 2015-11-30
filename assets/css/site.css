@@ -94,8 +94,19 @@ h4 {
     font-weight: 200;
     text-decoration: none;
 }
-.navbar-right a:hover {
+
+.navbar #help {
+  position: absolute;
+  top: 7px;
+  right: 150px;
+  font-family: Quicksand;
+  color: white;
+  font-weight: 200;
+}
+
+.navbar #help:hover, .navbar-right a:hover {
     font-weight: 400;
+    cursor: pointer;
 }
 
 /*
