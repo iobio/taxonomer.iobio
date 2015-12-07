@@ -1,0 +1,69 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="taxonomer.iobio">
+    <meta name="author" content="marthlab">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>taxonomer.iobio-faq</title>
+
+    <link href="http://fonts.googleapis.com/css?family=Overlock+SC" rel="stylesheet" type="text/css">
+    <!-- Bootstrap core CSS -->
+    <link href="assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->    
+    <link href="assets/css/site.css" rel="stylesheet">    
+
+    <!-- Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Quicksand:300,400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <style>
+        h2 {
+            font-size: 50px;
+        }
+
+        .instruction-title { font-size: 30px; margin-top: 55px;}
+        .instruction-body { font-size: 16px; text-align: justify}
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+
+      <div style="text-align:center;margin-bottom:20px" >
+        <h2 style="font-weight:600;margin-top: -10px;"><span style="font-weight:600;color: #268bd2;">Instructions</span></h2>
+      </div> 
+
+      <div style="width:960px; margin:auto">
+        <div style='text-align:center'>Google Chrome is the recommended browser for use with taxonomer.iobio.io</div>
+        <div class='instruction-body' style="margin-top:40px">
+	        Fastq files for analysis at Taxonomer.iobio.io can be provided in three ways (see below). Analysis stops once a set amount of data is analyzed. Therefore, the absolute number of reads analyzed changes with read length (i.e. analysis will end after a larger number of shorter reads and a smaller number of longer reads).
+	        <div><img src='assets/images/file_selection.png' style="width:400px"/> </div>
+	    </div>
+
+        <div class='instruction-title'>Local drive</div>
+        <div class='instruction-body'>
+        	<div><img src='assets/images/local.png' style="width:500px"/> </div>
+        	Unzipped fastq files can be streamed from any local drive as long as the user’s internet connection has sufficient upload speeds. For analysis of paired-end data, hold shift to select 2 fastq files.
+        </div>
+
+        <div class='instruction-title'>Cloud storage, such as AWS S3</div>
+        <div class='instruction-body'>
+        	<div><img src='assets/images/cloud.png' style="width:500px"/> </div>
+        	Unzipped fastq files can be streamed from cloud storage such as AWS S3 (https://aws.amazon.com/s3/). This is the recommended option if internet upload speeds are limited. Other cloud storage options such as Dropbox, Box, and Google Drive will be supported with future updates.
+        </div>
+
+        <div class='instruction-title'>NCBI Short Read Archive (SRA)</div>
+        <div class='instruction-body'>
+            <div><img src='assets/images/SRA.png' style="width:500px"/> </div>
+        	Fastq files deposited into the NCBI SRA can be streamed directly. By entering the NCBI SRR accession number.
+        </div>
+
+      </div>
+
+
+    </div>
+  </body>
+</html>

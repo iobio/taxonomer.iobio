@@ -20,9 +20,12 @@
     <link href='http://fonts.googleapis.com/css?family=Quicksand:300,400' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <style>
-        h3, .h3 {
-            font-size: 20px;
+        h2 {
+            font-size: 50px;
         }
+
+        .faq-question { font-size: 30px; margin-top: 45px;}
+        .faq-answer { font-size: 16px; text-align: justify}
     </style>
   </head>
 
@@ -33,7 +36,44 @@
         <h2 style="font-weight:600;margin-top: -10px;"><span style="font-weight:600;color: #268bd2;">FAQ</span></h2>
       </div> 
 
-      <div> Coming soon ... </div>
+      <div style="width:960px; margin:auto">
+        <div style='text-align:center'>Google Chrome is the recommended browser for use with taxonomer.iobio.io</div>
+        <div class='faq-question'>What is the difference between “Reads Sampled” and “Reads Classified”?</div>
+        <div class='faq-answer'>
+          <div>
+            “Reads Samples” is the total number of reads analyzed by Taxonomer. The first step is analysis by Taxonomer’s Binner module, which compares every read to all reference databases in parallel, assigning reads to broad, non-exclusive taxonomic categories.
+          </div>
+          <br/>
+          <div>
+            “Reads Classified” refers to the subset of reads that were analyzed by Taxonomer’s Classifier and Protonomer modules. This includes reads derived from human mRNA, bacterial 16S rRNA, fungal ITS, and all viral/phage sequences.
+          </div>
+        </div>
+
+        <div class='faq-question'>How can I compare results between two or more samples?</div>
+        <div class='faq-answer'>
+          In its current version, Taxonomer does not provide functionality for comparing results between samples. However, users can either download raw results and perform comparisons in separate analyses (e.g. by using DESeq for transcript expression analyses) or simply open 2 or more windows simultaneously to visually compare results.          
+        </div>
+
+        <div class='faq-question'>How can I ensure rapid analysis if my internet connection has slow upload speeds?</div>
+        <div class='faq-answer'>
+          We recommend data storage at AWS S3 (https://aws.amazon.com/s3/) if upload speeds are limited. The test below was performed with the read 1 fastq file from SRR1553464 streamed from the SRA, from AWS, and from an iMac on a University of Utah Ethernet connection with ~900 Mbps upload speed.
+          <div style="text-align:center">
+            <img src='assets/images/Timing.jpg'/ style="height:250px">
+          </div>
+        </div>
+
+        <div class='faq-question'>Can I analyze 16S amplicon data?</div>
+        <div class='faq-answer'>
+          Yes, performance of Taxonomer with 16S amplicon sequencing data is shown in the Taxonomer manuscript in Figure 2e. 
+        </div>
+ 
+        <div class='faq-question'>Why does the Display Threshold disappear after zooming in?</div>
+        <div class='faq-answer'>
+          The display threshold can only be adjusted when viewing all results from a given ‘bin’.
+        </div>       
+
+
+      </div>
 
 
     </div>
