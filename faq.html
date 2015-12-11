@@ -45,13 +45,21 @@
           </div>
           <br/>
           <div>
-            “Reads Classified” refers to the subset of reads that were analyzed by Taxonomer’s Classifier and Protonomer modules. This includes reads derived from human mRNA, bacterial 16S rRNA, fungal ITS, and all viral/phage sequences.
+              “Reads Classified” refers to the subset of reads that were analyzed by Taxonomer’s Classifier and Protonomer modules. This includes reads derived from human mRNA, bacterial 16S rRNA, fungal ITS, and all viral/phage sequences.
+          </div>
+          <br/>
+          <div>
+            The complexity introduced by separate “binning” and “classification” results stem from two major sources: (1) not all reads identified as e.g. human or bacterial are used for classification purposes (see below) and (2) a strong sampling bias resulting in overrepresentation of scientifically or medically relevant viral, bacterial, and fungal taxa in reference databases resulting in lower sensitivity for classification of phylogenetically distant taxa. Keeping this in mind, rads sampled are shown below each bine (see example) and reads classified are shown in parentheses. For the ‘Human’ bin, reads sampled refers to all human reads, while reads in parentheses show mRNA-derived reads. With RNA-seq data, rRNA and mitochondrial reads account for most of the difference. For the ‘Bacterial’ bin, reads sampled refers to all bacterial reads while reads classified indicates the subset identified as 16S rRNA-derived. With RNA-seq data, usually >25% of bacterial reads are 16S rRNA-derived and are classified. For the ‘Viral’ bin, reads sampled refers to reads identified by the Binner module based on viral genome reference sequences. Reads classified indicates the number of ‘Viral’ and ‘Unknown’ reads identified to a viral taxon based on Taxonomer’s Protonomer module.
+          </div>
+          <br/>
+          <div>
+            Bin sizes are based on raw read counts and are not normalized to genome sizes. Thus, while they are generally indicative of, they do not necessarily accurately reflect, the biological composition of the sample at the cellular/viral particle level.
           </div>
         </div>
 
         <div class='faq-question'>How can I compare results between two or more samples?</div>
         <div class='faq-answer'>
-          In its current version, Taxonomer does not provide functionality for comparing results between samples. However, users can either download raw results and perform comparisons in separate analyses (e.g. by using DESeq for transcript expression analyses) or simply open 2 or more windows simultaneously to visually compare results.          
+          In its current version, Taxonomer does not provide functionality for comparing results between samples. However, users can either download raw results and perform comparisons in separate analyses (e.g. by using DESeq for transcript expression analyses) or simply open 2 or more windows simultaneously to visually compare results.        
         </div>
 
         <div class='faq-question'>How can I ensure rapid analysis if my internet connection has slow upload speeds?</div>
@@ -64,7 +72,7 @@
 
         <div class='faq-question'>Can I analyze 16S amplicon data?</div>
         <div class='faq-answer'>
-          Yes, performance of Taxonomer with 16S amplicon sequencing data is shown in the Taxonomer manuscript in Figure 2e. 
+          Yes, performance of Taxonomer with 16S amplicon sequencing data is shown in the Taxonomer manuscript in Figure 2e
         </div>
  
         <div class='faq-question'>Why does the Display Threshold disappear after zooming in?</div>
