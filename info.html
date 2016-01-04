@@ -33,26 +33,37 @@
         <h2 style="font-weight:600;margin-top: -10px;"><span style="font-weight:600;color: #268bd2;">taxonomer</span>.iobio</h2>
       </div> 
 
-
-Taxonomer.iobio is a an <a href="http://iobio.io">iobio</a> based realtime metagenomic analysis app. This app enables scientists and clinicians to examine the composition of their metagenomic samples in seconds and further explore the taxonomic classifications interactively.
-<br>
-<br>
-Scientists can explore the demo datasets described below or analyze their own data (FASTQ or FASTA format sequence files). The user has the option to either select a file on an http accessible site or on their hard drive.  Currently, the app will read and analyze the first few thousand reads from the file which is typically sufficient to acheive a reasonably high resolution view of the data.
-<br><br>
-
-Metagenomic analysis of DNA or RNA sequencing data is performed by taxonomer, a new powerful taxonomic classification program from the <a href="http://www.yandell-lab.org/">Yandell lab</a>.
-The data analysis and visualization interface was written by the <a href="http://www.genetics.utah.edu/?page_id=1905">Marth lab</a>  using the iobio platform.  Both of these groups are part of the Department of Human Genetics at the University of Utah and the USTAR Center for Genetic Discovery. The metagenomic applications for this project are driven by Robert Schlaberg from the University of Utah Department of Pathology and ARUP.  The main developers are Dr. Chase Miller, Dr. Yi Qiao, Steven Flygare, all from the USTAR Center for Genetic Discovery at the University of Utah. This work is in part funded by grant U01 HG006513 to Gabor Marth from the National Human Genome Research Institute.
+      Taxonomer is a kmer-based ultrafast metagenomics tool for assigning taxonomy to sequencing reads from both clinical and environmental samples. Taxonomer enables simultaneous microbial detection and human transcript quantification within a clinically meaningful timeframe (i.e. minutes). Taxonomer supports nucleotide and protein-based pathogen detection and phylogenetic classification using DNA and RNA sequencing data in a single integrated algorithmic framework.
 
 
+    Taxonomer results are interactively visualized through a real-time web service on the  <a href="http://iobio.io">iobio</a> visualization toolkit at <a href="http://taxonomer.iobio.io">taxonomer.iobio</a>. This allows rapid, highly interactive analyses using personal computers and mobile devices. This app enables scientists and clinicians to examine the composition of their metagenomic samples in seconds and further explore the taxonomic classifications interactively without the overhead of bioinformatics expertise.
+
+
+    Users can explore the demo datasets described below or analyze their own data (FASTQ or FASTA format sequence files). The user has the option to either select a file on an http accessible site or on their hard drive. For demo purposes, the app will read and analyze the first few thousand reads from the file.
+
+
+    Taxonomer was developed in collaboration between 3 laboratories at the University of Utah: the Schlaberg lab in the Department of Pathology and at ARUP Laboratories, the Eilbeck lab in the Department of Biomedical Informatics, and the Yandell lab in the Department of Human Genetics. Together with Mark Yandell, graduate students Steven Flygare and Keith Simmon developed the Taxonomer codebase. The Taxonomer.iobio web app is built upon the Marth lab iobio platform, implemented by Chase Miller, Yi Qiao and Tonya Di Serra.  
+
+
+    Taxonomer development was supported by the Utah Science Technology and Research (USTAR) Center for Genetic Discovery; the Primary Children’s Hospital Foundation; the University of Utah’s Center for Clinical and Translational Science (CCTS), the Richard A. and Carol M. Fay Endowed Graduate Fellowship, the Department of Pathology and NIH training grants 1ULTR001067 and 5T32HL007576-29. The iobio platform is supported by grant U01 HG006513 to Gabor Marth from the National Human Genome Research Institute.
+
+ 
 
     <div id="footer">                        
-        <div class="logos">     
-            <div style="display:inline;font-size:24px;font-family:'Overlock SC', cursive;">Marth lab</div>     
-            <div style="display:inline;font-size:24px;font-family:'Overlock SC', cursive;">Yandell lab</div>  
-            <img src="assets/images/ARUP_stkd_2c_pos.png" style="height:40px"/>   
-            <img src="assets/images/Path Logo.jpg" style="height:70px"/>   
-            <img src="assets/images/ustar-ucgd-logo.jpg" style="height:40px;"/>            
-            <a href="http://www.genetics.utah.edu/"><img src="assets/images/genetics_mainlogo3_lrg.png" style="height:40px"></a>          
+        <div >     
+            <div class="footer-labs" style="font-size:24px;font-family:'Overlock SC', cursive;">
+                <span style="padding-right:20px;">Schlaberg Lab</span>
+                <span style="padding-right:20px;">Eilbeck lab</span>  
+                <span style="padding-right:20px;">Yandell Lab</span>    
+                <span>Marth lab</span>    
+            </div>     
+
+            <div class="logos" style="padding-top:20px;">
+                <img src="assets/images/Dept of Path logo.jpg" style="height:50px"/>   
+                <img src="assets/images/ARUP_stkd_2c_pos.png" style="height:40px"/>   
+                <img src="assets/images/ustar-ucgd-logo.jpg" style="height:40px;"/>            
+                <a href="http://www.genetics.utah.edu/"><img src="assets/images/genetics_mainlogo3_lrg.png" style="height:40px"></a>          
+            </div> 
         </div>                      
         <div style="padding-bottom: 50px"></div>
     </div>
@@ -79,7 +90,7 @@ The data analysis and visualization interface was written by the <a href="http:/
                 <a href="http://taxonomer.iobio.io/?url=https://s3.amazonaws.com/iobio/ebola_sample.fastq">Show in taxonomer.iobio</a>
                 <br>
             </div>
-            <img src="assets/images/sample1_taxonomer.png" style="float: right;height: 400px"/>  
+            <img src="assets/images/sample-ebola.png" style="float: right;height: 400px"/>  
 
         </div>
 
@@ -100,7 +111,7 @@ The data analysis and visualization interface was written by the <a href="http:/
                 <br>
                 <a href="http://taxonomer.iobio.io/?url=https://s3.amazonaws.com/iobio/ERR501052_1.fastq">Show in taxonomer.iobio</a>
             </div>
-            <img src="assets/images/sample2_taxonomer.png" style="float: right;height: 400px"/>  
+            <img src="assets/images/sample-microbiota-malnurished.png" style="float: right;height: 400px"/>  
 
         </div>
 
@@ -121,7 +132,7 @@ The data analysis and visualization interface was written by the <a href="http:/
                 <br>
                 <a href="http://taxonomer.iobio.io/?url=https://s3.amazonaws.com/iobio/SRR533978_1.fastq">Show in taxonomer.iobio</a>
             </div>
-            <img src="assets/images/sample3_taxonomer.png" style="float: right;height: 400px"/>  
+            <img src="assets/images/sample-hemorrhagic-fever.png" style="float: right;height: 400px"/>  
 
         </div>
 

@@ -182,6 +182,19 @@ h4 {
            align-items: center;        
 }
 
+.footer-labs {
+
+    display: -webkit-flex;
+    display:         flex;
+    display: -ms-flexbox;
+    -webkit-flex-flow: row wrap;
+            flex-flow: row wrap;
+    -webkit-justify-content: center;        
+            justify-content: center;
+    -webkit-align-items: center;
+           align-items: center;        
+}
+
 
 
 /*
