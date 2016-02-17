@@ -50,9 +50,7 @@
           <br/>
           <div >
             <img src='assets/images/buttons.png' style="float:left;height:190px"/>
-            The complexity introduced by separate “binning” and “classification” results stem from two major sources: (1) not all reads identified as e.g. human or bacterial are used for classification purposes (see below) and (2) a strong sampling bias resulting in overrepresentation of scientifically or medically relevant viral, bacterial, and fungal taxa in reference databases resulting in lower sensitivity for classification of phylogenetically distant taxa. Keeping this 
-            
-            assin mind, rads sampled are shown below each bine (see example) and reads classified are shown in parentheses. For the ‘Human’ bin, reads sampled refers to all human reads, while reads in parentheses show mRNA-derived reads. With RNA-seq data, rRNA and mitochondrial reads account for most of the difference. For the ‘Bacterial’ bin, reads sampled refers to all bacterial reads while reads classified indicates the subset identified as 16S rRNA-derived. With RNA-seq data, usually >25% of bacterial reads are 16S rRNA-derived and are classified. For the ‘Viral’ bin, reads sampled refers to reads identified by the Binner module based on viral genome reference sequences. Reads classified indicates the number of ‘Viral’ and ‘Unknown’ reads identified to a viral taxon based on Taxonomer’s Protonomer module.
+            The complexity introduced by separate “binning” and “classification” results stem from two major sources: (1) not all reads identified as e.g. human or bacterial are used for classification purposes (see below) and (2) a strong sampling bias resulting in overrepresentation of scientifically or medically relevant viral, bacterial, and fungal taxa in reference databases resulting in lower sensitivity for classification of phylogenetically distant taxa. Keeping this in mind, reads sampled are shown below each bine (see example) and reads classified are shown in parentheses. For the ‘Human’ bin, reads sampled refers to all human reads, while reads in parentheses show mRNA-derived reads. With RNA-seq data, rRNA and mitochondrial reads account for most of the difference. For the ‘Bacterial’ bin, reads sampled refers to all bacterial reads while reads classified indicates the subset identified as 16S rRNA-derived. With RNA-seq data, usually >25% of bacterial reads are 16S rRNA-derived and are classified. For the ‘Viral’ bin, reads sampled refers to reads identified by the Binner module based on viral genome reference sequences. Reads classified indicates the number of ‘Viral’ and ‘Unknown’ reads identified to a viral taxon based on Taxonomer’s Protonomer module.
           </div>
           <br/>
           <div>
@@ -82,6 +80,36 @@
         <div class='faq-answer'>
           The display threshold can only be adjusted when viewing all results from a given ‘bin’.
         </div>       
+
+
+
+        <div class='faq-question'>Can I download Taxonomer results and what information is included?</div>
+        <div class='faq-answer'>
+
+          Yes, you can download the results by clicking on the 'Download' link: <br>
+
+          <div style="text-align:center;">
+           <img src='assets/images/download_results.png' style="width:220px;padding-top:5px;padding-bottom:5px;">
+          </div>
+
+          Taxonomer results can be downloaded in hierarchical JSON format or as tab-deliminted text file with read-level results that has the following columns: <br> 
+          <div style="padding-left:10px;">
+          1) Bin category <br>
+          2) Read classified (C) or unclassified (U) following bin assigment <br>
+          3) Read name <br>
+          4) Taxid of read assignment.  For virus this corresponds to NCBI taxid.  For bacteria, this corresponds to an artificial ID to the greengenes database, likewise for fungi except to the UNITE database.  For Human this is an artificial ID to a gene.  <br>
+          5) Internal sequence identifier of sequence that contributed either completely or equally (in case of a tie) to the read’s assignment.  <br>
+          6) Number of taxonomic levels at which the read assignment was made (more levels is a deeper assignment).  Note this value cannot be compared between bin categories  because difference taxonomies are used — for example, one cannot use this to compare the depth of a bacterial assignment to that of a viral assignment. <br>
+          7) Number of sequences tied for the assignment <br>
+          8) Max sum of k-mer weights for read assignment <br>
+          9) Standard deviation of sum of k-mer weights for read assignment <br>
+          10) Read length <br>
+          11) Number of k-mers used to make the read assignment <br>
+          12) Bin placeholder (no external significance) <br>
+        </div>
+
+
+        </div>    
 
 
       </div>
