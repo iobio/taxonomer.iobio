@@ -50,14 +50,7 @@
   </head>
 
   <body >
-    <div id='pw-prompt'>      
-        <input class='form-control' type="password" name="password" placeholder='Enter Password' onkeypress="onPwEnter(event)"></input>
-        <span >
-            <button class="btn btn-default" onClick="onPwEnter(event)" type="button">Enter</button>
-        </span>
-      
-    </div>
-    <div id='app' class='password'>
+    <div id='app' >
       <nav class=" iobio-bg-color navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
           <div class="navbar-header">
@@ -394,9 +387,7 @@
       window.fungiColor = d3.scale.ordinal();
       window.phageColor = d3.scale.ordinal();
       window.teColor = d3.scale.ordinal();
-      $(document).ready(function(){   
-        // focus password prompt
-        $('#pw-prompt input').focus();
+      $(document).ready(function(){           
 
         // initialize file/url picker
         $('#fastq-file').on('change', onFilesSelected);
@@ -651,26 +642,6 @@
       function goTe(dataUrl) {        
         var url = generateTeUrl(dataUrl);
         go(url);
-      }
-
-      function onPwEnter(e) {
-        var code = (e.keyCode ? e.keyCode : e.which);
-        if(code === 13) {
-          var correct = '19ff94efc860acf54a5757f8c161f43357bf254e';
-          var pw = $('#pw-prompt input').val();
-          var pwHash = new jsSHA(pw, "TEXT").getHash("SHA-1", "HEX");
-          if (pwHash == correct) {
-            // $('#app').removeClass('password');
-
-            // document.getElementById("app").setAttribute('class', '');
-            $('#app').removeClass('password');
-            // $('#app').css('display', 'none');
-            $('#pw-prompt').css('display', 'none');
-          } else {
-            alert('Wrong password');
-          }
-          return false;
-        }
       }
 
       function resetSliders() {
