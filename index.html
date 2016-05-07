@@ -14,8 +14,8 @@
     <!-- Bootstrap core CSS -->
     <link href="assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->    
-    <link href="assets/css/site.css" rel="stylesheet">    
+    <!-- Custom styles for this template -->
+    <link href="assets/css/site.css" rel="stylesheet">
 
     <!-- Fonts -->
     <link href='http://fonts.googleapis.com/css?family=Quicksand:300,400' rel='stylesheet' type='text/css'>
@@ -23,9 +23,9 @@
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script type="text/javascript" src='assets/js/d3.min.js'></script>  
-    <script type="text/javascript" src='assets/js/cumulativeHierarchy.js'></script>  
-    <script type="text/javascript" src='assets/js/t.js'></script>          
+    <script type="text/javascript" src='assets/js/d3.min.js'></script>
+    <script type="text/javascript" src='assets/js/cumulativeHierarchy.js'></script>
+    <script type="text/javascript" src='assets/js/t.js'></script>
     <script type="text/javascript" src='assets/js/binary.js'></script>
     <script type="text/javascript" src='assets/js/filePicker.js'></script>
     <script type="text/javascript" src='assets/js/sha1.js'></script>
@@ -77,7 +77,7 @@
               </div>
               <a style="margin-right: 20px; position: absolute; right: 0px; top: 1px;" href="http://iobio.io">an iobio project</a>
           </div>
-          
+
 
           <!-- <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
@@ -100,30 +100,30 @@
             <h4 style="font: italic 12px quicksand; color: rgb(180,180,180)">(use to navigate)</h4>
             <!-- <svg style="width:100%;border:1px solid green;display:none;"></svg> -->
           </div>
-          <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">  -->       
-          <div class="main"> 
+          <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">  -->
+          <div class="main">
             <div title='Pie chart of the reads binned' id='metrics-container' class="row">
-              <div id='binner' class="col-xs-6 col-sm-3 metric">              
+              <div id='binner' class="col-xs-6 col-sm-3 metric">
                 <h2>Read Bins</h2>
                 <svg></svg>
               </div>
-              <div title='Total number of reads sampled' id='reads-sampled' class="col-xs-6 col-sm-3 metric">              
+              <div title='Total number of reads sampled' id='reads-sampled' class="col-xs-6 col-sm-3 metric">
                 <h2>Reads Sampled</h2>
                 <span class="text-muted"></span>
               </div>
-              <div title='Displays minimum abundance that a read must be in the sample to likely be included in the analysis' id='sensitivity' class="col-xs-6 col-sm-3 metric">              
+              <div title='Displays minimum abundance that a read must be in the sample to likely be included in the analysis' id='sensitivity' class="col-xs-6 col-sm-3 metric">
                 <h2>Detection Threshold</h2>
                 <svg></svg>
               </div>
-              <div title='The number of reads classified beyond simple binning' id='classified' class="col-xs-6 col-sm-3 metric">              
+              <div title='The number of reads classified beyond simple binning' id='classified' class="col-xs-6 col-sm-3 metric">
                 <h2>Reads Classified</h2>
                 <span class="text-muted"></span>
               </div>
             </div>
-            
-            <div id='main-panel'>       
-              
-              <div id='file-name' class="dropdown" style="z-index:10">  
+
+            <div id='main-panel'>
+
+              <div id='file-name' class="dropdown" style="z-index:10">
                 <span class='name'></span>
                 <span id='dl-drop-down' class="dropdown-toggle"  data-toggle="dropdown" aria-expanded="true">
                   <a href="#">
@@ -140,21 +140,21 @@
                     </a>
                   </li>
                   <li role="presentation"><a id="taxonomerUrl" role="menuitem" tabindex="-1" href="#" onclick="startDownload(this)" >
-                    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>                        
+                    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
                     Download Taxonomer Results
                     </a>
                     <!-- url used to programmatically click for local files to be downloaded -->
                     <a style="display:none" id='taxonomerUrl-click'  download></a>
-                  </li>                      
+                  </li>
                 </ul>
-              </div>     
-              <div id='top-controls' class="row" style="z-index:1">              
+              </div>
+              <div id='top-controls' class="row" style="z-index:1">
                 <div class="col-xs-3">
                   <div id='breadcrumbs' >
                     <ul>
 
                     </ul>
-                  </div>                
+                  </div>
                 </div>
                 <div class="col-xs-6">
                   <div class='composition' id='bacterial-composition'>
@@ -170,14 +170,14 @@
                     <div style="font-size:12px">(Based on Internal Transcribed Spacer (ITS) Reads)</div>
                   </div>
                 </div>
-                <div class="col-xs-3"  style="z-index: 5">                                    
+                <div class="col-xs-3"  style="z-index: 5">
                   <!-- <h4 id="file-name"><span class="name"></span><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></h4> -->
-                  <div id='min-abundance' style="z-index: 5">              
+                  <div id='min-abundance' style="z-index: 5">
                     <h4>Display Threshold</h4>
                     <div style="text-align: left; width: 240px; margin: -5px auto 0px auto;">
                       <!-- <span id='min-abundance-slider-span' class='iobio-txt-color'>0</span><span class='iobio-txt-color'> %</span>
-                      <input id="min-abundance-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterPercent(this.value)'></input> 
-                      <div style="clear:both"></div> -->                      
+                      <input id="min-abundance-slider" type="range" value='0' oninput='updateSlider(this)' onchange='filterPercent(this.value)'></input>
+                      <div style="clear:both"></div> -->
                       <span id='min-read-count-slider-span'>0</span><span > read(s)</span>
                       <input id="min-read-count-slider" type="range" value='1' min='1' max='50' oninput='updateSlider(this)' onchange='filterCount(this.value)'></input>
                     </div>
@@ -188,12 +188,12 @@
                       <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
                     </span>
                   </div> -->
-                </div>              
+                </div>
               </div>
-              <div style="clear:both"></div>            
+              <div style="clear:both"></div>
 
               <div id='spinner'><img  src='assets/images/loading_dots.gif'/></div>
-              <!-- file/url picker -->            
+              <!-- file/url picker -->
               <div id="filepicker" >
                   <div class="btn-group" >
                     <button  type="button" class="btn btn-default dropdown-toggle load-file" data-toggle="dropdown" aria-expanded="false">
@@ -209,38 +209,38 @@
                               </label>
                           </div>
                       </li>
-                      <li><a onClick="displayUrlBox()" href="#">Enter URL for FASTQ/FASTA(s)</a></li> 
+                      <li><a onClick="displayUrlBox()" href="#">Enter URL for FASTQ/FASTA(s)</a></li>
 
-                      <li><a onClick="displaySraBox()" href="#">Enter SRA Run ID</a></li> 
-                      
+                      <li><a onClick="displaySraBox()" href="#">Enter SRA Run ID</a></li>
+
                       <li role="presentation" class="divider"></li>
 
                       <li class="disabled" style="text-align: center;color: grey" >Sample Datasets</li>
 
 
                       <li style="padding-top: 4px;padding-bottom:  4px;">
-            
-                          <a href="#" 
-                               onClick="onSampleUrlEntered('https://s3.amazonaws.com/iobio/ebola_sample.fastq')" 
-                               style="display:inline;">Ebolavirus</a>                       
+
+                          <a href="#"
+                               onClick="onSampleUrlEntered('https://s3.amazonaws.com/iobio/ebola_sample.fastq')"
+                               style="display:inline;">Ebolavirus</a>
 
                           <span style="float:right;padding-right: 20px;">
                             <a href="info.html#sample1" style="display:inline;">More Info</a>
                           </span>
-           
+
                       </li>
                       <li style="padding-top: 4px;padding-bottom:  4px;">
-                        <a href="#" 
-                           onClick="onSampleUrlEntered('https://s3.amazonaws.com/iobio/ERR501052_1.fastq')" 
-                           style="display:inline;">Intestinal microbiota</a> 
+                        <a href="#"
+                           onClick="onSampleUrlEntered('https://s3.amazonaws.com/iobio/ERR501052_1.fastq')"
+                           style="display:inline;">Intestinal microbiota</a>
                         <span style="float:right;padding-right: 20px;">
                            <a href="info.html#sample2"  style="display:inline;">More Info</a>
                         </span>
                       </li>
                       <li style="padding-top: 4px;padding-bottom:  4px;">
-                        <a href="#" 
-                           onClick="onSampleUrlEntered('https://s3.amazonaws.com/iobio/SRR533978_1.fastq')" 
-                           style="display:inline;padding-right:54px">Hemorrhagic fever</a> 
+                        <a href="#"
+                           onClick="onSampleUrlEntered('https://s3.amazonaws.com/iobio/SRR533978_1.fastq')"
+                           style="display:inline;padding-right:54px">Hemorrhagic fever</a>
                         <span style="float:right;padding-right: 20px;">
                           <a href="info.html#sample3"  style="display:inline;">More Info</a>
                         </span>
@@ -260,8 +260,8 @@
                     <div style="text-align:left; margin-top: 15px">
                       <a href="#" onclick='showMatePair()'>Add Mate Pair (optional)</a>
                     </div>
-                    <div id='mate-pair-url' style="width:100%; display:none">                      
-                      <input id="mate-pair-url-input" type="text" value="" class="form-control" placeholder="http://..." />                      
+                    <div id='mate-pair-url' style="width:100%; display:none">
+                      <input id="mate-pair-url-input" type="text" value="" class="form-control" placeholder="http://..." />
                     </div>
                   </div>
 
@@ -273,25 +273,25 @@
                           <button class="btn btn-default" onClick="onSraEntered()" type="button">Go</button>
                       </span>
 
-                    </div>                    
+                    </div>
                   </div>
-              </div> 
+              </div>
 
               <!-- binner visualization -->
               <div id="big-binner">
-                <!-- <div style="height: 100%; width: 100%;position:absolute;">                  
+                <!-- <div style="height: 100%; width: 100%;position:absolute;">
                   <svg id='big-binner-binner' viewBox="0 0 600 440" preserveAspectRatio="xMidYMid"></svg>                   -->
                 <div id='b' style="height: 100%; width: 100%; position:absolute;">
                   <script>
                     var w = $('#big-binner').width();
-                    var h = $('#big-binner').height();                    
-                    $('#big-binner #b').append("<svg id='big-binner-binner' viewbox='0 0 " + w + " " + h + "'  preserveAspectRatio='xMidYMid'></svg>");                                      
+                    var h = $('#big-binner').height();
+                    $('#big-binner #b').append("<svg id='big-binner-binner' viewbox='0 0 " + w + " " + h + "'  preserveAspectRatio='xMidYMid'></svg>");
                   </script>
-                </div>                                              
+                </div>
               </div>
 
               <div id='cat-list'>
-                <svg viewBox="0 0 100 444" preserveAspectRatio="xMidYMid"> 
+                <svg viewBox="0 0 100 444" preserveAspectRatio="xMidYMid">
                   <g transform="translate(0,0)">
                     <rect data-bin='human' x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#25aaff"></rect>
                     <text class='title' x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Human </text>
@@ -301,50 +301,50 @@
                     <rect data-bin='bacterial' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#ff6f03"></rect>
                     <text class='title' x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Bacterial </text>
                     <text x="50" y="47" data-bin='baterial' class='bacterial-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
-                  </g>                  
+                  </g>
                   <g transform="translate(0,100)">
                     <rect data-bin='viral' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:purple"></rect>
                     <text class='title' x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Viral </text>
                     <text x="50" y="47" data-bin='viral' class='viral-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
-                  </g>                  
+                  </g>
                   <g transform="translate(0,150)">
                     <rect data-bin='phage' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:red"></rect>
                     <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Phage </text>
                     <text x="50" y="47" data-bin='phage' class='phage-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
-                  </g>   
+                  </g>
                   <g transform="translate(0,200)">
                     <rect data-bin='fungal' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:green"></rect>
                     <text class='title' x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Fungal </text>
                     <text x="50" y="47" data-bin='fungal' class='fungal-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
-                  </g>                  
+                  </g>
                   <g transform="translate(0,250)">
                     <rect data-bin='phix' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#06ac61"></rect>
                     <text class='title' x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> PhiX </text>
                     <text x="50" y="47" data-bin='phix' class='phix-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
-                  </g>        
+                  </g>
                   <g transform="translate(0,300)">
                     <rect data-bin='ambiguous' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#5877ab"></rect>
                     <text class='title' x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Ambiguous </text>
                     <text x="50" y="47"  class='ambiguous-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
-                  </g>        
+                  </g>
                   <g transform="translate(0,350)">
                     <rect data-bin='unknown' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:rgb(120,120,120)"></rect>
                     <text class='title' x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Unknown </text>
                     <text x="50" y="47"  class='unclassified-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
-                  </g>        
+                  </g>
 <!--                   <g transform="translate(0,400)">
                     <rect data-bin='repeat' onclick="toSunburst(this)" x="0" y="0" rx="4" ry="4" width="100" height="34" style="fill:#133063"></rect>
                     <text x="50" y="17" alignment-baseline='middle' style="text-anchor:middle;font-size:14px"> Repeat </text>
                     <text x="50" y="47"  class='Repeat-binned-reads reads' title="Total Reads (Classified Reads)">0</text>
-                  </g>    -->     
-                        
+                  </g>    -->
+
                 </svg>
-              </div>                  
+              </div>
 
               <!-- sunburst visualization -->
               <div id='main-viz'>
                 <div id='selected-name'>All</div>
-                <div id='viz'>                            
+                <div id='viz'>
                   <!-- <svg viewBox="0 0 600 440" preserveAspectRatio="xMidYMid"></svg> -->
                   <script>
                     var w = $('#viz').width();
@@ -352,7 +352,7 @@
                     $('#viz').append("<svg viewbox='0 0 " + w + " " + h + "'  preserveAspectRatio='xMidYMid' style='margin-top:15px; margin-bottom:15px;'></svg>");
                   </script>
                 </div>
-                <div id='reads-viewed'>                
+                <div id='reads-viewed'>
                   <h4 id='total-reads'>Total <span id='bin'></span> Reads Classified: <span class='iobio-txt-color'></span></h4>
                   <!-- <h4 id='viewed-reads' style="float:right">Displayed: <span class='iobio-txt-color'>100%</span></h4> -->
                   <div style="clear:both"></div>
@@ -369,40 +369,41 @@
         </div>
       </div>
     </div>
+    <div style="position: absolute; bottom: 10px; right: 30px"><a href="http://taxonomer.com">For more funtionality go to Taxonomer.com</a></div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->    
+    <!-- Placed at the end of the document so the pages load faster -->
     <script src="assets/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- D3 Visualizations -->
-    <script type="text/javascript" src='assets/js/sunburst.d3.js'></script>   
-    <script type="text/javascript" src='assets/js/donut.d3.js'></script>  
-    <script type="text/javascript" src='assets/js/gauge.d3.js'></script>    
+    <script type="text/javascript" src='assets/js/sunburst.d3.js'></script>
+    <script type="text/javascript" src='assets/js/donut.d3.js'></script>
+    <script type="text/javascript" src='assets/js/gauge.d3.js'></script>
 
     <!-- On load -->
     <script>
       var color = d3.scale.category20c();
-      window.bacterialColor = d3.scale.ordinal();        
+      window.bacterialColor = d3.scale.ordinal();
       window.viralColor = d3.scale.ordinal()
       window.fungiColor = d3.scale.ordinal();
       window.phageColor = d3.scale.ordinal();
       window.teColor = d3.scale.ordinal();
-      $(document).ready(function(){           
+      $(document).ready(function(){
 
         // initialize file/url picker
         $('#fastq-file').on('change', onFilesSelected);
 
-        // defaults        
-        window.bytesToSample=11000000;        
+        // defaults
+        window.bytesToSample=11000000;
         window.sraReadsToSample = 50000;
         window.defaultCountFilter = 1;
 
         // check if url to bam file is supplied in url and sample it
         if (window.location.search != "") {
             var url = getUrlParameter('url');
-            var full = getUrlParameter('full');  
-            var te = getUrlParameter('te');  
-            var sra = getUrlParameter('sra');            
+            var full = getUrlParameter('full');
+            var te = getUrlParameter('te');
+            var sra = getUrlParameter('sra');
 
             // check for flag to do more sampling
             if (getUrlParameter('big')) {
@@ -412,7 +413,7 @@
 
             if (url != undefined) {
               if (url[url.length-1] == '#') url = url.slice(0,url.length-1);
-              goUrl(url);            
+              goUrl(url);
             } else if (full != undefined) {
               // window.defaultCountFilter = function(val) { return parseInt(Math.max(5, val * 0.001))};
               goFull(full);
@@ -427,16 +428,16 @@
       });
 
       function go(url, options) {
-        $('#filepicker').css('visibility', 'hidden')        
-        $('#big-binner').css('visibility', 'visible')     
-        $('#cat-list').css('visibility', 'visible')     
-        $('#spinner').css('visibility', 'visible')  
-        window.mode = 'binner';         
+        $('#filepicker').css('visibility', 'hidden')
+        $('#big-binner').css('visibility', 'visible')
+        $('#cat-list').css('visibility', 'visible')
+        $('#spinner').css('visibility', 'visible')
+        window.mode = 'binner';
 
         // create charts
-        var commaFormatter = d3.format(",0f");   
+        var commaFormatter = d3.format(",0f");
         var radiusSmall = $('#binner svg').height()/2;
-        var radiusBig = $('#big-binner-binner').height()/2;        
+        var radiusBig = $('#big-binner-binner').height()/2;
         var binnerColor = d3.scale.ordinal()
               .domain(['bacterial', 'fungal', 'human', 'viral', 'unknown', 'ambiguous', 'phage', 'Repeat'])
               .range(['#ff6f03', 'green', '#25aaff', 'purple', 'rgb(120,120,120)', '#5877ab', 'red', '#133063'])
@@ -460,12 +461,12 @@
               .click(function(d) { toSunburst(d.name) })
               .color(function(d) {   if(d.data.type=='binner') {return 'white'} else {return binnerColor(d.data.name);} })
               .tooltip(function(d) { return d.data.name.split('-')[0] + ' classified: ' + commaFormatter(d.value) });
-        window.binnerPie = d3.layout.pie().sort(function(a,b) { return d3.ascending(a.name,b.name); }).value(function(d) { return d.count});         
+        window.binnerPie = d3.layout.pie().sort(function(a,b) { return d3.ascending(a.name,b.name); }).value(function(d) { return d.count});
         $('#cat-list').css('left', parseInt(($('#main-panel').width()/2 - radiusBig)/2) + 'px');
         $('#cat-list').css('top', parseInt(($('#main-panel').height()/2 - $('#cat-list').height()/2)+60) + 'px');
 
         var radius = $('#sensitivity svg').height();
-        window.sensitivityChart = gaugeD3().radius(radius).thickness(6).klass("sensitivityArc");        
+        window.sensitivityChart = gaugeD3().radius(radius).thickness(6).klass("sensitivityArc");
         window.sensitivityScale = d3.scale.log().domain([0.0001,1]).range([1,0]);
         var num = window.sensitivityScale(1);
         var data = [ num,1 - num ];
@@ -477,39 +478,39 @@
             .width( $('#viz svg').width() )
             .height( $('#viz svg').height() - 15 )
             .color(colorByCategory)
-            .click( function(d) {  
-              //updateParentHistory(d);              
+            .click( function(d) {
+              //updateParentHistory(d);
               addClassToInactive(d, 'inactive');
               updateReadsViewed();
               updateBreadcrumbs();
-              updateSliderActive();              
-              $('#selected-name').html( d.name.split(':')[1] == 'root' ? d.children[0].name : d.name );              
+              updateSliderActive();
+              $('#selected-name').html( d.name.split(':')[1] == 'root' ? d.children[0].name : d.name );
             });
         var commaFormat = d3.format("0,000");
-        
+
         if (options && options.full)
           var start = startHttp;
         else
           var start = startWs;
 
         start(url, function(data) {
-          $('#spinner').css('visibility', 'hidden')        
+          $('#spinner').css('visibility', 'hidden')
           // transform binner data
           var binnerData = [];
           window.binnerClassifiedData = [];
-          var total = 0;          
+          var total = 0;
           if (data.binnerResult['phage'] == undefined) data.binnerResult['phage'] = 0;
           Object.keys(data.binnerResult).forEach(function(key){
-            
+
             if (key == 'unclassified') {
-                binnerData.push( {name:'unknown', count:data.binnerResult[key]} );                
+                binnerData.push( {name:'unknown', count:data.binnerResult[key]} );
             } else {
               binnerData.push( {name:key, count:data.binnerResult[key]} );
             }
             // gather data for classified portion of binner pie chart
             if (data.classifierResult[key] != undefined) {
               var cCount = data.classifierResult[key].count || 0;
-              binnerClassifiedData.push( {name: key, count: cCount, type:'classified'});              
+              binnerClassifiedData.push( {name: key, count: cCount, type:'classified'});
               binnerClassifiedData.push( {name:key+'-binner', count:data.binnerResult[key]-cCount, type:'binner'} );
             } else {
               binnerClassifiedData.push( {name:key+'-binner', count:data.binnerResult[key], type:'binner'} );
@@ -517,45 +518,45 @@
             total += data.binnerResult[key]
           })
           // update metrics
-          $('#reads-sampled span').html(numberFormatter(total));                    
+          $('#reads-sampled span').html(numberFormatter(total));
 
           // update small binner
-          window.binnerData = binnerData;          
+          window.binnerData = binnerData;
           var arc = d3.select('#binner svg').selectAll(".arc")
               .data(window.binnerPie(binnerData), function(d) { return d.data.name; });
-          binnerChart(arc, {text:false});          
+          binnerChart(arc, {text:false});
 
           // transform classifier data
           var classifierRoot = { 'name' : 'root', 'id' : 'root', 'count' : 0,  'children' : [] };
           Object.keys(data.classifierResult).forEach(function(key) {
-                        
+
             if (data.classifierResult[key].children != undefined) {
               if (data.classifierResult[key].children[0].children == undefined) {
-                var root = data.classifierResult[key];                
-                classifierRoot.children.push( root );  
+                var root = data.classifierResult[key];
+                classifierRoot.children.push( root );
               }
               else {
                 var root = data.classifierResult[key].children[0]
-                classifierRoot.children.push( root );  
+                classifierRoot.children.push( root );
               }
-            }            
+            }
             var count = data.classifierResult[key].count || 0;
             classifierRoot['count'] += count;
             if (key == 'bacterial') colorRange(window.bacterialColor,'#FF5C00', '#FFBF00', root);
-            else if (key == 'viral') colorRange(window.viralColor,'#7404B4', '#E016EC', root);  
-            // else if (key == 'viral') window.viralColor.range(colorRange('purple', '#c9a9ea', 30));              
-            else if (key == 'fungal') colorRange(window.fungiColor,'#009E13', '#00B57E', root);              
+            else if (key == 'viral') colorRange(window.viralColor,'#7404B4', '#E016EC', root);
+            // else if (key == 'viral') window.viralColor.range(colorRange('purple', '#c9a9ea', 30));
+            else if (key == 'fungal') colorRange(window.fungiColor,'#009E13', '#00B57E', root);
             else if (key == 'phage') colorRange(window.phageColor,'#CC0627', '#F20054', root);
             else if (key == 'Repeat') colorRange(window.teColor, '#0A1A36', '#7DA6FF', root);
           })
 
           var rows = ['human', 'viral', 'bacterial', 'fungal', 'ambiguous', 'unclassified', 'phage', 'phix', 'Repeat'];
-          rows.forEach(function(key){ 
-            var cCount = data.classifierResult[key] ? data.classifierResult[key].count : undefined;            
+          rows.forEach(function(key){
+            var cCount = data.classifierResult[key] ? data.classifierResult[key].count : undefined;
             if (cCount == undefined) cCount = '';
             else cCount = ' (' + commaFormat(cCount) + ')'
             $('.' + key + '-binned-reads').html( commaFormat(data.binnerResult[key]) + cCount )
-          });          
+          });
 
           // update classified total
           $('#classified span').html(numberFormatter(classifierRoot['count']));
@@ -569,44 +570,44 @@
               var arc = d3.select('#sensitivity svg')
                 .datum(gauge(data));
               window.sensitivityChart(arc)
-            }            
+            }
           })
-            
-          window.rootData = JSON.parse(JSON.stringify(classifierRoot));                 
+
+          window.rootData = JSON.parse(JSON.stringify(classifierRoot));
           // window.totalReads = d3.selectAll('#main-panel path').data()[0].value;
-         
+
           // update correct chart
-          if ( window.mode == 'binner') {                                    
+          if ( window.mode == 'binner') {
             var arcBig = d3.select('#big-binner-binner').selectAll(".binnerArc")
                 .data(window.binnerPie(binnerData), function(d) { return d.data.name; });
             window.bigBinnerChart(arcBig);
             var arcClassifiedBig = d3.select('#big-binner-binner').selectAll(".binnerClassArc")
                 .data(window.binnerPie(binnerClassifiedData), function(d) { return d.data.name; });
-            window.bigBinnerClassifiedChart(arcClassifiedBig);                        
-          } else {               
-            var currTopRoot = d3.select('#main-viz path').data()[0];            
+            window.bigBinnerClassifiedChart(arcClassifiedBig);
+          } else {
+            var currTopRoot = d3.select('#main-viz path').data()[0];
             var currH = treeToHash(currTopRoot, 'id');
             var newDataCurrRoot;
-            t.bfs(window.rootData, [], function(node, par, ctrl) {             
+            t.bfs(window.rootData, [], function(node, par, ctrl) {
                  if (node.id == currTopRoot.id && node.bin == currTopRoot.bin) {
                    newDataCurrRoot = node;
-                   t.bfs(newDataCurrRoot, [], function(n, p, c) {                     
-                     if(currH[n.id] != undefined) {                                           
+                   t.bfs(newDataCurrRoot, [], function(n, p, c) {
+                     if(currH[n.id] != undefined) {
                        n.x0 = currH[n.id].x0;
                        n.dx0 = currH[n.id].dx0;
                      }
                    });
-                   ctrl['stop'] = true;               
-                 }           
+                   ctrl['stop'] = true;
+                 }
              })
             var selection = d3.select("#viz svg").datum( newDataCurrRoot );
             // window.sunburstChart(selection, {drillTo:currRoot});
-            window.sunburstChart(selection, {transitionDuration:200});    
+            window.sunburstChart(selection, {transitionDuration:200});
             // update total reads in this bin
-            $('#total-reads .iobio-txt-color').html(getBinRoot(newDataCurrRoot.bin).count)        
+            $('#total-reads .iobio-txt-color').html(getBinRoot(newDataCurrRoot.bin).count)
           }
-          
-        })            
+
+        })
       }
 
       function goFile(files) {
@@ -615,9 +616,9 @@
         $('#file-name .name').html(files[0].name)
         // generate file url
         generateFileUrl(files, function(url){
-          go(url);  
+          go(url);
         });
-        
+
       }
 
       function goSra(sra_ids) {
@@ -625,7 +626,7 @@
         go(url);
       }
 
-      function goUrl(dataUrl) { 
+      function goUrl(dataUrl) {
         // set title
         var name = dataUrl.split('/')[ dataUrl.split('/').length-1 ];
         $('#file-name .name').html(name);
@@ -634,12 +635,12 @@
         go(url);
       }
 
-      function goFull(dataUrl) {        
+      function goFull(dataUrl) {
         var url = generateFullUrl(dataUrl);
         go(url, {full:true});
       }
 
-      function goTe(dataUrl) {        
+      function goTe(dataUrl) {
         var url = generateTeUrl(dataUrl);
         go(url);
       }
@@ -648,41 +649,41 @@
         $('#min-abundance input').each(function(i,s) {
           s.value = 0;
           updateSlider(s);
-        })        
+        })
       }
 
-      function toSunburst(elem) {        
+      function toSunburst(elem) {
         window.mode = 'sunburst';
         if (typeof elem == 'string' || elem instanceof String)
           var bin = elem;
-        else 
+        else
           var bin = elem.getAttribute('data-bin');
         if (bin == 'human' || bin == 'ambiguous' || bin == 'unknown') return;
 
-        var binNode = getBinRoot(bin);                
+        var binNode = getBinRoot(bin);
         $('#min-read-count-slider').val(window.defaultCountFilter);
         updateSlider($('#min-read-count-slider')[0]);
-        
+
         var selection = d3.select("#viz svg").datum(binNode);
-        
+
         window.sunburstChart(selection);
-        
+
         initBreadcrumbs(binNode.children[0]);
 
-        
-        // drill into binner chart        
-        var data = [{"name":"viral","count":0},{"name":"unknown","count":0},{"name":"fungal","count":0},{"name":"bacterial","count":0},{"name":"human","count":0},{"name":"ambiguous","count":0},{"name":"phage","count":0}, {"name":"te","count":0}]  
+
+        // drill into binner chart
+        var data = [{"name":"viral","count":0},{"name":"unknown","count":0},{"name":"fungal","count":0},{"name":"bacterial","count":0},{"name":"human","count":0},{"name":"ambiguous","count":0},{"name":"phage","count":0}, {"name":"te","count":0}]
         data.forEach(function(d) { if (d.name==bin) d.count = 1; })
-        // var data = [{"name":bin,"count":1}];          
+        // var data = [{"name":bin,"count":1}];
         var arcBig = d3.select('#big-binner').selectAll(".binnerArc")
             .data(window.binnerPie(data), function(d) { return d.data.name; });
         window.bigBinnerChart(arcBig, {events:true});
         var arcClassifiedBig = d3.select('#big-binner').selectAll(".binnerClassArc")
             .data(window.binnerPie(data), function(d) { return d.data.name; });
-        window.bigBinnerClassifiedChart(arcClassifiedBig, {events:true});                        
+        window.bigBinnerClassifiedChart(arcClassifiedBig, {events:true});
         // do this horrible event b\c i don't know how to tell when binner transition is over
-        $('#selected-name').html( binNode.children[0].name );              
-        $(document).on("binnerTransitionOver", function() {              
+        $('#selected-name').html( binNode.children[0].name );
+        $(document).on("binnerTransitionOver", function() {
           $('#big-binner').css('visibility', 'hidden');
           // reset sliders
           resetSliders();
@@ -698,7 +699,7 @@
           $('#min-read-count-slider').val(window.defaultCountFilter);
           updateSlider($('#min-read-count-slider')[0]);
           $('#min-read-count-slider').change()
-        });          
+        });
       }
 
       function getDefaultCountFilter(val) {
@@ -721,29 +722,29 @@
         //   return d3.select('#main-panel #root').data()[0];
 
         var root;
-        t.bfs(d3.select('#main-viz path').data(), [], function(node, par, ctrl) {             
-             if (node.x >= xDomain[0] && node.x <= xDomain[1] && node.y >= yDomain[0] && node.y <= yDomain[1]) {               
+        t.bfs(d3.select('#main-viz path').data(), [], function(node, par, ctrl) {
+             if (node.x >= xDomain[0] && node.x <= xDomain[1] && node.y >= yDomain[0] && node.y <= yDomain[1]) {
                root = node;
-               ctrl['stop'] = true;               
-             }           
+               ctrl['stop'] = true;
+             }
          })
         return root;
       }
 
-      function getBinRoot(bin) {        
+      function getBinRoot(bin) {
 
         var root;
-        t.bfs(window.rootData, [], function(node, par, ctrl) {             
-             if (node.bin == bin) {               
+        t.bfs(window.rootData, [], function(node, par, ctrl) {
+             if (node.bin == bin) {
                root = node;
-               ctrl['stop'] = true;               
-             }           
+               ctrl['stop'] = true;
+             }
          })
         return root;
         // return root.children[0];
       }
 
-      function updateReadsViewed(displayCount) { 
+      function updateReadsViewed(displayCount) {
         // var currRoot = getCurrRoot();
         // // if (displayCount != undefined) {
         //   var count = 0;
@@ -751,7 +752,7 @@
         //     count += child.count;
         //   })
         //   var percent = parseInt(count /  getBinRoot(currRoot.bin).count * 1000) / 10;
-        // // } else {          
+        // // } else {
         // //   var percent = parseInt(currRoot.value / getBinRoot(currRoot.bin).value * 1000) / 10;
         // // }
         // $('#viewed-reads span').html(percent + '%')
@@ -763,17 +764,17 @@
           if (attr != undefined)
             arr.push(node[attr]);
           else
-            arr.push(node);     
-        }) 
+            arr.push(node);
+        })
         return arr;
       }
 
       function treeToHash(d,key) {
          var h = {};
           t.dfs(d, [], function(node) {
-            h[node[key]] = node;     
-          }) 
-          return h; 
+            h[node[key]] = node;
+          })
+          return h;
       }
 
       function updateGlobalHistory(d) {
@@ -784,7 +785,7 @@
         }
         else {
           var selection = d3.select('.history-sunburst').datum(d);
-          var chart = getHistoryChart();            
+          var chart = getHistoryChart();
           chart(selection, {'text': false, 'click': false, 'mouseover':false, 'idPrefix' : 'hist'});
         }
       }
@@ -793,26 +794,26 @@
         if ($('.history').length > 1)
           $('.history').last().remove();
         // if (d.parent && d.parent.name != 'root')
-        addToHistory(d.parent);        
+        addToHistory(d.parent);
         $('.history-title').last().html( d.parent.name == 'root' ? 'Global' : 'Parent' );
         $('.history-category').last().html( d.parent.name == 'root' ? 'All' : d.parent.name );
       }
 
       function addToHistory(origD) {
-        
+
         // t.bfs(window.rootData, [], function(node, par, ctrl) {
         //      if(origD.name == node.name) {
-        //       d = node;                    
+        //       d = node;
         //      }
-        //  })  
-        // var newD = JSON.parse(JSON.stringify(d))     
+        //  })
+        // var newD = JSON.parse(JSON.stringify(d))
         // var chart = getHistoryChart();
         // var div = d3.select('.sidebar').append('div').attr('class', 'history')
         // div.append('div').attr('class','history-title');
         // var selection = div.append('svg')
         //   .datum(newD)
         //     .attr('class', 'history-sunburst');
-        // chart(selection, {'text': false, 'click': false, 'mouseover':false, 'idPrefix' : 'hist'});   
+        // chart(selection, {'text': false, 'click': false, 'mouseover':false, 'idPrefix' : 'hist'});
         // div.append('div').attr('class','history-category');
       }
 
@@ -849,14 +850,14 @@
         $('#breadcrumbs ul').html('');
         var node = getCurrRoot();
         if(node.name.split(':')[1] == 'root') node = node.children[0];
-        var name = node.name.split(':')[1] || 'All';        
+        var name = node.name.split(':')[1] || 'All';
         $('#breadcrumbs ul').prepend('<li>' + name + '</li>');
         node = node.parent;
-        if(node == undefined) { 
+        if(node == undefined) {
           $('#breadcrumbs ul').prepend('<li> <a href="#" onclick="selectCategory(\'root\')">All</a></li>')
           return;
         }
-        
+
         while(node != undefined && node.name.split(':')[1] != 'root') {
           $('#breadcrumbs ul').prepend('<li><a href="#" onclick="selectCategory(' + node.id + ')">' + node.name.split(':')[1] + '</a></li>')
           node = node.parent;
@@ -865,7 +866,7 @@
       }
 
       function selectCategory(path) {
-        if (typeof path == 'string' || path instanceof String) 
+        if (typeof path == 'string' || path instanceof String)
           var pathId = path;
         else
           var pathId = path.id;
@@ -876,19 +877,19 @@
           $('#big-binner').css('visibility', 'visible');
           var arcClassifiedBig = d3.select('#big-binner').selectAll(".binnerClassArc")
               .data(window.binnerPie(window.binnerClassifiedData), function(d) { return d.data.name; });
-          window.bigBinnerClassifiedChart(arcClassifiedBig, {events:false});                        
+          window.bigBinnerClassifiedChart(arcClassifiedBig, {events:false});
           var arcBig = d3.select('#big-binner').selectAll(".binnerArc")
               .data(window.binnerPie(window.binnerData), function(d) { return d.data.name; });
-          window.bigBinnerChart(arcBig, {events: false});          
-        } else 
+          window.bigBinnerChart(arcBig, {events: false});
+        } else
           $(path).d3Click();
       }
 
       // layout for d3 gauge
       function gauge(data) {
-        var pie = d3.layout.pie().sort(null);        
+        var pie = d3.layout.pie().sort(null);
         // sum values and add as final value
-        // do this since we are using a pie chart represent a gauge 
+        // do this since we are using a pie chart represent a gauge
         data.push( data.reduce(function(p,c){ return p+c;}) )
         var d = pie(data);
         d.pop();
@@ -896,7 +897,7 @@
 
       }
 
-      function colorByCategory(d) {        
+      function colorByCategory(d) {
         // if (d.bin == 'bacterial')
         //   return window.bacterialColor(d.id);
         // else if (d.bin == 'fungal')
@@ -928,10 +929,10 @@
         var color = d3.interpolateRgb(c1, c2);
         var range = [];
         var domain = [];
-        for (var i=0; i < toplevels.length; i++) {          
+        for (var i=0; i < toplevels.length; i++) {
           range.push( color(i/toplevels.length) );
-          domain.push( toplevels[i].id )  
-        }        
+          domain.push( toplevels[i].id )
+        }
         cscale.range(range).domain(domain);
         return cscale;
       }
@@ -956,42 +957,42 @@
         }, root)
       }
 
-      function filterTree(val, expression, root) {            
+      function filterTree(val, expression, root) {
         root = root || d3.select('#main-viz path').data()[0];
         var displayCount = 0;
 
-        t.dfs(root, [], function(node, par, ctrl) {            
+        t.dfs(root, [], function(node, par, ctrl) {
           if (node._count != undefined) {
             node.count = node._count;
             node._count = undefined;
           }
           if (!expression(node, val)) {
-            t.dfs(node, [], function(n, par, ctrl) {  
+            t.dfs(node, [], function(n, par, ctrl) {
               if(n.count != undefined) {
                 n._count = n.count;
                 n.count = 0;
               }
             });
-            ctrl['cutoff'] = true;            
+            ctrl['cutoff'] = true;
           } else {
             displayCount += node.count
           }
           updateReadsViewed(displayCount);
-       }) 
+       })
 
-        var selection = d3.select("#viz svg").datum(root)   
-        var options = getUrlParameter('full') != undefined ? {} : {pixelFilter:false};         
-        window.sunburstChart(selection, options);        
-      }      
+        var selection = d3.select("#viz svg").datum(root)
+        var options = getUrlParameter('full') != undefined ? {} : {pixelFilter:false};
+        window.sunburstChart(selection, options);
+      }
 
       function generateUrl(dataUrl) {
         var name = dataUrl.split('/')[ dataUrl.split('/').length-1 ];
-        // var dataUrl = 'https://s3.amazonaws.com/iobio/SRR1714192_1.fastq,https://s3.amazonaws.com/iobio/SRR1714192_2.fastq';        
+        // var dataUrl = 'https://s3.amazonaws.com/iobio/SRR1714192_1.fastq,https://s3.amazonaws.com/iobio/SRR1714192_2.fastq';
         var partialStream = 'http://partialstream.iobio.io'
         var split = dataUrl.split('.');
         var format = split[split.length-1];
         var seperator = '@';
-        if (format == 'fa' || format == 'fasta' || format == 'fas') seperator = '">"';          
+        if (format == 'fa' || format == 'fasta' || format == 'fas') seperator = '">"';
         if (dataUrl.split(',').length == 2) {
           var urls = [];
           dataUrl.split(',').forEach(function(u) {
@@ -1000,9 +1001,9 @@
           dataUrl = urls.join(' ');
         } else {
           dataUrl = encodeURI( partialStream + '?cmd=--url ' + dataUrl + ' --bytes ' + window.bytesToSample + ' --separator ' + seperator);
-        }        
+        }
         var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl);
-        var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));        
+        var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));
         var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxonomerUrl);
         // set urls for user download
 
@@ -1010,7 +1011,7 @@
 
         // return url
         return encodeURI(taxanglerUrl);
-      } 
+      }
 
       function generateSraUrl(sra_ids) {
         // var sratoolkit = 'http://sratoolkit.iobio.io';
@@ -1023,9 +1024,9 @@
           dataUrl = urls.join(' ');
         } else {
           dataUrl = encodeURI( sratoolkit + '?cmd=fastq-dump -X ' + window.sraReadsToSample + ' -Z --fasta ' + sra_ids);
-        }        
+        }
         var fq2faUrl = encodeURI('http://fq2fa.iobio.io?cmd=' + dataUrl);
-        var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));        
+        var taxonomerUrl = encodeURI('http://thetaxonomer.iobio.io?cmd=' + encodeURIComponent(fq2faUrl));
         var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxonomerUrl);
         // set urls for user download
 
@@ -1039,17 +1040,17 @@
         document.getElementById('mate-pair-url').style.display = 'block';
       }
 
-      function generateFullUrl(dataUrl) {      
+      function generateFullUrl(dataUrl) {
         var taxsampleUrl = 'http://taxsample.iobio.io?cmd=' + dataUrl;
         // var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxsampleUrl);
         return encodeURI(taxsampleUrl);
-      } 
+      }
 
-      function generateTeUrl(dataUrl) {      
+      function generateTeUrl(dataUrl) {
         var tesampleUrl = 'http://aureliesample.iobio.io?cmd=' + dataUrl;
         // var taxanglerUrl = 'http://taxangler.iobio.io?cmd=' + encodeURIComponent(taxsampleUrl);
         return encodeURI(tesampleUrl);
-      } 
+      }
 
       function startHttp(url, callback) {
         $.ajax({
@@ -1057,21 +1058,21 @@
             dataType: 'json',
             success: function(result) {
               callback(result);
-            }            
+            }
           })
-      }    
+      }
 
       function startWs(url, callback) {
         var domain = new URL(url).hostname
-        var client = BinaryClient('ws://' + domain);        
-        // if (domain == 'taxsample.iobio.io')      
-        //   var client = BinaryClient('ws://taxsample.iobio.io');        
+        var client = BinaryClient('ws://' + domain);
+        // if (domain == 'taxsample.iobio.io')
+        //   var client = BinaryClient('ws://taxsample.iobio.io');
         // else
-        //   var client = BinaryClient('ws://taxangler.iobio.io');        
+        //   var client = BinaryClient('ws://taxangler.iobio.io');
         var buffer = '';
         client.on('open', function(stream){
-          var stream = client.createStream({event:'run', params : {'url':url}});          
-          
+          var stream = client.createStream({event:'run', params : {'url':url}});
+
           stream.on('data', function(datas, options) {
             (buffer + datas).split(';').forEach(function(data) {
               if (data == undefined) return;
@@ -1084,21 +1085,21 @@
               }
               if(success) {
                 buffer = "";
-                callback(obj); 
+                callback(obj);
               }
             });
-          });   
-          
+          });
+
         });
       }
 
       function generateFileUrl(files, callback) {
         // var file = files[0];
         var me = this;
-        var partialstreamService = 'ws://partialstream.iobio.io';        
+        var partialstreamService = 'ws://partialstream.iobio.io';
         var fq2faService = 'ws://fq2fa.iobio.io';
         var taxonomerService = 'ws://thetaxonomer.iobio.io';
-        var taxanglerService = 'ws://taxangler.iobio.io'        
+        var taxanglerService = 'ws://taxangler.iobio.io'
         var connectionID;
         var client;
         var dataUrl = [];
@@ -1109,25 +1110,25 @@
         files.forEach(function(file) {
           var connectionID = generateUid();
           var client = BinaryClient(partialstreamService + '?id=', {'connectionID' : connectionID} );
-          
+
           // determine format
           var format = file.name.split('.')[file.name.split('.').length-1];
           var separator = '@';
           if (format == 'fa' || format == 'fasta' || format == 'fas') separator = '">"';
 
           // hold onto urls
-          dataUrl.push('"' + encodeURI('http://partialstream.iobio.io' + "?protocol=websocket&cmd=" + encodeURIComponent("http://client?&id="+connectionID) + '  --separator ' + separator) + '"');          
+          dataUrl.push('"' + encodeURI('http://partialstream.iobio.io' + "?protocol=websocket&cmd=" + encodeURIComponent("http://client?&id="+connectionID) + '  --separator ' + separator) + '"');
 
-          // send data to sevice when it asks for it         
-          client.on('stream', function(stream, options) {    
+          // send data to sevice when it asks for it
+          client.on('stream', function(stream, options) {
             var reader = new FileReader();
             var cutEnd = ""
             var bufferSize = 1000000;
-            
+
             var curr = 0;
             reader.onload = function(evt) { stream.write(evt.target.result); }
             reader.onloadend = function(evt) { stream.end(); }
-            
+
             var blob = file.slice(0, window.bytesToSample);
             reader.readAsBinaryString(blob);
           })
@@ -1137,27 +1138,27 @@
             stream.end();
             callback(url, taxonomerUrl);
           })
-        });                       
+        });
         var fq2faUrl     = encodeURI(fq2faService + '?protocol=websocket&cmd=' + dataUrl.join(' '));
         var taxonomerUrl = encodeURI(taxonomerService + "?protocol=websocket&cmd=" + encodeURIComponent(fq2faUrl));
         var taxanglerUrl = encodeURI(taxanglerService + '?protocol=websocket&cmd=' + encodeURIComponent(taxonomerUrl));
-        var url = taxanglerUrl; 
-        
-        
+        var url = taxanglerUrl;
+
+
       }
 
       function startDownload(elem) {
         if (window.sourceFiles != undefined) {
           generateFileUrl(window.sourceFiles, function(hierachalJsonUrl, taxonomerUrl) {
-            var id = $(elem).attr('id') + '-click';            
-            $('#hierachalJsonUrl-click').attr('href', hierachalJsonUrl); 
+            var id = $(elem).attr('id') + '-click';
+            $('#hierachalJsonUrl-click').attr('href', hierachalJsonUrl);
 
             // switch protocol to http if needed
-            if (taxonomerUrl.slice(0,2) == 'ws') 
-              taxonomerUrl = 'http' + taxonomerUrl.slice(2,taxonomerUrl.length);   
-            $('#taxonomerUrl-click').attr('href', taxonomerUrl);        
+            if (taxonomerUrl.slice(0,2) == 'ws')
+              taxonomerUrl = 'http' + taxonomerUrl.slice(2,taxonomerUrl.length);
+            $('#taxonomerUrl-click').attr('href', taxonomerUrl);
             console.log($('#' + id).attr('href'))
-            $('#' + id).get(0).click();            
+            $('#' + id).get(0).click();
           })
         }
       }
@@ -1165,29 +1166,29 @@
       function setDownloadUrls(taxanglerUrl, taxonomerUrl) {
         $('#hierachalJsonUrl').attr('href', taxanglerUrl);
         $('#hierachalJsonUrl').attr('download', name + ".json");
-        $('#taxonomerUrl').attr('href', taxonomerUrl);        
+        $('#taxonomerUrl').attr('href', taxonomerUrl);
         $('#taxonomerUrl').attr('download', name + ".taxonomer");
       }
-      
+
       function numberFormatter (d) {
         if ((d / 1000000) >= 1)
           d = Math.round(d / 1000000) + "M";
         else if ((d / 1000) >= 1)
           d = Math.round(d / 1000) + "K";
-        return d;            
+        return d;
       }
 
       function updateSlider(elem) {
         $('#' + elem.id + '-span').html(elem.value);
-      }      
+      }
 
       function getUrlParameter(sParam) {
           var sPageURL = window.location.search.substring(1);
           var sURLVariables = sPageURL.split('&');
-          for (var i = 0; i < sURLVariables.length; i++) 
+          for (var i = 0; i < sURLVariables.length; i++)
           {
               var sParameterName = sURLVariables[i].split('=');
-              if (sParameterName[0] == sParam) 
+              if (sParameterName[0] == sParam)
               {
                   return sParameterName[1];
               }
@@ -1206,9 +1207,9 @@
     </script>
     <script>
         // add tooltip div
-        var div = d3.select("body").append("div")   
-            .attr("class", "tooltip")               
+        var div = d3.select("body").append("div")
+            .attr("class", "tooltip")
             .style("opacity", 1);
-    </script>   
+    </script>
   </body>
 </html>
