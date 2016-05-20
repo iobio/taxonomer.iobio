@@ -13,8 +13,8 @@
     <!-- Bootstrap core CSS -->
     <link href="assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->    
-    <link href="assets/css/site.css" rel="stylesheet">    
+    <!-- Custom styles for this template -->
+    <link href="assets/css/site.css" rel="stylesheet">
 
     <!-- Fonts -->
     <link href='http://fonts.googleapis.com/css?family=Quicksand:300,400' rel='stylesheet' type='text/css'>
@@ -31,7 +31,7 @@
 
       <div style="text-align:center;margin-bottom:20px" >
         <h2 style="font-weight:600;margin-top: -10px;"><span style="font-weight:600;color: #268bd2;">taxonomer</span>.iobio</h2>
-      </div> 
+      </div>
 
       Taxonomer is a kmer-based ultrafast metagenomics tool for assigning taxonomy to sequencing reads from both clinical and environmental samples. Taxonomer enables simultaneous microbial detection and human transcript quantification within a clinically meaningful timeframe (i.e. minutes). Taxonomer supports nucleotide and protein-based pathogen detection and phylogenetic classification using DNA and RNA sequencing data in a single integrated algorithmic framework.
 
@@ -42,32 +42,39 @@
     Users can explore the demo datasets described below or analyze their own data (FASTQ or FASTA format sequence files). The user has the option to either select a file on an http accessible site or on their hard drive. For demo purposes, the app will read and analyze the first few thousand reads from the file.
 
 
-    Taxonomer was developed in collaboration between 3 laboratories at the University of Utah: the Schlaberg lab in the Department of Pathology and at ARUP Laboratories, the Eilbeck lab in the Department of Biomedical Informatics, and the Yandell lab in the Department of Human Genetics. Together with Mark Yandell, graduate students Steven Flygare and Keith Simmon developed the Taxonomer codebase. The Taxonomer.iobio web app is built upon the Marth lab iobio platform, implemented by Chase Miller, Yi Qiao and Tonya Di Serra.  
+    Taxonomer was developed in collaboration between 3 laboratories at the University of Utah: the Schlaberg lab in the Department of Pathology and at ARUP Laboratories, the Eilbeck lab in the Department of Biomedical Informatics, and the Yandell lab in the Department of Human Genetics. Together with Mark Yandell, graduate students Steven Flygare and Keith Simmon developed the Taxonomer codebase. The Taxonomer.iobio web app is built upon the Marth lab iobio platform, implemented by Chase Miller, Yi Qiao and Tonya Di Serra.
 
 
     Taxonomer development was supported by the Utah Science Technology and Research (USTAR) Center for Genetic Discovery; the Primary Children’s Hospital Foundation; the University of Utah’s Center for Clinical and Translational Science (CCTS), the Richard A. and Carol M. Fay Endowed Graduate Fellowship, the Department of Pathology and NIH training grants 1ULTR001067 and 5T32HL007576-29. The iobio platform is supported by grant U01 HG006513 to Gabor Marth from the National Human Genome Research Institute.
 
- 
 
-    <div id="footer">                        
-        <div >     
+
+    <div id="footer">
+        <div >
             <div class="footer-labs" style="font-size:24px;font-family:'Overlock SC', cursive;">
                 <span style="padding-right:20px;">Schlaberg Lab</span>
-                <span style="padding-right:20px;">Eilbeck lab</span>  
-                <span style="padding-right:20px;">Yandell Lab</span>    
-                <span>Marth lab</span>    
-            </div>     
+                <span style="padding-right:20px;">Eilbeck lab</span>
+                <span style="padding-right:20px;">Yandell Lab</span>
+                <span>Marth lab</span>
+            </div>
 
             <div class="logos" style="padding-top:20px;">
-                <img src="assets/images/Dept of Path logo.jpg" style="height:50px"/>   
-                <img src="assets/images/ARUP_stkd_2c_pos.png" style="height:40px"/>   
-                <img src="assets/images/ustar-ucgd-logo.jpg" style="height:40px;"/>            
-                <a href="http://www.genetics.utah.edu/"><img src="assets/images/genetics_mainlogo3_lrg.png" style="height:40px"></a>          
-            </div> 
-        </div>                      
+                <img src="assets/images/Dept of Path logo.jpg" style="height:50px"/>
+                <img src="assets/images/ARUP_stkd_2c_pos.png" style="height:40px"/>
+                <img src="assets/images/ustar-ucgd-logo.jpg" style="height:40px;"/>
+                <a href="http://www.genetics.utah.edu/"><img src="assets/images/genetics_mainlogo3_lrg.png" style="height:40px"></a>
+            </div>
+        </div>
         <div style="padding-bottom: 50px"></div>
     </div>
 
+
+      <div style="padding-top: 20px"></div>
+      <a id='idbydna'/>
+      <h2 style="font-weight:600;">Full Analysis <img src='assets/images/idbydna.png' style="height: 60px; margin-top: -2px" /></h2>
+      <div>
+        <a href="http://idbydna.com">IdByDna</a> has taken the initial academic project and created an enhanced commercial version. It includes more comprehensive databases, full analysis, project management, and more. Try it at <a href='http://taxonomer.com'>Taxonomer.com!</a>
+      </div>
 
       <div style="padding-top: 20px"></div>
 
@@ -77,7 +84,7 @@
       <div>
         <a id="sample1"><h3>Human Serum Sample Positive for Zaire Ebolavirus (RNA-Seq)</h3></a>
         <span style="text-align: justify">
-            RNA-Seq data of a serum sample from a patient in Sierra Leone, West Africa, who tested positive for Ebolavirus by PCR (1.61E+09 copies/ml). Selection of viral reads demonstrates ~75% of the reads being classified as Zaire Ebolavirus (see below). 
+            RNA-Seq data of a serum sample from a patient in Sierra Leone, West Africa, who tested positive for Ebolavirus by PCR (1.61E+09 copies/ml). Selection of viral reads demonstrates ~75% of the reads being classified as Zaire Ebolavirus (see below).
         </span>
         <div>
             <div style="float:left;">
@@ -90,7 +97,7 @@
                 <a href="http://taxonomer.iobio.io/?url=https://s3.amazonaws.com/iobio/ebola_sample.fastq">Show in taxonomer.iobio</a>
                 <br>
             </div>
-            <img src="assets/images/sample-ebola.png" style="float: right;height: 400px"/>  
+            <img src="assets/images/sample-ebola.png" style="float: right;height: 400px"/>
 
         </div>
 
@@ -111,7 +118,7 @@
                 <br>
                 <a href="http://taxonomer.iobio.io/?url=https://s3.amazonaws.com/iobio/ERR501052_1.fastq">Show in taxonomer.iobio</a>
             </div>
-            <img src="assets/images/sample-microbiota-malnurished.png" style="float: right;height: 400px"/>  
+            <img src="assets/images/sample-microbiota-malnurished.png" style="float: right;height: 400px"/>
 
         </div>
 
@@ -132,7 +139,7 @@
                 <br>
                 <a href="http://taxonomer.iobio.io/?url=https://s3.amazonaws.com/iobio/SRR533978_1.fastq">Show in taxonomer.iobio</a>
             </div>
-            <img src="assets/images/sample-hemorrhagic-fever.png" style="float: right;height: 400px"/>  
+            <img src="assets/images/sample-hemorrhagic-fever.png" style="float: right;height: 400px"/>
 
         </div>
 
