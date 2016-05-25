@@ -387,7 +387,11 @@ h4 {
 
 
 
-#main-panel #big-binner .arc{
+#main-panel #big-binner .binnerArc{
+  cursor: pointer;
+}
+
+#main-panel #big-binner .binnerClassArc{
   cursor: pointer;
 }
 
@@ -429,6 +433,10 @@ h4 {
 #main-panel #cat-list .reads {
   fill:black;
   text-anchor:middle;
+}
+
+#main-panel #cat-list rect:hover {
+  cursor: pointer;
 }
 
 #main-panel #selected-name {
