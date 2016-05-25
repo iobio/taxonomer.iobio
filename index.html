@@ -343,6 +343,7 @@
 
                 </svg>
               </div>
+              <div id='errorMsg' style="display:none">Oops, there was an error analyzing your sample. Please make sure your file, url, or SRRid is valid and try agin</div>
 
               <!-- sunburst visualization -->
               <div id='main-viz'>
@@ -359,12 +360,6 @@
                   <h4 id='total-reads'>Total <span id='bin'></span> Reads Classified: <span class='iobio-txt-color'></span></h4>
                   <!-- <h4 id='viewed-reads' style="float:right">Displayed: <span class='iobio-txt-color'>100%</span></h4> -->
                   <div style="clear:both"></div>
-                </div>
-                <div id='viz-picker' style='display:none'>
-                  <img src='assets/images/sunburst_icon_color.png'/>
-                  <img src='assets/images/bubble_icon.png'/>
-                  <img src='assets/images/tree_icon.png'/>
-                  <img src='assets/images/bar_chart_icon.png'/>
                 </div>
               </div>
             </div>
@@ -1091,6 +1086,15 @@
               }
             });
           });
+
+          stream.on('end', function() {
+            if( $('#reads-sampled span').html() == "0")
+              $('#errorMsg').css('display', 'block');
+          })
+
+          stream.on('error', function(err) {
+            console.log('error: ' + error);
+          })
 
         });
       }
